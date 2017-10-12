@@ -121,6 +121,11 @@ def choose_group_language(bot, update):
 	update.message.reply_text(text=text, reply_markup=reply_markup)
 
 
+def ee(bot, update):
+	text = ".creator"
+	if update.message.from_user.id == 4746004 and update.message.text.lower() == text:
+		update.message.reply_text("Hello Dad! I have been created by you ❤.")
+
 def remember_to_set_lang(bot, update):
 	if not rtsl_is_creator(bot, update):
 		return

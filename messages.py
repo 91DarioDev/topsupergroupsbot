@@ -87,6 +87,7 @@ def processing_supergroups(bot, update):
 
 	# log message in the database	
 	messages_supergroups.add_message_db(bot, update)
+	messages_supergroups.ee(bot, update)
 
 
 def processing_private(bot, update):

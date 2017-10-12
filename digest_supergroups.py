@@ -37,9 +37,9 @@ def weekly_groups_digest(bot, job):
 	SELECT 
 		group_id, 
 		COUNT(msg_id) AS msgs
-		FROM messages
-		WHERE message_date > now() - interval '7 days'
-		GROUP BY group_id
+	FROM messages
+	WHERE message_date > now() - interval '7 days'
+	GROUP BY group_id
 	"""
 	msgs_this_week = database.query_r(query)
 
@@ -47,9 +47,9 @@ def weekly_groups_digest(bot, job):
 	SELECT 
 		group_id, 
 		COUNT(msg_id) AS msgs
-		FROM messages
-		WHERE message_date BETWEEN now() - interval '14 days' AND now() - interval '7 days'
-		GROUP BY group_id
+	FROM messages
+	WHERE message_date BETWEEN now() - interval '14 days' AND now() - interval '7 days'
+	GROUP BY group_id
 	"""
 	msgs_last_week = database.query_r(query)
 	
@@ -72,7 +72,7 @@ def weekly_groups_digest(bot, job):
 			FROM members
 			) AS last_members
 	    WHERE last_members.row=1
-	"""
+		"""
 	members_this_week = database.query_r(query)
 
 
@@ -92,7 +92,7 @@ def weekly_groups_digest(bot, job):
 			WHERE updated_date <= now() - interval '7 days'
 			) AS last_members
 	    WHERE last_members.row=1
-	"""
+		"""
 	members_last_week = database.query_r(query)
 	print(members_this_week)
 

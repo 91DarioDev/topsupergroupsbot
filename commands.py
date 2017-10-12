@@ -198,14 +198,14 @@ def aboutyou(bot, update):
 			add_t = get_lang.get_string(lang, "messages_in_groups_position")
 			add_t = add_t.format(m_per_group, username, pos_per_group)
 			text += add_t
-		text += about_you_world(user_id)
+		text += about_you_world(user_id, lang)
 
 	utils.send_message_long(bot, chat_id=user_id, text=text)
 
 
 
 
-def about_you_world(user_id):
+def about_you_world(user_id, lang):
 	# thank https://stackoverflow.com/a/46437403/8372336 for the help in creating the query
 	query = """
 	SELECT  main.num_msgs, main.num_grps, main.rnk

@@ -95,7 +95,7 @@ hey_no_lang_set = ("Hey! you haven't set any language yet, so in which region of
 				" i put this group?. No, really, set a language.")
 
 you_inactive_this_week = "This week you didn't sent messages in groups yet"
-you_sent_this = "This week you already sent:"
+this_week_you_sent_this = "This week you already sent:"
 you_globally_this_week = "You globally already sent {} messages in {} groups during this week. Position: {}"
 
 unsupported_chat = ("I have been programmed to take part only in public groups. "

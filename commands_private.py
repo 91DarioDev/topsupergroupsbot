@@ -30,9 +30,9 @@ from telegram.error import (TelegramError,
 def stats_users(bot, update):
 	# total users grouped by regions
 	query = """
-	SELECT DISTINCT region, COUNT(user_id) AS amount
+	SELECT region, COUNT(user_id) AS amount
 	FROM users 
-	GROUP BY user_id, region
+	GROUP BY region
 	ORDER BY amount DESC
 	"""
 	text = "<b>Total users per region:\n</b>"
@@ -42,10 +42,10 @@ def stats_users(bot, update):
 
 	# users grouped by regions didn't block the bot
 	query = """
-	SELECT DISTINCT region, COUNT(user_id) AS amount
+	SELECT region, COUNT(user_id) AS amount
 	FROM users 
-	GROUP BY user_id, region
-	HAVING bot_blocked = FALSE
+	WHERE bot_blocked = FALSE
+	GROUP BY region
 	ORDER BY amount DESC
 	"""
 	text += "\n<b>Users didn't block the bot:\n</b>"
@@ -56,10 +56,10 @@ def stats_users(bot, update):
 
 	# users grouped by regions didn't block the bot active 7 days
 	query = """
-	SELECT DISTINCT region, COUNT(user_id) AS amount 
+	SELECT region, COUNT(user_id) AS amount 
 	FROM users 
-	GROUP BY user_id, region
-	HAVING bot_blocked = FALSE AND message_date > (now() - interval '7 days')
+	WHERE bot_blocked = FALSE AND message_date > (now() - interval '7 days')
+	GROUP BY region
 	ORDER BY amount DESC
 	"""
 	text += "\n<b>Didn't block the bot and active in the last 7 days per region:</b>\n"
@@ -74,9 +74,9 @@ def stats_users(bot, update):
 def stats_groups(bot, update):
 	# total groups
 	query = """
-	SELECT DISTINCT lang, COUNT(group_id) AS amount
+	SELECT lang, COUNT(group_id) AS amount
 	FROM supergroups
-	GROUP BY group_id, lang
+	GROUP BY lang
 	ORDER BY amount DESC
 	"""
 	text = "<b>Total groups per lang:</b>\n"
@@ -87,10 +87,10 @@ def stats_groups(bot, update):
 
 	# total groups bot not removed
 	query = """
-	SELECT DISTINCT lang, COUNT(group_id) AS amount
+	SELECT lang, COUNT(group_id) AS amount
 	FROM supergroups
-	GROUP BY group_id, lang
-	HAVING bot_inside = TRUE
+	WHERE bot_inside = TRUE
+	GROUP BY lang
 	ORDER BY amount DESC
 	"""
 	text += "<b>\nTotal groups per lang didn't remove the bot:</b>\n"
@@ -101,10 +101,10 @@ def stats_groups(bot, update):
 
 	# total groups bot inside and joined last 7 days
 	query = """
-	SELECT DISTINCT lang, COUNT(group_id) AS amount
+	SELECT lang, COUNT(group_id) AS amount
 	FROM supergroups
-	GROUP BY group_id, lang
-	HAVING bot_inside = TRUE AND last_date > (now() - interval '7 days')
+	WHERE bot_inside = TRUE AND last_date > (now() - interval '7 days')
+	GROUP BY lang
 	ORDER BY amount DESC
 	"""
 	text += "<b>\nTotal groups per lang didn't remove the bot and joined in the past 7 days:</b>\n"

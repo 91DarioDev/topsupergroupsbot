@@ -1,2 +1,3 @@
 /antiflood/antiflood.py
 /config/config.py
+*.pyc

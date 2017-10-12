@@ -95,6 +95,13 @@ def callback_query(bot, update):
 	elif query.data.startswith("leaderboard_by:"):
 		redirect_ledearboard(bot, query)
 
+	elif query.data == "digest_group":
+		group_digest_menu(bot, query)
+
+	elif query.data.startswith("set_weekly_group_digest"):
+		set_weekly_group_digest(bot, query)
+
+
 
 
 
@@ -176,6 +183,27 @@ def vote_link(bot, query):
 	text += "\n\n{}".format(votelink.create_vote_link(group_id))
 	reply_markup = keyboards.vote_link_kb(lang)
 	query.edit_message_text(text=text, reply_markup=reply_markup)
+
+
+@utils.creator_button_only
+def group_digest_menu(bot, query):
+	group_id = query.message.chat.id
+	query_db = "SELECT lang, weekly_digest FROM supergroups WHERE group_id = %s"
+	extract = database.query_r(query_db, group_id, one=True)
+	lang = extract[0]
+	weekly_digest = extract[1]
+	text = get_lang.get_string(lang, "group_weekly_digest")
+	reply_markup = keyboards.weekly_group_digest_kb(lang, weekly_digest)
+	query.edit_message_text(text=text, reply_markup=reply_markup)
+
+
+def set_weekly_group_digest(bot, query):
+	value = True if query.data.split(":")[1] == "true" else False
+	query_db = "UPDATE supergroups SET weekly_digest = %s WHERE group_id = %s RETURNING lang"
+	extract = database.query_wr(query_db, value, query.message.chat.id)
+	lang = extract[0][0]
+	reply_markup = keyboards.weekly_group_digest_kb(lang, value)
+	query.message.edit_reply_markup(reply_markup=reply_markup)
 
 
 def set_vote(bot, query):

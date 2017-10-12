@@ -104,3 +104,7 @@ unsupported_chat = ("I have been programmed to take part only in public groups. 
 					"This is not a public group. I leave, bye")
 
 banned_leave = "Sorry but this group is banned. I leave."
+
+group_digest_button = "Digest"
+group_weekly_digest = ("Would you like to receive a digest of this group anytime a week is over?"
+					" You can change your mind at anytime.")

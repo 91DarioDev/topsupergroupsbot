@@ -52,7 +52,9 @@ def main_group_settings_kb(lang):
 				callback_data="adult_contents")
 	vote_link = InlineKeyboardButton(text=get_lang.get_string(lang, "vote_link_button"), 
 				callback_data="vote_link")
-	buttons_list = [[button_lang], [button_adult], [vote_link]]
+	digest = InlineKeyboardButton(text=get_lang.get_string(lang, "group_digest_button"),
+				callback_data="digest_group")
+	buttons_list = [[button_lang], [button_adult], [vote_link], [digest]]
 	keyboard = InlineKeyboardMarkup(buttons_list)
 	return keyboard
 
@@ -99,6 +101,22 @@ def vote_group_kb(group_id, lang):
 	keyboard = InlineKeyboardMarkup(buttons_list)
 	return keyboard
 
+
+def weekly_group_digest_kb(lang, value):
+	yes = get_lang.get_string(lang, "yes")
+	no = get_lang.get_string(lang, "no")
+	back = get_lang.get_string(lang, "back")
+	button_yes = InlineKeyboardButton(
+				text=constants.CURRENT_CHOICE+yes if value is True else yes, 
+				callback_data="set_weekly_group_digest:true")
+	button_no = InlineKeyboardButton(
+				text=constants.CURRENT_CHOICE+no if value is False else no, 
+				callback_data="set_weekly_group_digest:false")
+	button_back = InlineKeyboardButton(text=back, 
+				callback_data="main_group_settings_creator")
+	buttons_list = [[button_yes, button_no], [button_back]]
+	keyboard = InlineKeyboardMarkup(buttons_list)
+	return keyboard
 
 def vote_link_kb(lang):
 	button_back = InlineKeyboardButton(text=get_lang.get_string(lang, "back"), 

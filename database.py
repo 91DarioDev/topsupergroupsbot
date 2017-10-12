@@ -110,6 +110,7 @@ def create_db():
 		group_id BIGINT PRIMARY KEY, 
 		lang TEXT DEFAULT NULL, 
 		nsfw BOOLEAN DEFAULT FALSE, 
+		weekly_digest BOOLEAN DEFAULT TRUE, 
 		joined_the_bot timestamp DEFAULT NULL, 
 		banned_on TIMESTAMP DEFAULT NULL, 
 		banned_until TIMESTAMP DEFAULT NULL, 

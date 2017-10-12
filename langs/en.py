@@ -15,7 +15,9 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 
-choose_group_lang = "Choose the language of the group"
+choose_group_lang = ("Choose the language of the group. "
+					"Your group will be added in the leaderboard of the right language. "
+					"Don't lie or we'll ban this group")
 group_settings = "Group settings:"
 messages_in_groups_position = "— {} messages in @{}. Position: {}\n"
 have_adult = "Does this group contains adult content?"

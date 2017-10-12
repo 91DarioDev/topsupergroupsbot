@@ -15,7 +15,6 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 # library
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler  
 from telegram.ext.dispatcher import run_async

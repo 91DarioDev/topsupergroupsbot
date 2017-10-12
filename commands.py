@@ -184,11 +184,12 @@ def aboutyou(bot, update):
 	extract = database.query_r(query, user_id)
 
 	if len(extract) == 0:
-		text = "This week you didn't sent messages in groups yet"
+		lang = utils.get_db_lang(user_id)
+		text = get_lang.get.string(lang, "you_inactive_this_week")
 
 	else:
 		lang = extract[0][5]
-		text = "This week you alrady sent:\n\n"
+		text = get_lang.get_string(lang, "this_week_you_sent_this")+"\n\n"
 		for i in extract:
 			title = i[1]
 			username = i[2]
@@ -229,7 +230,7 @@ def about_you_world(user_id):
 
 	extract = database.query_r(query, user_id, one=True)
 
-	text = "\nYou globally already sent {} messages in {} groups during this week. Position: {}"
+	text = "\n"+get_lang.get_string(lang, "you_globally_this_week")
 	text = text.format(extract[0], extract[1], extract[2])
 	return text
 

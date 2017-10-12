@@ -27,7 +27,10 @@ import time
 def leave_unsupported_chat(bot, update):
 	if update.message.chat.type == "group" or (update.message.chat.type == "supergroup" 
 			and update.message.chat.username is None):
-		update.message.reply_text(text="unsupported chat", quote=False)
+		query = "SELECT lang FROM supergroups WHERE group_id = %s"
+		extract = database.query_r(query, update.message.chat.id, one=True)[0]
+		text = get_lang.get_string(lang, "unsupported_chat")
+		update.message.reply_text(text=text, quote=False)
 		bot.leaveChat(update.message.chat.id)
 		query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
 		database.query_w(query, update.message.chat.id)
@@ -100,7 +103,10 @@ def is_banned(bot, update):
 	return ban # this returns None if not banned else the expiring date
 
 def leave_banned_group(bot, update):
-	update.message.reply_text(text="banned, i leave", quote=False)
+	query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
+	lang = database.query_r(query_db, update.message.chat.id, one=True)[0]
+	text = get_lang.get_string(lang, "banned_leave")
+	update.message.reply_text(text=text, quote=False)
 	bot.leaveChat(update.message.chat.id)
 	query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
 	database.query_w(query, update.message.chat.id)

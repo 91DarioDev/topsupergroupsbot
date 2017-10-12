@@ -233,3 +233,14 @@ def ban_group(bot, update, args):
 	database.query_w(query, group_id)
 
 
+@utils.bot_owner_only
+def unban_group(bot, update, args):
+	if len(args) != 1:
+		update.message.reply_text("1 args as id")
+		return
+	group_id = args[0]
+	query = """
+		UPDATE supergroups SET banned_on = NULL, banned_until = NULL WHERE group_id = %s
+	"""
+	database.query_w(query, group_id)
+	update.message.reply_text("unbanned", quote=True)

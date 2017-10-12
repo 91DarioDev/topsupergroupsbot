@@ -126,7 +126,9 @@ def remember_to_set_lang(bot, update):
 
 
 def rtsl_is_creator(bot, update):
-	return True 
+	status = update.effective_chat.get_member(update.message.from_user.id).status
+	if status == "creator":
+		return True
 
 def rtsl_already_sent(bot, update):
 	mute_for = 60

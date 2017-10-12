@@ -16,6 +16,7 @@
 
 import database
 import utils
+import get_lang
 from telegram.error import (TelegramError, 
 							Unauthorized, 
 							BadRequest, 
@@ -203,5 +204,32 @@ def reverse_username(bot, update, args):
 	except BadRequest as e:
 		update.message.reply_text(e)
 		return
-	text = "id: {}".format(result.chat.id)
+	text = "id: {}".format(result['id'])
 	text += ""
+	update.message.reply_text(text, quote=True)
+
+
+
+@utils.bot_owner_only
+def ban_group(bot, update, args):
+	if len(args) != 3:
+		update.message.reply_text("specify id for days\nexample: -34545322 for 30")
+		return
+	group_id = args[0]
+	days = int(args[2])
+	query = """
+		UPDATE supergroups 
+		SET banned_on = now(), 
+		banned_until = now() + interval '%s days' 
+		WHERE group_id = %s
+		RETURNING lang
+	"""
+	extract = database.query_wr(query, days, group_id, one=True)
+	lang = extract[0]
+	text = get_lang.get_string(lang, "banned_leave")
+	bot.send_message(chat_id=group_id, text=text)
+	bot.leaveChat(group_id)
+	query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
+	database.query_w(query, group_id)
+
+

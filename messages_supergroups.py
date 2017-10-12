@@ -104,7 +104,8 @@ def is_banned(bot, update):
 
 def leave_banned_group(bot, update):
 	query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
-	lang = database.query_r(query_db, update.message.chat.id, one=True)[0]
+	extract = database.query_r(query_db, update.message.chat.id, one=True)
+	lang = extract[0]
 	text = get_lang.get_string(lang, "banned_leave")
 	update.message.reply_text(text=text, quote=False)
 	bot.leaveChat(update.message.chat.id)

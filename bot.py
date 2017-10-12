@@ -80,6 +80,7 @@ def main():
 	dp.add_handler(CommandHandler('infoid', commands_private.infoid, pass_args=True))
 	dp.add_handler(CommandHandler('reverseusername', commands_private.reverse_username, 
 									pass_args=True))
+	dp.add_handler(CommandHandler('bangroup', commands_private.ban_group, pass_args=True))
 	#invalid command
 	dp.add_handler(MessageHandler(Filters.command & Filters.private, utils.invalid_command))
 	# handle all messages not command. it's obvious because commands are handled before, 

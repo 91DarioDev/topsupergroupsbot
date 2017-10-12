@@ -33,6 +33,7 @@ import cleandb
 import memberslog
 import digest_private
 import commands_private
+import digest_supergroups
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 					level=logging.INFO)

@@ -19,6 +19,7 @@ import constants
 import time
 import get_lang
 import database
+import locale
 from config import config
 from functools import wraps
 from telegram import constants as ptb_consts
@@ -177,3 +178,16 @@ def guessed_user_lang(bot, update):
 		return user2code
 	else:
 		return "en"
+
+
+def sep(num, lang='en', none_is_zero=False):
+	if num is None:
+		if none_is_zero is False:
+			return None
+		else:
+			return 0
+	try:
+		locale.setlocale(locale.LC_ALL, lang)
+	except locale.Error:
+		locale.setlocale(locale.LC_ALL, 'en')
+	return locale.format("%d", num, grouping=True)

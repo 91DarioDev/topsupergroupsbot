@@ -96,6 +96,8 @@ def main():
 	j.run_repeating(cleandb.clean_db, interval=60*60*24, first=0)
 	j.run_repeating(memberslog.members_log, interval=60*60*24, first=0)
 	j.run_daily(digest_private.weekly_own_private, time=datetime.time(0, 0, 0), days=(0,))
+	j.run_daily(digest_supergroups.weekly_groups_digest, time=datetime.time(0, 0, 0), days=(0,))
+	#j.run_repeating(digest_supergroups.weekly_groups_digest, interval=60*60*24, first=0)
 
 	# handle errors
 	dp.add_error_handler(error)

@@ -25,6 +25,7 @@ def weekly_groups_digest(bot, job):
 			joined_the_bot
 		FROM supergroups
 		WHERE weekly_digest = TRUE AND bot_inside = TRUE
+		ORDER BY last_date DESC
 		"""
 	lst = database.query_r(query)
 

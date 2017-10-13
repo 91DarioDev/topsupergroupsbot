@@ -31,12 +31,9 @@ def start(bot, update, args):
 		return
 	first_arg = args[0]
 	if first_arg.startswith("vote"):
-		if update.message.chat.type == "private":
-			votelink.send_vote_by_link(bot, update, first_arg)
-		return
+		votelink.send_vote_by_link(bot, update, first_arg)
 	elif first_arg == "groups_working":
-		if update.message.chat.type == "private":
-			send_groups_working(bot, update)
+		send_groups_working(bot, update)
 		return
 
 
@@ -261,6 +258,7 @@ def help(bot, update):
 	update.message.reply_text(text=text, parse_mode="HTML")
 
 
+@utils.private_only
 def send_groups_working(bot, update):
 	lang = utils.get_db_lang(update.message.from_user.id)
 	text = get_lang.get_string(lang, "groups_working")

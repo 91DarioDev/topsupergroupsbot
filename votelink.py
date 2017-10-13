@@ -25,6 +25,7 @@ def create_vote_link(group_id):
 	return schema
 
 
+@utils.private_only
 def send_vote_by_link(bot, update, first_arg):
 	group_id = first_arg.replace("vote", "")
 	user_id = update.message.from_user.id

@@ -143,7 +143,7 @@ def weekly_groups_digest(bot, job):
 
 	query = """
 		SELECT 
-			DISTINCT group_id,
+			group_id,
 			COUNT(user_id) OVER (PARTITION BY group_id)
 		FROM messages
 		WHERE message_date > (now() - interval %s)
@@ -153,7 +153,7 @@ def weekly_groups_digest(bot, job):
 
 	query = """
 		SELECT 
-			DISTINCT group_id,
+			group_id,
 			COUNT(user_id) OVER (PARTITION BY group_id)
 		FROM messages
 		WHERE message_date BETWEEN (now() - interval %s) AND (now() - interval %s)

@@ -114,6 +114,7 @@ def create_db():
 		joined_the_bot timestamp DEFAULT NULL, 
 		banned_on TIMESTAMP DEFAULT NULL, 
 		banned_until TIMESTAMP DEFAULT NULL, 
+		ban_reason TEXT DEFAULT NULL, 
 		bot_inside BOOLEAN DEFAULT TRUE, 
 		last_date timestamp DEFAULT NULL
 	)"""

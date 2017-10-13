@@ -95,7 +95,7 @@ def callback_query(bot, update):
 	elif query.data.startswith("leaderboard_by:"):
 		redirect_ledearboard(bot, query)
 
-	elif query.data == "digest_group":
+	elif query.data.startswith("digest_group"):
 		group_digest_menu(bot, query)
 
 	elif query.data.startswith("set_weekly_group_digest"):
@@ -194,6 +194,11 @@ def group_digest_menu(bot, query):
 	weekly_digest = extract[1]
 	text = get_lang.get_string(lang, "group_weekly_digest")
 	reply_markup = keyboards.weekly_group_digest_kb(lang, weekly_digest)
+	if query.data.endswith("new_msg"):
+		query.message.edit_reply_markup()
+		query.message.reply_text(text=text, reply_markup=reply_markup)
+		return
+	query.answer()
 	query.edit_message_text(text=text, reply_markup=reply_markup)
 
 

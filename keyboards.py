@@ -258,3 +258,12 @@ def disable_private_own_weekly_digest_kb(lang):
 	buttons_list = [[disable]]
 	keyboard = InlineKeyboardMarkup(buttons_list)
 	return keyboard
+
+
+def disable_group_weekly_digest_kb(lang):
+	disable = InlineKeyboardButton(
+				text=get_lang.get_string(lang, "disable"), 
+				callback_data="digest_group:new_msg")
+	buttons_list = [[disable]]
+	keyboard = InlineKeyboardMarkup(buttons_list)
+	return keyboard

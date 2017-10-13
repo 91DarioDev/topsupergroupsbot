@@ -146,4 +146,4 @@ def weekly_groups_digest(bot, job):
 		"""
 	last_week_active_users = database.query_r(query)
 
-weekly_groups_digest(None, None)
+#weekly_groups_digest(None, None)

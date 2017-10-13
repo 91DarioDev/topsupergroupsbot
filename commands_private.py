@@ -175,6 +175,7 @@ def infoid_from_db(user_id):
 			joined_the_bot,
 			banned_on,
 			banned_until,
+			ban_reason, 
 			bot_inside,
 			last_date
 		FROM supergroups
@@ -187,8 +188,9 @@ def infoid_from_db(user_id):
 		text += "joined_the_bot: {}\n".format(extract[2])
 		text += "banned_on: {}\n".format(extract[3])
 		text += "banned_until: {}\n".format(extract[4])
-		text += "bot_inside: {}\n".format(extract[5])
-		text += "last_date: {}\n".format(extract[6])
+		text += "ban_reason: {}\n".format(extract[5])
+		text += "bot_inside: {}\n".format(extract[6])
+		text += "last_date: {}\n".format(extract[7])
 	return text
 
 

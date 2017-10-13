@@ -262,7 +262,12 @@ def unban_group(bot, update, args):
 		return
 	group_id = args[0]
 	query = """
-		UPDATE supergroups SET banned_on = NULL, banned_until = NULL WHERE group_id = %s
+		UPDATE supergroups 
+		SET 
+			banned_on = NULL, 
+			banned_until = NULL, 
+			ban_reason = NULL
+		WHERE group_id = %s
 	"""
 	database.query_w(query, group_id)
 	update.message.reply_text("unbanned", quote=True)

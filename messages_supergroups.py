@@ -100,7 +100,10 @@ def is_banned(bot, update):
 	if extract is None:
 		ban = None
 	else:
-		ban = None if extract[0] < datetime.datetime.now() else extract[0]
+		if extract[0] is None or extract[0] < datetime.datetime.now():
+			ban = None
+		else:
+			ban = extract[0]
 	return ban # this returns None if not banned else the expiring date
 
 def leave_banned_group(bot, update):

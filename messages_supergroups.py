@@ -166,3 +166,8 @@ def rtsl_already_sent(bot, update):
 		database.REDIS.setex(key, now+mute_for, mute_for*2)
 		return False
 	return True
+
+def added_again_message(bot, update, lang):
+	text = get_lang.get_string(lang, "added_again")
+	reply_markup = keyboards.main_group_settings_kb(lang)
+	update.message.reply_text(text=text, reply_markup=reply_markup, quote=False)

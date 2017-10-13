@@ -63,8 +63,15 @@ def before_processing_supergroups(bot, update):
 	messages_supergroups.add_user_ref(bot, update)
 	messages_supergroups.add_supergroup_ref(bot, update)
 
+
+	# check if the bot has been added and send a welcome message
 	if messages_supergroups.this_bot_has_been_added(bot, update):
-		messages_supergroups.choose_group_language(bot, update)
+		if lang is None:
+			messages_supergroups.choose_group_language(bot, update)
+		else:
+			messages_supergroups.added_again_message(bot, update, lang)
+	# if it hasn't been added remember to set the language
+	# this is run even for commands (before processing)
 	else:
 		if lang is None:
 			messages_supergroups.remember_to_set_lang(bot, update)

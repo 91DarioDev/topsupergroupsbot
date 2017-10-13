@@ -136,3 +136,5 @@ weekly_groups_digest = ("Hello! Another week is over. Here there are some stats 
 					"difference: {}  percent: {}\n\n"
 					"TOP USERS OF THE WEEK:\n"
 					)
+
+added_again = "Hello! Do you want to check the group settings again?"

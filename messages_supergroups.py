@@ -20,6 +20,7 @@ import constants
 import get_lang
 import datetime
 import time
+import html
 
 
 # UNSUPPORTED CHAT
@@ -103,12 +104,14 @@ def is_banned(bot, update):
 	return ban # this returns None if not banned else the expiring date
 
 def leave_banned_group(bot, update):
-	query_db = "SELECT lang, banned_until FROM supergroups WHERE group_id = %s"
+	query_db = "SELECT lang, banned_until, ban_reason FROM supergroups WHERE group_id = %s"
 	extract = database.query_r(query_db, update.message.chat.id, one=True)
 	lang = extract[0]
 	banned_until = extract[1]
-	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0))
-	update.message.reply_text(text=text, quote=False)
+	ban_reason = extract[2]
+	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0),
+														"<code>"+html.escape(ban_reason)+"</code>")
+	update.message.reply_text(text=text, quote=False, parse_mode='HTML')
 	bot.leaveChat(update.message.chat.id)
 	query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
 	database.query_w(query, update.message.chat.id)

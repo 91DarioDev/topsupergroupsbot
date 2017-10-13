@@ -213,15 +213,25 @@ def reverse_username(bot, update, args):
 
 @utils.bot_owner_only
 def ban_group(bot, update, args):
-	if len(args) != 3:
-		update.message.reply_text("specify id for days\nexample: -34545322 for 30")
+	if len(args) < 3:
+		text = "specify id for days\nexample: -34545322 for 30 (optional: for too much spam)"
+		update.message.reply_text(text)
 		return
-	group_id = args[0]
-	days = int(args[2])
+
+	params = " ".join(args).split(" for ")
+	group_id = params[0]
+	print(group_id)
+	days = int(params[1])
+	try:
+		reason = params[2]
+	except IndexError:
+		reason = None
 	query = """
 		UPDATE supergroups 
-		SET banned_on = now(), 
-		banned_until = now() + interval '%s days' 
+		SET 
+			banned_on = now(), 
+			banned_until = now() + interval '%s days',
+			ban_reason = %s 
 		WHERE group_id = %s
 		RETURNING lang, banned_until
 	"""
@@ -232,10 +242,11 @@ def ban_group(bot, update, args):
 		if admin.status == 'creator':
 			creator = admin
 
-	extract = database.query_wr(query, days, group_id, one=True)
+	extract = database.query_wr(query, days, reason, group_id, one=True)
 	lang = extract[0]
 	banned_until = extract[1]
-	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0))
+	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0), 
+																"<code>"+html.escape(reason)+"</code>")
 	text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(creator.user.id, 
 															html.escape(creator.user.first_name))
 	bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')

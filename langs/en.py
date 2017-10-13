@@ -133,5 +133,6 @@ weekly_groups_digest = ("Hello! Another week is over. Here there are some stats 
 					"average and number of votes this week: {}|({})\n\n"
 					"active users last week: {}\n"
 					"active users this week: {}\n"
-					"difference: {}  percent: {}"
+					"difference: {}  percent: {}\n\n"
+					"TOP USERS OF THE WEEK:\n"
 					)

@@ -18,6 +18,7 @@ import database
 import get_lang
 import keyboards
 import utils
+import html
 from telegram.error import (TelegramError, 
 							Unauthorized, 
 							BadRequest, 
@@ -27,8 +28,8 @@ from telegram.error import (TelegramError,
 
 
 def weekly_groups_digest(bot, job):
-	near_interval = '7 days'
-	far_interval = '14 days'
+	near_interval = '1 days'
+	far_interval = '2 days'
 
 	query = """
 		SELECT
@@ -103,11 +104,11 @@ def weekly_groups_digest(bot, job):
 			    	ORDER BY updated_date DESC
 			    	) AS row 
 			FROM members
-			WHERE updated_date <= now() - interval '7 days'
+			WHERE updated_date <= now() - interval %s
 			) AS last_members
 	    WHERE last_members.row=1
 		"""
-	members_last_week = database.query_r(query)
+	members_last_week = database.query_r(query, near_interval)
 	print(members_this_week)
 
 	####################
@@ -159,6 +160,7 @@ def weekly_groups_digest(bot, job):
 		GROUP BY group_id, user_id
 		"""
 	last_week_active_users = database.query_r(query, far_interval, near_interval)
+
 
 
 	start_in = 0
@@ -238,6 +240,37 @@ def weekly_groups_digest(bot, job):
 					diff_act, percent_act
 			)
 
+
+
+		##############
+		# TOP n USERS
+		##############
+
+		query_top_users = """
+			SELECT 
+				user_id,
+				COUNT(msg_id) AS num_msgs, 
+				name 
+			FROM messages AS m
+			LEFT OUTER JOIN users_ref AS u_ref
+			USING (user_id)
+			WHERE group_id = %s AND m.message_date > (now() - interval %s)
+			GROUP BY user_id, name
+			ORDER BY num_msgs DESC
+			LIMIT %s
+			"""
+		top_users_of_the_group = database.query_r(query_top_users, group_id, near_interval, 10)
+		count = 0
+		for user in top_users_of_the_group:
+			count += 1
+			text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
+																count,
+																user[0],
+																html.escape(user[2]),
+																utils.sep(user[1])
+																)
+
+
 		reply_markup = keyboards.disable_group_weekly_digest_kb(lang)
 		#schedule send
 		job.job_queue.run_once(send_one_by_one_weekly_group_digest, 
@@ -263,11 +296,10 @@ def send_one_by_one_weekly_group_digest(bot, job):
 		bot.send_message(chat_id=group_id, 
 						text=message, 
 						reply_markup=reply_markup,
-						parse_mode='HTML')
+						parse_mode='HTML',
+						disable_notification=True)
 	except Unauthorized:
 		query = "UPDATE supergroups SET bot_inside = FALSE WHERE user_id = %s"
 		database.query_w(query, group_id)
 	except Exception as e:
 		print("{} exception is send_one_by_one group diges".format(e))
-
-#weekly_groups_digest(None, None)

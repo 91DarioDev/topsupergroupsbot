@@ -17,6 +17,7 @@
 import database
 import get_lang
 import keyboards
+import utils
 from telegram.error import (TelegramError, 
 							Unauthorized, 
 							BadRequest, 
@@ -156,25 +157,26 @@ def weekly_groups_digest(bot, job):
 		"""
 	last_week_active_users = database.query_r(query)
 
+
 	start_in = 0
 	for group in lst:
 		start_in += 0.1
 		group_id = group[0]
 		lang = group[1]
 
-		msgs_new = None
-		msgs_old = None
+		msgs_new = 0
+		msgs_old = 0
 
-		members_new = None
-		members_old = None
+		members_new = 0
+		members_old = 0
 
-		sum_v_new = None
-		avg_v_new = None
-		sum_v_old = None
-		avg_v_old = None
+		sum_v_new = 0
+		avg_v_new = 0
+		sum_v_old = 0
+		avg_v_old = 0
 
-		act_users_new = None
-		act_users_old = None
+		act_users_new = 0
+		act_users_old = 0
 
 		for i in msgs_this_week:
 			if i[0] == group_id:
@@ -219,11 +221,18 @@ def weekly_groups_digest(bot, job):
 				act_users_old = i[1]
 				break
 
-
+		diff_msg, percent_msg = diff_percent(msgs_new, msgs_old, lang)
+		diff_members, percent_members = diff_percent(members_new, members_old, lang) 
+		diff_act, percent_act = diff_percent(act_users_new, act_users_old, lang)
 		text = get_lang.get_string(lang, "weekly_groups_digest").format(
-					msgs_old, msgs_new, members_old, members_new, 
-					avg_v_old, sum_v_old, avg_v_new, sum_v_new,
-					act_users_old, act_users_new
+					utils.sep(msgs_old, lang), utils.sep(msgs_new, lang), 
+					diff_msg, percent_msg,
+					utils.sep(members_old, lang), utils.sep(members_new, lang), 
+					diff_members, percent_members, 
+					utils.sep(avg_v_old, lang), utils.sep(sum_v_old, lang), 
+					utils.sep(avg_v_new, lang), utils.sep(sum_v_new, lang),
+					utils.sep(act_users_old), utils.sep(act_users_new),
+					diff_act, percent_act
 			)
 
 		reply_markup = keyboards.disable_group_weekly_digest_kb(lang)
@@ -232,6 +241,16 @@ def weekly_groups_digest(bot, job):
 								start_in, 
 								context=[group_id, text, reply_markup])
 
+
+def diff_percent(new, old, lang):
+	diff = new - old
+	diff_s = utils.sep(diff, lang) if diff < 0 else "+"+utils.sep(diff, lang)
+	try:
+		percent = new*100/diff
+	except ZeroDivisionError:
+		percent = 0
+	percent_s = (utils.sep(percent, lang) if percent < 0 else "+"+utils.sep(percent, lang))+"%"
+	return diff_s, percent_s
 
 def send_one_by_one_weekly_group_digest(bot, job):
 	group_id = job.context[0]

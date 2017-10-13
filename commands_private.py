@@ -222,11 +222,12 @@ def ban_group(bot, update, args):
 		SET banned_on = now(), 
 		banned_until = now() + interval '%s days' 
 		WHERE group_id = %s
-		RETURNING lang
+		RETURNING lang, banned_until
 	"""
 	extract = database.query_wr(query, days, group_id, one=True)
 	lang = extract[0]
-	text = get_lang.get_string(lang, "banned_leave")
+	banned_until = extract[1]
+	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0))
 	bot.send_message(chat_id=group_id, text=text)
 	bot.leaveChat(group_id)
 	query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"

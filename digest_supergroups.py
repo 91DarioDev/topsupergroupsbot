@@ -27,6 +27,9 @@ from telegram.error import (TelegramError,
 
 
 def weekly_groups_digest(bot, job):
+	near_interval = '7 days'
+	far_interval = '14 days'
+
 	query = """
 		SELECT
 			group_id,
@@ -49,20 +52,20 @@ def weekly_groups_digest(bot, job):
 		group_id, 
 		COUNT(msg_id) AS msgs
 	FROM messages
-	WHERE message_date > now() - interval '7 days'
+	WHERE message_date > now() - interval %s
 	GROUP BY group_id
 	"""
-	msgs_this_week = database.query_r(query)
+	msgs_this_week = database.query_r(query, near_interval)
 
 	query = """
 	SELECT 
 		group_id, 
 		COUNT(msg_id) AS msgs
 	FROM messages
-	WHERE message_date BETWEEN now() - interval '14 days' AND now() - interval '7 days'
+	WHERE message_date BETWEEN now() - interval %s AND now() - interval %s
 	GROUP BY group_id
 	"""
-	msgs_last_week = database.query_r(query)
+	msgs_last_week = database.query_r(query, far_interval, near_interval)
 	
 	#############
 	# MEMBERS
@@ -117,10 +120,10 @@ def weekly_groups_digest(bot, job):
 			COUNT(vote) AS amount, 
 			ROUND(AVG(vote), 1) AS average
 		FROM votes
-		WHERE vote_date > (now() - interval '7 days')
+		WHERE vote_date > (now() - interval %s)
 		GROUP BY group_id
 	"""
-	this_week_votes_avg = database.query_r(query)
+	this_week_votes_avg = database.query_r(query, near_interval)
 
 	query = """
 		SELECT 
@@ -128,10 +131,10 @@ def weekly_groups_digest(bot, job):
 			COUNT(vote) AS amount, 
 			ROUND(AVG(vote), 1) AS average
 		FROM votes
-		WHERE vote_date BETWEEN (now() - interval '14 days') AND (now() - interval '7 days')
+		WHERE vote_date BETWEEN (now() - interval %s) AND (now() - interval %s)
 		GROUP BY group_id
 	"""
-	last_week_votes_avg = database.query_r(query)
+	last_week_votes_avg = database.query_r(query, far_interval, near_interval)
 
 	##################
 	# ACTIVE USERS
@@ -142,20 +145,20 @@ def weekly_groups_digest(bot, job):
 			DISTINCT group_id,
 			COUNT(user_id) OVER (PARTITION BY group_id)
 		FROM messages
-		WHERE message_date > (now() - interval '7 days')
+		WHERE message_date > (now() - interval %s)
 		GROUP BY group_id, user_id
 		"""
-	this_week_active_users = database.query_r(query)
+	this_week_active_users = database.query_r(query, near_interval)
 
 	query = """
 		SELECT 
 			DISTINCT group_id,
 			COUNT(user_id) OVER (PARTITION BY group_id)
 		FROM messages
-		WHERE message_date BETWEEN (now() - interval '14 days') AND (now() - interval '7 days')
+		WHERE message_date BETWEEN (now() - interval %s) AND (now() - interval %s)
 		GROUP BY group_id, user_id
 		"""
-	last_week_active_users = database.query_r(query)
+	last_week_active_users = database.query_r(query, far_interval, near_interval)
 
 
 	start_in = 0
@@ -246,10 +249,10 @@ def diff_percent(new, old, lang):
 	diff = new - old
 	diff_s = utils.sep(diff, lang) if diff < 0 else "+"+utils.sep(diff, lang)
 	try:
-		percent = new*100/diff
+		percent = diff*100/old
+		percent_s = (utils.sep(percent, lang) if percent < 0 else "+"+utils.sep(percent, lang))+"%"
 	except ZeroDivisionError:
-		percent = 0
-	percent_s = (utils.sep(percent, lang) if percent < 0 else "+"+utils.sep(percent, lang))+"%"
+		percent_s = "—"	
 	return diff_s, percent_s
 
 def send_one_by_one_weekly_group_digest(bot, job):

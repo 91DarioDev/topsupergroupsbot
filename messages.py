@@ -21,6 +21,7 @@ from antiflood import antiflood
 
 from telegram.ext import DispatcherHandlerStop
 
+
 def before_processing(bot, update):
 	if update.message.chat.type == "private":
 		before_processing_private(bot, update)

@@ -121,3 +121,14 @@ groups_working = ("Do you want your group to be part of our leaderboards? Simply
 				"We do not apply any kind of censorship about topics, but we may ban groups cheating "
 				"in leaderboards.\nIn /settings you will even find the link to redirect users to "
 				"automatically vote your group.")
+
+weekly_groups_digest = ("Another week is over. Here there are some stats of this group:\n"
+					"sent messages last week: {}\n"
+					"sent messages this week: {}\n\n"
+					"members last week: {}\n"
+					"members this week: {}\n\n"
+					"average and number of votes last week: {}|({})\n"
+					"average and number of votes this week: {}|({})\n\n"
+					"active users last week: {}\n"
+					"active users this week: {}\n"
+					)

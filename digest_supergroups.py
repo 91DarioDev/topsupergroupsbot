@@ -15,6 +15,7 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 import database
+import get_lang
 
 def weekly_groups_digest(bot, job):
 	query = """
@@ -147,8 +148,9 @@ def weekly_groups_digest(bot, job):
 		"""
 	last_week_active_users = database.query_r(query)
 
-
+	start_in = 0
 	for group in lst:
+		start_in += 0.1
 		group_id = group[0]
 		lang = group[1]
 
@@ -167,47 +169,75 @@ def weekly_groups_digest(bot, job):
 		act_users_old = None
 
 		for i in msgs_this_week:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				msgs_new = i[1]
 				break
 
 		for i in msgs_last_week:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				msgs_old = i[1]
 				break
 
 		for i in members_this_week:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				members_new = i[1]
 				break
 
 		for i in members_last_week:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				members_old = i[1]
 				break
 
 		for i in this_week_votes_avg:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				sum_v_new = i[1]
 				avg_v_new = i[2]
 				break
 
 
 		for i in last_week_votes_avg:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				sum_v_old = i[1]
 				avg_v_old = i[2]
 				break
 
 		for i in this_week_active_users:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				act_users_new = i[1]
 				break
 
 		for i in last_week_votes_avg:
-			if i[0] = group_id:
+			if i[0] == group_id:
 				act_users_old = i[1]
 				break
 
 
-#weekly_groups_digest(None, None)
+		text = get_lang.get_string(lang, "weekly_groups_digest").format(
+					msgs_old, msgs_new, members_old, members_new, 
+					avg_v_old, sum_v_old, avg_v_new, sum_v_new,
+					act_users_old, act_users_new
+			)
+		reply_markup = None
+		#schedule send
+		job.job_queue.run_once(send_one_by_one, start_in, context=[group_id, text, reply_markup])
+		print(text)
+
+
+
+
+def send_one_by_one(bot, job):
+	group_id = job.context[0]
+	message = job.context[1]
+	reply_markup = job.context[2]
+	try:
+		bot.send_message(chat_id=user_id, 
+						text=message, 
+						reply_markup=reply_markup,
+						parse_mode='HTML')
+	except Unauthorized:
+		query = "UPDATE supergroups SET bot_inside = FALSE WHERE user_id = %s"
+		database.query_w(query, group_id)
+	except Exception as e:
+		print("{} exception is send_one_by_one group diges".format(e))
+
+weekly_groups_digest(None, None)

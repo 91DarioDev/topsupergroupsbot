@@ -233,9 +233,11 @@ def set_vote(bot, query):
 	text = "{}\n\n{}\n{}".format(query.message.text, alert, constants.EMOJI_STAR*vote)
 	query.edit_message_text(text=text)
 
+
 def current_page(bot, query):
 	lang = utils.get_db_lang(query.from_user.id)
 	query.answer(get_lang.get_string(lang, "already_this_page"), show_alert=True)
+
 
 @utils.admin_button_only
 def current_page_admin(bot, query):

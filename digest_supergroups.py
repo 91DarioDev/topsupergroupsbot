@@ -147,4 +147,67 @@ def weekly_groups_digest(bot, job):
 		"""
 	last_week_active_users = database.query_r(query)
 
+
+	for group in lst:
+		group_id = group[0]
+		lang = group[1]
+
+		msgs_new = None
+		msgs_old = None
+
+		members_new = None
+		members_old = None
+
+		sum_v_new = None
+		avg_v_new = None
+		sum_v_old = None
+		avg_v_old = None
+
+		act_users_new = None
+		act_users_old = None
+
+		for i in msgs_this_week:
+			if i[0] = group_id:
+				msgs_new = i[1]
+				break
+
+		for i in msgs_last_week:
+			if i[0] = group_id:
+				msgs_old = i[1]
+				break
+
+		for i in members_this_week:
+			if i[0] = group_id:
+				members_new = i[1]
+				break
+
+		for i in members_last_week:
+			if i[0] = group_id:
+				members_old = i[1]
+				break
+
+		for i in this_week_votes_avg:
+			if i[0] = group_id:
+				sum_v_new = i[1]
+				avg_v_new = i[2]
+				break
+
+
+		for i in last_week_votes_avg:
+			if i[0] = group_id:
+				sum_v_old = i[1]
+				avg_v_old = i[2]
+				break
+
+		for i in this_week_active_users:
+			if i[0] = group_id:
+				act_users_new = i[1]
+				break
+
+		for i in last_week_votes_avg:
+			if i[0] = group_id:
+				act_users_old = i[1]
+				break
+
+
 #weekly_groups_digest(None, None)

@@ -242,6 +242,7 @@ def ban_group(bot, update, args):
 	for admin in admins:
 		if admin.status == 'creator':
 			creator = admin
+			break
 
 	extract = database.query_wr(query, days, reason, group_id, one=True)
 	lang = extract[0]

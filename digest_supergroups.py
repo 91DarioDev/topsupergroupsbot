@@ -16,6 +16,14 @@
 
 import database
 import get_lang
+import keyboards
+from telegram.error import (TelegramError, 
+							Unauthorized, 
+							BadRequest, 
+							TimedOut, 
+							ChatMigrated, 
+							NetworkError)
+
 
 def weekly_groups_digest(bot, job):
 	query = """
@@ -217,20 +225,20 @@ def weekly_groups_digest(bot, job):
 					avg_v_old, sum_v_old, avg_v_new, sum_v_new,
 					act_users_old, act_users_new
 			)
-		reply_markup = None
+
+		reply_markup = keyboards.disable_group_weekly_digest_kb(lang)
 		#schedule send
-		job.job_queue.run_once(send_one_by_one, start_in, context=[group_id, text, reply_markup])
-		print(text)
+		job.job_queue.run_once(send_one_by_one_weekly_group_digest, 
+								start_in, 
+								context=[group_id, text, reply_markup])
 
 
-
-
-def send_one_by_one(bot, job):
+def send_one_by_one_weekly_group_digest(bot, job):
 	group_id = job.context[0]
 	message = job.context[1]
 	reply_markup = job.context[2]
 	try:
-		bot.send_message(chat_id=user_id, 
+		bot.send_message(chat_id=group_id, 
 						text=message, 
 						reply_markup=reply_markup,
 						parse_mode='HTML')
@@ -240,4 +248,4 @@ def send_one_by_one(bot, job):
 	except Exception as e:
 		print("{} exception is send_one_by_one group diges".format(e))
 
-weekly_groups_digest(None, None)
+#weekly_groups_digest(None, None)

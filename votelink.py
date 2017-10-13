@@ -24,6 +24,7 @@ def create_vote_link(group_id):
 	schema = "https://t.me/{}?start=vote{}".format(constants.GET_ME.username, group_id)
 	return schema
 
+
 def send_vote_by_link(bot, update, first_arg):
 	group_id = first_arg.replace("vote", "")
 	user_id = update.message.from_user.id

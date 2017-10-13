@@ -26,20 +26,27 @@ import supported_langs
 
 def start(bot, update, args):
 	if len(args) == 0:
-		if update.message.chat.type != "private":
-			return
-		start_no_params(bot, update)
+		if update.message.chat.type == "private":
+			start_no_params(bot, update)
 		return
 	first_arg = args[0]
 	if first_arg.startswith("vote"):
-		votelink.send_vote_by_link(bot, update, first_arg)
+		if update.message.chat.type == "private":
+			votelink.send_vote_by_link(bot, update, first_arg)
+		return
+	elif first_arg == "groups_working":
+		if update.message.chat.type == "private":
+			send_groups_working(bot, update)
+		return
+
 
 
 def start_no_params(bot, update):
 	guessed_lang = utils.guessed_user_lang(bot, update)
 	query = "UPDATE users SET lang = %s WHERE user_id = %s"
 	database.query_w(query, guessed_lang, update.message.from_user.id)
-	text = get_lang.get_string(guessed_lang, "help_message")
+	group_working_link = "https://t.me/{}?start=groups_working".format(constants.GET_ME.username)
+	text = get_lang.get_string(guessed_lang, "help_message").format(group_working_link)
 	update.message.reply_text(text, parse_mode="HTML")
 
 
@@ -249,5 +256,12 @@ def leaderboard(bot, update):
 @utils.private_only
 def help(bot, update):
 	lang = utils.get_db_lang(update.message.from_user.id)
-	text = get_lang.get_string(lang, "help_message")
+	group_working_link = "https://t.me/{}?start=groups_working".format(constants.GET_ME.username)
+	text = get_lang.get_string(lang, "help_message").format(group_working_link)
 	update.message.reply_text(text=text, parse_mode="HTML")
+
+
+def send_groups_working(bot, update):
+	lang = utils.get_db_lang(update.message.from_user.id)
+	text = get_lang.get_string(lang, "groups_working")
+	update.message.reply_text(text=text)

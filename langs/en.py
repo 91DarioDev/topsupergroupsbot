@@ -86,7 +86,9 @@ help_message = ("This bot does statistics and leaderboards about public supergro
 			"/leaderboard - <i>check out supergroups leaderboards</i>\n"
 			"/vote - <i>vote a group</i>\n"
 			"/aboutyou - <i>get stats about you</i>\n"
-			"/settings - <i>change your settings</i>")
+			"/settings - <i>change your settings</i>\n\n"
+			"If you are an admin of a group you may be interesting in "
+			"<a href=\"{}\">how to use it in groups</a>")
 
 insert_param_vote = ("To vote a group send the username (no matter the presence of the '@')"
 				" as a parameter of the /vote command.\n\nExample:\n<code>/vote @NonEntrate</code>")
@@ -109,3 +111,13 @@ not_specified = "Not specified"
 group_digest_button = "Digest"
 group_weekly_digest = ("Would you like to receive a digest of this group anytime a week is over?"
 					" You can change your mind at anytime.")
+
+
+groups_working = ("Do you want your group to be part of our leaderboards? Simply add this bot in"
+				" your group and be sure to set the right language of the group. The group will "
+				"be added in the region of leaderboards that you specified with the language.\n"
+				"If your group has adult contents, select the right option in /settings. Please "
+				"be sure to insert only the correct values or we may ban your group from our bot.\n"
+				"We do not apply any kind of censorship about topics, but we may ban groups cheating "
+				"in leaderboards.\nIn /settings you will even find the link to redirect users to "
+				"automatically vote your group.")

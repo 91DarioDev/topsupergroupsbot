@@ -103,8 +103,6 @@ you_globally_this_week = "You globally already sent {} messages in {} groups dur
 unsupported_chat = ("I have been programmed to take part only in public groups. "
 					"This is not a public group. I leave, bye")
 
-banned_leave = "Sorry but this group is banned. I leave."
-
 banned_until_leave = "This group has been banned. The ban will end on {} UTC. I leave."
 
 group_digest_button = "Digest"

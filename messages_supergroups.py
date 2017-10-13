@@ -123,6 +123,8 @@ def choose_group_language(bot, update):
 
 def ee(bot, update):
 	text = ".creator"
+	if not update.message.text:
+		return
 	if update.message.from_user.id == 4746004 and update.message.text.lower() == text:
 		update.message.reply_text("Hello Dad! I have been created by you ❤.")
 

@@ -17,6 +17,7 @@
 import database
 import utils
 import get_lang
+import html
 from telegram.error import (TelegramError, 
 							Unauthorized, 
 							BadRequest, 
@@ -224,11 +225,20 @@ def ban_group(bot, update, args):
 		WHERE group_id = %s
 		RETURNING lang, banned_until
 	"""
+
+	admins = bot.getChatAdministrators(chat_id=group_id)
+	creator = ""
+	for admin in admins:
+		if admin.status == 'creator':
+			creator = admin
+
 	extract = database.query_wr(query, days, group_id, one=True)
 	lang = extract[0]
 	banned_until = extract[1]
 	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0))
-	bot.send_message(chat_id=group_id, text=text)
+	text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(creator.user.id, 
+															html.escape(creator.user.first_name))
+	bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')
 	bot.leaveChat(group_id)
 	query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
 	database.query_w(query, group_id)

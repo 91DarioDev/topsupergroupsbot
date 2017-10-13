@@ -220,7 +220,6 @@ def ban_group(bot, update, args):
 
 	params = " ".join(args).split(" for ")
 	group_id = params[0]
-	print(group_id)
 	days = int(params[1])
 	try:
 		reason = params[2]
@@ -245,8 +244,10 @@ def ban_group(bot, update, args):
 	extract = database.query_wr(query, days, reason, group_id, one=True)
 	lang = extract[0]
 	banned_until = extract[1]
+	shown_reason = html.escape(reason) if reason is not None else get_lang.get_string(lang, "not_specified")
+	shown_reason = "<code>{}</code>".format(shown_reason)
 	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0), 
-																"<code>"+html.escape(reason)+"</code>")
+															shown_reason)
 	text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(creator.user.id, 
 															html.escape(creator.user.first_name))
 	bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')

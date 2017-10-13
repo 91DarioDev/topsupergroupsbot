@@ -108,9 +108,11 @@ def leave_banned_group(bot, update):
 	extract = database.query_r(query_db, update.message.chat.id, one=True)
 	lang = extract[0]
 	banned_until = extract[1]
-	ban_reason = extract[2]
+	reason = extract[2]
+	shown_reason = html.escape(reason) if reason is not None else get_lang.get_string(lang, "not_specified")
+	shown_reason = "<code>{}</code>".format(shown_reason)
 	text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0),
-														"<code>"+html.escape(ban_reason)+"</code>")
+														shown_reason)
 	update.message.reply_text(text=text, quote=False, parse_mode='HTML')
 	bot.leaveChat(update.message.chat.id)
 	query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"

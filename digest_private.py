@@ -129,7 +129,11 @@ def send_one_by_one(bot, job):
 	message = job.context[1]
 	reply_markup = job.context[2]
 	try:
-		utils.send_message_long(bot, chat_id=user_id, text=message, reply_markup=reply_markup)
+		utils.send_message_long(bot, 
+								chat_id=user_id, 
+								text=message, 
+								reply_markup=reply_markup,
+								disable_notification=True)
 	except Unauthorized:
 		query = "UPDATE users SET bot_blocked = TRUE WHERE user_id = %s"
 		database.query_w(query, user_id)

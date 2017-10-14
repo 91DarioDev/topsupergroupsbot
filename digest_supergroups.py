@@ -30,8 +30,8 @@ from telegram.ext.dispatcher import run_async
 
 @run_async
 def weekly_groups_digest(bot, job):
-	near_interval = '1 days'
-	far_interval = '2 days'
+	near_interval = '7 days'
+	far_interval = '14 days'
 
 	query = """
 		SELECT

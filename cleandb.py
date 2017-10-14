@@ -16,8 +16,11 @@
 
 import database
 
+from telegram.ext.dispatcher import run_async
+
 CLEAN_INTERVAL = '1 month'
 
+@run_async
 def clean_db(bot, job):
 	query = "DELETE FROM messages WHERE message_date < now() - interval %s"
 	database.query_w(query, CLEAN_INTERVAL)

@@ -19,12 +19,15 @@ import database
 from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, 
 							ChatMigrated, NetworkError)
 
+from telegram.ext.dispatcher import run_async
 
 
 INTERVAL = 2
 
 DEADLINE = '5 hours' # so if i restart the bot they are not updated after few time
 
+
+@run_async
 def members_log(bot, job):
 	bulk_list = get_groups_to_log(bot, job) # retrieve groups to update
 	set_bulk(bot, job, bulk_list) # set a bulk one by one with delay

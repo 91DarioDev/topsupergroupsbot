@@ -23,7 +23,7 @@ from collections import OrderedDict
 
 from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, 
 							ChatMigrated, NetworkError)
-
+from telegram.ext.dispatcher import run_async
 
 
 
@@ -39,6 +39,8 @@ def group_extract(lst):
 	final = list(d.items())
 	return final
 
+
+@run_async
 def weekly_own_private(bot, job):
 	interval = '7 days'
 
@@ -124,6 +126,7 @@ def schedule_own_private_digest(bot, job, data):
 
 
 
+@run_async
 def send_one_by_one(bot, job):
 	user_id = job.context[0]
 	message = job.context[1]

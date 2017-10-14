@@ -120,7 +120,11 @@ groups_working = ("Do you want your group to be part of our leaderboards? Simply
 				"be sure to insert only the correct values or we may ban your group from our bot.\n"
 				"We do not apply any kind of censorship about topics, but we may ban groups cheating "
 				"in leaderboards.\nIn /settings you will even find the link to redirect users to "
-				"automatically vote your group.")
+				"automatically vote your group.\n\n"
+				"<b>SUPPORTED COMMANDS IN GROUPS</b>:\n"
+				"/settings - <i>set group settings</i>"
+				"/groupleaderboard - <i>get a message containing leaderboard of users that wrote"
+				"more messages in the group during the current week (UTC)</i>")
 
 weekly_groups_digest = ("Hello! Another week is over. Here there are some stats of this group:\n\n"
 					"sent messages last week: {}\n"

@@ -262,4 +262,4 @@ def help(bot, update):
 def send_groups_working(bot, update):
 	lang = utils.get_db_lang(update.message.from_user.id)
 	text = get_lang.get_string(lang, "groups_working")
-	update.message.reply_text(text=text)
+	update.message.reply_text(text=text, parse_mode='HTML')

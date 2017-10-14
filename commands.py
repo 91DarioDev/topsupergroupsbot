@@ -189,7 +189,7 @@ def aboutyou(bot, update):
 
 	if len(extract) == 0:
 		lang = utils.get_db_lang(user_id)
-		text = get_lang.get.string(lang, "you_inactive_this_week")
+		text = get_lang.get_string(lang, "you_inactive_this_week")
 
 	else:
 		lang = extract[0][5]

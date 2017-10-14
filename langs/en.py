@@ -122,7 +122,7 @@ groups_working = ("Do you want your group to be part of our leaderboards? Simply
 				"in leaderboards.\nIn /settings you will even find the link to redirect users to "
 				"automatically vote your group.\n\n"
 				"<b>SUPPORTED COMMANDS IN GROUPS</b>:\n"
-				"/settings - <i>set group settings</i>"
+				"/settings - <i>set group settings</i>\n"
 				"/groupleaderboard - <i>get a message containing leaderboard of users that wrote"
 				"more messages in the group during the current week (UTC)</i>")
 

@@ -25,8 +25,10 @@ from telegram.error import (TelegramError,
 							TimedOut, 
 							ChatMigrated, 
 							NetworkError)
+from telegram.ext.dispatcher import run_async
 
 
+@run_async
 def weekly_groups_digest(bot, job):
 	near_interval = '1 days'
 	far_interval = '2 days'
@@ -288,6 +290,8 @@ def diff_percent(new, old, lang):
 		percent_s = "—"	
 	return diff_s, percent_s
 
+
+@run_async
 def send_one_by_one_weekly_group_digest(bot, job):
 	group_id = job.context[0]
 	message = job.context[1]

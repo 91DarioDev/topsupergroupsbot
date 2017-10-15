@@ -68,7 +68,7 @@ weekly_own_digest = "Do you want to get anytime a week is over statistic about y
 digest_of_the_week_global = ("Another week is over!\nDuring the last week you globally sent {} messages "
 					"in {} groups. Position: {}\n")
 
-digest_of_the_week_detail = "- {} messages in @{}. Position: {}\n"
+digest_of_the_week_detail = "— {} messages in @{}. Position: {}\n"
 
 generic_leaderboard = ("Choose one of the following order criterias for the leaderboard.\n" 
 					"If you want to be faster next time there are shortcuts for leaderboards:\n\n"

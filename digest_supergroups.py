@@ -111,7 +111,6 @@ def weekly_groups_digest(bot, job):
 	    WHERE last_members.row=1
 		"""
 	members_last_week = database.query_r(query, near_interval)
-	print(members_this_week)
 
 	####################
 	# SUM AND AVG VOTES

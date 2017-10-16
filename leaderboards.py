@@ -45,7 +45,7 @@ def groupleaderboard(bot, update):
 	result = offset_groupleaderboard(lang, group_id, chosen_page=1)
 
 	update.message.reply_text(text=result[0], reply_markup=result[1], 
-				parse_mode=ParseMode.HTML, disable_notification=True)
+							parse_mode=ParseMode.HTML, disable_notification=True)
 
 
 def offset_groupleaderboard(lang, group_id, chosen_page):
@@ -67,8 +67,10 @@ def offset_groupleaderboard(lang, group_id, chosen_page):
 	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
 	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
 
-	reply_markup = keyboards.displayed_pages_kb(pages=list_pages, 
-				chosen_page=chosen_page, lb_type=GROUP_LEADERBOARD)
+	reply_markup = keyboards.displayed_pages_kb(
+			pages=list_pages, 
+			chosen_page=chosen_page, 
+			lb_type=GROUP_LEADERBOARD)
 
 	text = get_lang.get_string(lang, "pre_groupleaderboard")
 	text += "\n\n"
@@ -124,8 +126,11 @@ def offset_leadervote(lang, region, chosen_page):
 	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
 	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
 
-	reply_markup = keyboards.displayed_pages_kb(pages=list_pages, 
-				chosen_page=chosen_page, lb_type=VOTE_LEADERBOARD, region=region)
+	reply_markup = keyboards.displayed_pages_kb(
+			pages=list_pages, 
+			chosen_page=chosen_page, 
+			lb_type=VOTE_LEADERBOARD, 
+			region=region)
 
 	emoji_region = supported_langs.COUNTRY_FLAG[region]
 	text = get_lang.get_string(lang, "pre_leadervote").format(min_reviews, emoji_region)
@@ -185,8 +190,11 @@ def offset_leadermessage(lang, region, chosen_page):
 
 	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
 
-	reply_markup = keyboards.displayed_pages_kb(pages=list_pages, 
-				chosen_page=chosen_page, lb_type=MESSAGE_LEADERBOARD, region=region)
+	reply_markup = keyboards.displayed_pages_kb(
+			pages=list_pages, 
+			chosen_page=chosen_page, 
+			lb_type=MESSAGE_LEADERBOARD, 
+			region=region)
 
 	emoji_region = supported_langs.COUNTRY_FLAG[region]
 	text = get_lang.get_string(lang, "pre_leadermessage").format(emoji_region)
@@ -256,8 +264,11 @@ def offset_leadermember(lang, region, chosen_page):
 
 	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
 
-	reply_markup = keyboards.displayed_pages_kb(pages=list_pages, 
-				chosen_page=chosen_page, lb_type=MEMBER_LEADERBOARD, region=region)
+	reply_markup = keyboards.displayed_pages_kb(
+			pages=list_pages, 
+			chosen_page=chosen_page, 
+			lb_type=MEMBER_LEADERBOARD, 
+			region=region)
 
 	emoji_region = supported_langs.COUNTRY_FLAG[region]
 	text = get_lang.get_string(lang, "pre_leadermember").format(emoji_region)

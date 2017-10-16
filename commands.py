@@ -202,7 +202,7 @@ def aboutyou(bot, update):
 			add_t = get_lang.get_string(lang, "messages_in_groups_position")
 			add_t = add_t.format(
 							utils.sep_l(m_per_group, lang), 
-							utils.sep_l(username, lang), 
+							username, 
 							utils.sep_l(pos_per_group, lang)
 							)
 			text += add_t

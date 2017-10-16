@@ -28,7 +28,7 @@ from telegram.error import (TelegramError,
 from telegram.ext.dispatcher import run_async
 
 
-@run_async
+#@run_async
 def weekly_groups_digest(bot, job):
 	near_interval = '7 days'
 	far_interval = '14 days'
@@ -237,7 +237,7 @@ def weekly_groups_digest(bot, job):
 					diff_members, percent_members, 
 					utils.sep(avg_v_old, lang), utils.sep(sum_v_old, lang), 
 					utils.sep(avg_v_new, lang), utils.sep(sum_v_new, lang),
-					utils.sep(act_users_old), utils.sep(act_users_new),
+					utils.sep(act_users_old, lang), utils.sep(act_users_new, lang),
 					diff_act, percent_act
 			)
 
@@ -268,7 +268,7 @@ def weekly_groups_digest(bot, job):
 																count,
 																user[0],
 																html.escape(user[2]),
-																utils.sep(user[1])
+																utils.sep(user[1], lang)
 																)
 
 

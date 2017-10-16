@@ -77,8 +77,12 @@ def offset_groupleaderboard(lang, group_id, chosen_page):
 	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
 	for user in extract_lim:
 		offset += 1 # for before IT numeration
-		text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(offset, user[0], 
-																	html.escape(user[2]), user[1])
+		text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
+																	offset, 
+																	user[0], 
+																	html.escape(user[2]), 
+																	utils.sep_l(user[1], lang)
+																	)
 	return text, reply_markup
 
 
@@ -132,8 +136,16 @@ def offset_leadervote(lang, region, chosen_page):
 		nsfw = constants.EMOJI_NSFW if group[5] is True else ""
 		new = constants.EMOJI_NEW if (group[6] + datetime.timedelta(weeks=1)) > datetime.datetime.now() else ""
 		offset += 1 # for before IT numeration
-		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(offset, nsfw, 
-				group[2], html.escape(group[1]), group[4], constants.EMOJI_STAR, group[3], new)
+		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(
+																			offset, 
+																			nsfw, 
+																			group[2], 
+																			html.escape(group[1]), 
+																			group[4], 
+																			constants.EMOJI_STAR, 
+																			utils.sep_l(group[3], lang),
+																			new
+																			)
 	return text, reply_markup
 
 
@@ -186,8 +198,14 @@ def offset_leadermessage(lang, region, chosen_page):
 		nsfw = constants.EMOJI_NSFW if group[4] is True else ""
 		new = constants.EMOJI_NEW if (group[5] + datetime.timedelta(weeks=1)) > datetime.datetime.now() else ""
 		offset += 1 # for before IT numeration
-		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(offset, nsfw, 
-				group[3], html.escape(group[2]), group[1], new)
+		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
+																		offset, 
+																		nsfw, 
+																		group[3], 
+																		html.escape(group[2]), 
+																		utils.sep_l(group[1], lang), 
+																		new
+																		)
 	return text, reply_markup
 
 
@@ -251,6 +269,11 @@ def offset_leadermember(lang, region, chosen_page):
 		nsfw = constants.EMOJI_NSFW if group[6] is True else ""
 		new = constants.EMOJI_NEW if (group[5] + datetime.timedelta(weeks=1)) > datetime.datetime.now() else ""
 		offset += 1 # for before IT numeration
-		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(offset, nsfw, 
-				group[4], html.escape(group[3]), group[1], new)
+		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
+			offset, 
+			nsfw, 
+			group[4], 
+			html.escape(group[3]), 
+			utils.sep(group[1], lang), 
+			new)
 	return text, reply_markup

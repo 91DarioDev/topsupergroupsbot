@@ -200,7 +200,11 @@ def aboutyou(bot, update):
 			m_per_group = i[3]
 			pos_per_group = i[4]
 			add_t = get_lang.get_string(lang, "messages_in_groups_position")
-			add_t = add_t.format(m_per_group, username, pos_per_group)
+			add_t = add_t.format(
+							utils.sep_l(m_per_group, lang), 
+							utils.sep_l(username, lang), 
+							utils.sep_l(pos_per_group, lang)
+							)
 			text += add_t
 		text += about_you_world(user_id, lang)
 
@@ -235,7 +239,11 @@ def about_you_world(user_id, lang):
 	extract = database.query_r(query, user_id, one=True)
 
 	text = "\n"+get_lang.get_string(lang, "you_globally_this_week")
-	text = text.format(extract[0], extract[1], extract[2])
+	text = text.format(
+						utils.sep_l(extract[0], lang), 
+						utils.sep_l(extract[1], lang), 
+						utils.sep_l(extract[2], lang)
+						)
 	return text
 
 

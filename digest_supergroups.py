@@ -28,7 +28,7 @@ from telegram.error import (TelegramError,
 from telegram.ext.dispatcher import run_async
 
 
-#@run_async
+@run_async
 def weekly_groups_digest(bot, job):
 	near_interval = '7 days'
 	far_interval = '14 days'
@@ -231,13 +231,13 @@ def weekly_groups_digest(bot, job):
 		diff_members, percent_members = diff_percent(members_new, members_old, lang) 
 		diff_act, percent_act = diff_percent(act_users_new, act_users_old, lang)
 		text = get_lang.get_string(lang, "weekly_groups_digest").format(
-					utils.sep(msgs_old, lang), utils.sep(msgs_new, lang), 
+					utils.sep_l(msgs_old, lang), utils.sep_l(msgs_new, lang), 
 					diff_msg, percent_msg,
-					utils.sep(members_old, lang), utils.sep(members_new, lang), 
+					utils.sep_l(members_old, lang), utils.sep_l(members_new, lang), 
 					diff_members, percent_members, 
-					utils.sep(avg_v_old, lang), utils.sep(sum_v_old, lang), 
-					utils.sep(avg_v_new, lang), utils.sep(sum_v_new, lang),
-					utils.sep(act_users_old, lang), utils.sep(act_users_new, lang),
+					utils.sep_l(avg_v_old, lang), utils.sep_l(sum_v_old, lang), 
+					utils.sep_l(avg_v_new, lang), utils.sep_l(sum_v_new, lang),
+					utils.sep_l(act_users_old, lang), utils.sep_l(act_users_new, lang),
 					diff_act, percent_act
 			)
 
@@ -268,7 +268,7 @@ def weekly_groups_digest(bot, job):
 																count,
 																user[0],
 																html.escape(user[2]),
-																utils.sep(user[1], lang)
+																utils.sep_l(user[1], lang)
 																)
 
 
@@ -281,10 +281,10 @@ def weekly_groups_digest(bot, job):
 
 def diff_percent(new, old, lang):
 	diff = new - old
-	diff_s = utils.sep(diff, lang) if diff < 0 else "+"+utils.sep(diff, lang)
+	diff_s = utils.sep_l(diff, lang) if diff < 0 else "+"+utils.sep_l(diff, lang)
 	try:
 		percent = diff*100/old
-		percent_s = (utils.sep(percent, lang) if percent < 0 else "+"+utils.sep(percent, lang))+"%"
+		percent_s = (utils.sep_l(percent, lang) if percent < 0 else "+"+utils.sep_l(percent, lang))+"%"
 	except ZeroDivisionError:
 		percent_s = "—"	
 	return diff_s, percent_s

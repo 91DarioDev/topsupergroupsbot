@@ -30,7 +30,10 @@ def leave_unsupported_chat(bot, update):
 			and update.message.chat.username is None):
 		query = "SELECT lang FROM supergroups WHERE group_id = %s"
 		extract = database.query_r(query, update.message.chat.id, one=True)
-		lang = extract[0]
+		if extract is None:
+			lang = 'en'
+		else:
+			lang = extract[0]
 		text = get_lang.get_string(lang, "unsupported_chat")
 		update.message.reply_text(text=text, quote=False)
 		bot.leaveChat(update.message.chat.id)

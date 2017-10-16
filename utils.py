@@ -19,10 +19,12 @@ import constants
 import time
 import get_lang
 import database
-import locale
+import babel
 from config import config
 from functools import wraps
 from telegram import constants as ptb_consts
+
+from babel.numbers import format_decimal
 
 
 
@@ -180,14 +182,21 @@ def guessed_user_lang(bot, update):
 		return "en"
 
 
-def sep(num, lang='en', none_is_zero=False):
+
+def sep(num, none_is_zero=False):
 	if num is None:
-		if none_is_zero is False:
-			return None
-		else:
-			return 0
+		return 0 if none_is_zero is False else None
+	return "{:,}".format(num)
+
+
+
+
+def sep_l(num, locale='en', none_is_zero=False):
+	if num is None:
+		return None if none_is_zero is False else 0
+	if locale is None:
+		return "{:,}".format(num)
 	try:
-		locale.setlocale(locale.LC_ALL, lang)
-	except locale.Error:
-		locale.setlocale(locale.LC_ALL, 'en')
-	return locale.format("%d", num, grouping=True)
+		return babel.numbers.format_decimal(num, locale=locale)
+	except babel.core.UnknownLocaleError:
+		return "{:,}".format(num)

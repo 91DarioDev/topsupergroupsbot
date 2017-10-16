@@ -54,7 +54,7 @@ choose_region = ("Choose you region. It will be the default language filter when
 pre_leadervote = "Top supergroups ordered by average of votes. Having at least {} votes.\nRegion: {}"
 pre_leadermessage = "Top supergroups ordered by amount of sent messages during this week (UTC).\nRegion: {}"
 pre_groupleaderboard = "Top users ordered by more messages sent during this week (UTC)."
-pre_leadermember = "Top supergroups ordered by amount of members (UTC).\nRegion: {}"
+pre_leadermember = "Top supergroups ordered by amount of members.\nRegion: {}"
 
 
 private_lang_button = "Language"

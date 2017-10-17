@@ -1,0 +1,5 @@
+redis
+Babel
+python-telegram-bot
+psycopg2
+

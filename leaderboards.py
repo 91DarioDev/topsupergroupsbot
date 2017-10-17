@@ -285,6 +285,6 @@ def offset_leadermember(lang, region, chosen_page):
 			nsfw, 
 			group[4], 
 			html.escape(group[3]), 
-			utils.sep(group[1], lang), 
+			utils.sep_l(group[1], lang), 
 			new)
 	return text, reply_markup

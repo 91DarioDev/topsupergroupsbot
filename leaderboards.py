@@ -115,7 +115,7 @@ def offset_leadervote(lang, region, chosen_page):
 		s_ref.title, 
 		s_ref.username, 
 		COUNT(vote) AS amount, 
-		ROUND(AVG(vote), 1) AS average,
+		ROUND(AVG(vote), 1)::float AS average,
 		s.nsfw, 
 		extract(epoch from s.joined_the_bot at time zone 'utc') AS dt
 	FROM votes AS v
@@ -261,7 +261,7 @@ def offset_leadermember(lang, region, chosen_page):
 		supergroups.lang, 
 		supergroups_ref.title, 
 		supergroups_ref.username, 
-		extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+		extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
 		supergroups.nsfw
 	FROM
 	-- Window function to get only de last_date:
@@ -271,7 +271,7 @@ def offset_leadermember(lang, region, chosen_page):
 	    ORDER BY updated_date DESC) AS row FROM members) AS last_members
 	    WHERE last_members.row=1) AS members
 	-- Joins with other tables
-	LEFT JOIN supergroups 
+	LEFT JOIN supergroups
 	ON members.group_id = supergroups.group_id
 	LEFT JOIN supergroups_ref 
 	ON supergroups.group_id = supergroups_ref.group_id

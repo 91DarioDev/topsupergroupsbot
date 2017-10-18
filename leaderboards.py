@@ -115,9 +115,10 @@ def offset_leadervote(lang, region, chosen_page):
 	LEFT OUTER JOIN supergroups AS s
 	ON s.group_id = v.group_id
 	GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, s.joined_the_bot, s.banned_until, s.lang
-	HAVING COUNT(vote) >= %s 
-		AND (s.banned_until IS NULL OR s.banned_until < now()) 
+	HAVING 
+		(s.banned_until IS NULL OR s.banned_until < now()) 
 		AND s.lang = %s
+		AND COUNT(vote) >= %s 
 	ORDER BY average DESC, amount DESC
 	"""
 
@@ -253,7 +254,7 @@ def offset_leadermember(lang, region, chosen_page):
 	LEFT JOIN supergroups_ref 
 	ON supergroups.group_id = supergroups_ref.group_id
 	WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
-	AND lang = %s
+		AND lang = %s
 	ORDER BY members.amount DESC
 	"""
 

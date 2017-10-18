@@ -183,4 +183,19 @@ def create_db():
 
 
 
+#    _         _         
+#   (_)_ _  __| |_____ __
+#   | | ' \/ _` / -_) \ /
+#   |_|_||_\__,_\___/_\_\
+#     
+
+
+
+def create_index():
+	query = "CREATE INDEX IF NOT EXISTS members_date_index ON members(updated_date)"
+	query_w(query)
+
+
+
 create_db()
+create_index()

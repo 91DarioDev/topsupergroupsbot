@@ -84,7 +84,7 @@ def callback_query(bot, update):
 		private_your_own_digest(bot, query)
 
 	elif query.data == "private_groups_digest":
-		private_groups_diget(bot, query)
+		private_groups_digest(bot, query)
 
 	elif query.data.startswith("set_weekly_own_digest"):
 		set_weekly_own_digest(bot, query)
@@ -375,7 +375,7 @@ def	private_your_own_digest(bot, query):
 	query.edit_message_text(text=text, reply_markup=reply_markup)
 
 
-def	private_groups_diget(bot, query):
+def	private_groups_digest(bot, query):
 	query.answer("comming soon", show_alert=True)
 
 

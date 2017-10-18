@@ -192,9 +192,7 @@ def create_db():
 
 
 def create_index():
-	query = "CREATE INDEX IF NOT EXISTS members_date_index ON members(updated_date)"
-	query_w(query)
-
+	pass
 
 
 create_db()

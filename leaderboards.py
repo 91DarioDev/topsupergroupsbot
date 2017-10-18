@@ -21,9 +21,11 @@ import keyboards
 import constants
 import get_lang
 import supported_langs
+import cached_leaderboards
 
 import datetime
 import html
+import time
 
 from telegram import ParseMode
 
@@ -33,6 +35,8 @@ VOTE_LEADERBOARD = 'vl'
 MESSAGE_LEADERBOARD = 'ml'
 MEMBER_LEADERBOARD = 'mml'
 
+
+NEW_INTERVAL = 60*60*24*7
 
 
 @utils.admin_command_only
@@ -80,11 +84,11 @@ def offset_groupleaderboard(lang, group_id, chosen_page):
 	for user in extract_lim:
 		offset += 1 # for before IT numeration
 		text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
-																	offset, 
-																	user[0], 
-																	html.escape(user[2]), 
-																	utils.sep_l(user[1], lang)
-																	)
+				offset, 
+				user[0], 
+				html.escape(user[2]), 
+				utils.sep_l(user[1], lang)
+				)
 	return text, reply_markup
 
 
@@ -106,15 +110,20 @@ def offset_leadervote(lang, region, chosen_page):
 	min_reviews = 1
 
 	query = """
-	SELECT v.group_id, s_ref.title, s_ref.username, 
-		COUNT(vote) AS amount, ROUND(AVG(vote), 1) AS average,
-		s.nsfw, s.joined_the_bot
+	SELECT 
+		v.group_id, 
+		s_ref.title, 
+		s_ref.username, 
+		COUNT(vote) AS amount, 
+		ROUND(AVG(vote), 1) AS average,
+		s.nsfw, 
+		extract(epoch from s.joined_the_bot at time zone 'utc') AS dt
 	FROM votes AS v
 	LEFT OUTER JOIN supergroups_ref AS s_ref
 	ON s_ref.group_id = v.group_id
 	LEFT OUTER JOIN supergroups AS s
 	ON s.group_id = v.group_id
-	GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, s.joined_the_bot, s.banned_until, s.lang
+	GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
 	HAVING 
 		(s.banned_until IS NULL OR s.banned_until < now()) 
 		AND s.lang = %s
@@ -122,7 +131,11 @@ def offset_leadervote(lang, region, chosen_page):
 	ORDER BY average DESC, amount DESC
 	"""
 
-	extract = database.query_r(query, min_reviews, region)
+	extract = cached_leaderboards.get_leaderboard(name_type=VOTE_LEADERBOARD, region=region)
+	if extract is None:
+		extract = database.query_r(query,region, min_reviews)
+		cached_leaderboards.set_leaderboard(VOTE_LEADERBOARD, region, extract)
+
 	num_of_pages = pages.get_total_pages(extract)
 	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
 	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
@@ -140,18 +153,18 @@ def offset_leadervote(lang, region, chosen_page):
 	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
 	for group in extract_lim:
 		nsfw = constants.EMOJI_NSFW if group[5] is True else ""
-		new = constants.EMOJI_NEW if (group[6] + datetime.timedelta(weeks=1)) > datetime.datetime.now() else ""
+		new = constants.EMOJI_NEW if (group[6]+NEW_INTERVAL > time.time()) else ""
 		offset += 1 # for before IT numeration
 		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(
-																			offset, 
-																			nsfw, 
-																			group[2], 
-																			html.escape(group[1]), 
-																			group[4], 
-																			constants.EMOJI_STAR, 
-																			utils.sep_l(group[3], lang),
-																			new
-																			)
+				offset, 
+				nsfw, 
+				group[2], 
+				html.escape(group[1]), 
+				group[4], 
+				constants.EMOJI_STAR, 
+				utils.sep_l(group[3], lang),
+				new
+				)
 	return text, reply_markup
 
 
@@ -170,9 +183,13 @@ def leadermessage(bot, update):
 
 def offset_leadermessage(lang, region, chosen_page):
 	query = """
-	SELECT m.group_id, COUNT (m.group_id) AS leaderboard,
-		s_ref.title, s_ref.username,
-		s.nsfw, s.joined_the_bot
+	SELECT 
+		m.group_id, 
+		COUNT (m.group_id) AS leaderboard,
+		s_ref.title, 
+		s_ref.username,
+		s.nsfw, 
+		extract(epoch from s.joined_the_bot at time zone 'utc') AS dt
 	FROM messages AS m
 	LEFT OUTER JOIN supergroups_ref AS s_ref
 	ON s_ref.group_id = m.group_id
@@ -181,11 +198,16 @@ def offset_leadermessage(lang, region, chosen_page):
 	WHERE m.message_date > date_trunc('week', now())
 		AND (s.banned_until IS NULL OR s.banned_until < now()) 
 		AND s.lang = %s
-	GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, s.joined_the_bot, s.banned_until 
+	GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until 
 	ORDER BY leaderboard DESC
 	"""
 
-	extract = database.query_r(query, region)
+	extract = cached_leaderboards.get_leaderboard(name_type=MESSAGE_LEADERBOARD, region=region)
+	if extract is None:
+		extract = database.query_r(query, region)
+		cached_leaderboards.set_leaderboard(MESSAGE_LEADERBOARD, region, extract)
+
+	
 	num_of_pages = pages.get_total_pages(extract)
 	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
 
@@ -205,16 +227,16 @@ def offset_leadermessage(lang, region, chosen_page):
 	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
 	for group in extract_lim:
 		nsfw = constants.EMOJI_NSFW if group[4] is True else ""
-		new = constants.EMOJI_NEW if (group[5] + datetime.timedelta(weeks=1)) > datetime.datetime.now() else ""
+		new = constants.EMOJI_NEW if (group[5]+NEW_INTERVAL) > time.time() else ""
 		offset += 1 # for before IT numeration
 		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
-																		offset, 
-																		nsfw, 
-																		group[3], 
-																		html.escape(group[2]), 
-																		utils.sep_l(group[1], lang), 
-																		new
-																		)
+				offset, 
+				nsfw, 
+				group[3], 
+				html.escape(group[2]), 
+				utils.sep_l(group[1], lang), 
+				new
+				)
 	return text, reply_markup
 
 
@@ -239,7 +261,7 @@ def offset_leadermember(lang, region, chosen_page):
 		supergroups.lang, 
 		supergroups_ref.title, 
 		supergroups_ref.username, 
-		supergroups.joined_the_bot,
+		extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
 		supergroups.nsfw
 	FROM
 	-- Window function to get only de last_date:
@@ -258,8 +280,11 @@ def offset_leadermember(lang, region, chosen_page):
 	ORDER BY members.amount DESC
 	"""
 
-	extract = database.query_r(query, region)
-
+	extract = cached_leaderboards.get_leaderboard(name_type=MEMBER_LEADERBOARD, region=region)
+	if extract is None:
+		extract = database.query_r(query, region)
+		cached_leaderboards.set_leaderboard(MEMBER_LEADERBOARD, region, extract)
+		
 	num_of_pages = pages.get_total_pages(extract)
 	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
 
@@ -279,7 +304,7 @@ def offset_leadermember(lang, region, chosen_page):
 	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
 	for group in extract_lim:
 		nsfw = constants.EMOJI_NSFW if group[6] is True else ""
-		new = constants.EMOJI_NEW if (group[5] + datetime.timedelta(weeks=1)) > datetime.datetime.now() else ""
+		new = constants.EMOJI_NEW if (group[5]+NEW_INTERVAL) > time.time() else ""
 		offset += 1 # for before IT numeration
 		text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
 			offset, 

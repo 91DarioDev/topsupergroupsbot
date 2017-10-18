@@ -182,6 +182,7 @@ def vote_link(bot, query):
 	text = get_lang.get_string(lang, "here_group_vote_link")
 	text += "\n\n{}".format(votelink.create_vote_link(group_id))
 	reply_markup = keyboards.vote_link_kb(lang)
+	query.answer()
 	query.edit_message_text(text=text, reply_markup=reply_markup)
 
 
@@ -208,6 +209,7 @@ def set_weekly_group_digest(bot, query):
 	extract = database.query_wr(query_db, value, query.message.chat.id)
 	lang = extract[0][0]
 	reply_markup = keyboards.weekly_group_digest_kb(lang, value)
+	query.answer()
 	query.message.edit_reply_markup(reply_markup=reply_markup)
 
 
@@ -266,6 +268,7 @@ def lbpage(bot, query):
 		lbpage_ml(bot, query, page, region)
 	elif lb_type == leaderboards.MEMBER_LEADERBOARD:
 		lbpage_mml(bot, query, page, region)
+	query.answer()
 
 
 @utils.admin_button_only
@@ -383,6 +386,7 @@ def set_weekly_own_digest(bot, query):
 	extract = database.query_wr(query_db, value, query.from_user.id)
 	lang = extract[0][0]
 	reply_markup = keyboards.weekly_own_digest_kb(lang, value)
+	query.answer()
 	query.message.edit_reply_markup(reply_markup=reply_markup)
 
 

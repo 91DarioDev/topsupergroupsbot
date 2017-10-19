@@ -81,7 +81,7 @@ by_members = "Per membri"
 by_messages = "Per messaggi"
 by_votes = "Per voti"
 
-help_message = ("Questo bot fa statistiche e classifiche di gruppi pubblici e i loro utenti.\n"
+help_message = ("Questo bot fa statistiche e classifiche di gruppi pubblici e dei loro utenti.\n"
 			"Questi sono i comandi che puoi usare:\n\n"
 			"/leaderboard - <i>guarda classifiche dei gruppi</i>\n"
 			"/vote - <i>vota un gruppo</i>\n"

@@ -238,8 +238,7 @@ def weekly_groups_digest(bot, job):
 					utils.sep_l(avg_v_old, lang), utils.sep_l(sum_v_old, lang), 
 					utils.sep_l(avg_v_new, lang), utils.sep_l(sum_v_new, lang),
 					utils.sep_l(act_users_old, lang), utils.sep_l(act_users_new, lang),
-					diff_act, percent_act
-			)
+					diff_act, percent_act)
 
 
 
@@ -265,18 +264,20 @@ def weekly_groups_digest(bot, job):
 		for user in top_users_of_the_group:
 			count += 1
 			text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
-																count,
-																user[0],
-																html.escape(user[2]),
-																utils.sep_l(user[1], lang)
-																)
+					count,
+					user[0],
+					html.escape(user[2]),
+					utils.sep_l(user[1], lang)
+					)
 
 
 		reply_markup = keyboards.disable_group_weekly_digest_kb(lang)
 		#schedule send
-		job.job_queue.run_once(send_one_by_one_weekly_group_digest, 
-								start_in, 
-								context=[group_id, text, reply_markup])
+		job.job_queue.run_once(
+				send_one_by_one_weekly_group_digest, 
+				start_in, 
+				context=[group_id, text, reply_markup]
+				)
 
 
 def diff_percent(new, old, lang):

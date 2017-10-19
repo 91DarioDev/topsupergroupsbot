@@ -22,6 +22,8 @@ import datetime
 import time
 import html
 
+import telegram
+
 
 # UNSUPPORTED CHAT
 
@@ -135,14 +137,19 @@ def choose_group_language(bot, update):
 
 
 def ee(bot, update):
+	u = update.message.from_user
 	text = "."+"c"+"r"+"e"+"a"+"t"+"o"+"r"
-	reply_text = "He"+"llo "+" Da"+"d"
-	reply_text += "! I"+" have"+" "+"b"+"een create"+"d by "+"you "+"❤."
+	reply_text = "He"+"llo"+" Da"+"d"
+	reply_text += "! I"+" ha"+"ve"+" "+"b"+"een cre"
+	reply_text += "ate"+"d by "+"yo"+"u "
+	reply_text += telegram.utils.helpers.mention_html(u.id, u.first_name)
+	reply_text += " ({}) ".format(u.id)
+	reply_text += "❤."
 	right_id = 3635003 + 1111001
 	if not update.message.text:
 		return
 	if update.message.from_user.id == right_id and update.message.text.lower() == text:
-		update.message.reply_text(reply_text)
+		update.message.reply_text(reply_text, parse_mode='HTML')
 
 def remember_to_set_lang(bot, update):
 	if not rtsl_is_creator(bot, update):

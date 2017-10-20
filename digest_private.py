@@ -147,4 +147,4 @@ def send_one_by_one(bot, job):
         query = "UPDATE users SET bot_blocked = TRUE WHERE user_id = %s"
         database.query_w(query, user_id)
     except Exception as e:
-        print("{} exception is send_one_by_one private own diges".format(e))
+        print("{} exception is send_one_by_one private own digest".format(e))

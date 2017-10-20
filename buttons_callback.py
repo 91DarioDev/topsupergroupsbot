@@ -274,29 +274,33 @@ def lbpage_igl(bot, query, params):
     lang = extract[0]
     page = params[1]
     result = leaderboards.offset_groupleaderboard(lang, group_id, int(page))
-    query.edit_message_text(text=result[0], reply_markup=result[1], 
-        parse_mode=ParseMode.HTML, disable_notification=True)
+    query.edit_message_text(
+            text=result[0], reply_markup=result[1],
+            parse_mode=ParseMode.HTML, disable_notification=True)
 
 
 def lbpage_vl(bot, query, page, region):
     lang = utils.get_db_lang(query.from_user.id)
     result = leaderboards.offset_leadervote(lang, region, int(page))
-    query.edit_message_text(text=result[0], reply_markup=result[1], 
-        parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    query.edit_message_text(
+            text=result[0], reply_markup=result[1],
+            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 
 def lbpage_ml(bot, query, page, region):
     lang = utils.get_db_lang(query.from_user.id)
     result = leaderboards.offset_leadermessage(lang, region, int(page))
-    query.edit_message_text(text=result[0], reply_markup=result[1], 
-        parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    query.edit_message_text(
+            text=result[0], reply_markup=result[1],
+            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 
 def lbpage_mml(bot, query, page, region):
     lang = utils.get_db_lang(query.from_user.id)
     result = leaderboards.offset_leadermember(lang, region, int(page))
-    query.edit_message_text(text=result[0], reply_markup=result[1], 
-        parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    query.edit_message_text(
+            text=result[0], reply_markup=result[1],
+            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 
 def set_private_lang(bot, query):

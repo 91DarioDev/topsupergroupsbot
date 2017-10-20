@@ -24,6 +24,7 @@ import messages_supergroups
 import get_lang
 import supported_langs
 
+
 def start(bot, update, args):
     if len(args) == 0:
         if update.message.chat.type == "private":
@@ -35,7 +36,6 @@ def start(bot, update, args):
     elif first_arg == "groups_working":
         send_groups_working(bot, update)
         return
-
 
 
 def start_no_params(bot, update):
@@ -52,7 +52,6 @@ def settings(bot, update):
         settings_private(bot, update)
     elif update.message.chat.type in ['group', 'supergroup']:
         settings_group(bot, update)
-
 
 
 @utils.private_only
@@ -102,13 +101,11 @@ def vote(bot, update, args):
     update.message.reply_text(text=text, reply_markup=reply_markup)
 
 
-
 def settings_private(bot, update):
     lang = utils.get_db_lang(update.message.from_user.id)
     reply_markup = keyboards.main_private_settings_kb(lang)
     text = get_lang.get_string(lang, "private_settings")
     update.message.reply_text(text=text, reply_markup=reply_markup)
-
 
 
 @utils.admin_command_only
@@ -211,8 +208,6 @@ def aboutyou(bot, update):
     utils.send_message_long(bot, chat_id=user_id, text=text)
 
 
-
-
 def about_you_world(user_id, lang):
     # thank https://stackoverflow.com/a/46437403/8372336 for the help in creating the query
     query = """
@@ -240,10 +235,10 @@ def about_you_world(user_id, lang):
 
     text = "\n"+get_lang.get_string(lang, "you_globally_this_week")
     text = text.format(
-                        utils.sep_l(extract[0], lang), 
-                        utils.sep_l(extract[1], lang), 
-                        utils.sep_l(extract[2], lang)
-                        )
+            utils.sep_l(extract[0], lang),
+            utils.sep_l(extract[1], lang),
+            utils.sep_l(extract[2], lang)
+    )
     return text
 
 

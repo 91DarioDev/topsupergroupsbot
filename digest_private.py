@@ -26,7 +26,6 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut,
 from telegram.ext.dispatcher import run_async
 
 
-
 def group_extract(lst):
     # thank https://stackoverflow.com/a/46493187/8372336 for the help in this func
     # and a bit modified by me
@@ -133,7 +132,6 @@ def schedule_own_private_digest(bot, job, data):
         job.job_queue.run_once(send_one_by_one, start_in, context=[user_id, text, reply_markup])
 
 
-
 @run_async
 def send_one_by_one(bot, job):
     user_id = job.context[0]
@@ -150,4 +148,3 @@ def send_one_by_one(bot, job):
         database.query_w(query, user_id)
     except Exception as e:
         print("{} exception is send_one_by_one private own diges".format(e))
-        

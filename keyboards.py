@@ -23,7 +23,7 @@ from telegram import ReplyKeyboardRemove
 from telegram import InlineKeyboardMarkup
 from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, ChatMigrated, NetworkError)
 
-#files
+# files
 import supported_langs
 import constants
 import leaderboards
@@ -44,19 +44,23 @@ def build_menu(buttons: list,
     return menu
 
 
-
 def main_group_settings_kb(lang):
-    button_lang = InlineKeyboardButton(text=get_lang.get_string(lang, "group_lang_button"), 
-                callback_data="group_lang")
-    button_adult = InlineKeyboardButton(text=get_lang.get_string(lang, "adult_button"), 
-                callback_data="adult_contents")
-    vote_link = InlineKeyboardButton(text=get_lang.get_string(lang, "vote_link_button"), 
-                callback_data="vote_link")
-    digest = InlineKeyboardButton(text=get_lang.get_string(lang, "group_digest_button"),
-                callback_data="digest_group")
+    button_lang = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "group_lang_button"),
+            callback_data="group_lang")
+    button_adult = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "adult_button"),
+            callback_data="adult_contents")
+    vote_link = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "vote_link_button"),
+            callback_data="vote_link")
+    digest = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "group_digest_button"),
+            callback_data="digest_group")
     buttons_list = [[button_lang], [button_adult], [vote_link], [digest]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
+
 
 def select_group_lang_kb(group_lang, back=True):
     buttons_list = []
@@ -68,8 +72,10 @@ def select_group_lang_kb(group_lang, back=True):
                 text=get_lang.get_string(group_lang, "back"), 
                 callback_data="main_group_settings_creator")
     footer_buttons = [footer]
-    buttons_list = build_menu(buttons_list, n_cols=3, 
-                footer_buttons=footer_buttons if back == True else None)
+    buttons_list = build_menu(
+            buttons_list,
+            n_cols=3,
+            footer_buttons=footer_buttons if back is True else None)
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
@@ -79,13 +85,14 @@ def adult_content_kb(lang, value):
     no = get_lang.get_string(lang, "no")
     back = get_lang.get_string(lang, "back")
     button_yes = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+yes if value is True else yes, 
-                callback_data="set_adult_true")
+            text=constants.CURRENT_CHOICE+yes if value is True else yes,
+            callback_data="set_adult_true")
     button_no = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+no if value is False else no, 
-                callback_data="set_adult_false")
-    button_back = InlineKeyboardButton(text=back, 
-                callback_data="main_group_settings_creator")
+            text=constants.CURRENT_CHOICE+no if value is False else no,
+            callback_data="set_adult_false")
+    button_back = InlineKeyboardButton(
+            text=back,
+            callback_data="main_group_settings_creator")
     buttons_list = [[button_yes, button_no], [button_back]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
@@ -94,10 +101,12 @@ def adult_content_kb(lang, value):
 def vote_group_kb(group_id, lang):
     buttons_list = []
     for i in range(1, 6):
-        buttons_list.append([InlineKeyboardButton(text=(constants.EMOJI_STAR*i), 
-                    callback_data="rate:{}:{}".format(i, group_id))])
-    buttons_list.append([InlineKeyboardButton(text=get_lang.get_string(lang, "cancel"), 
-                                                callback_data="rate:cancel")])
+        buttons_list.append([InlineKeyboardButton(
+                text=(constants.EMOJI_STAR*i),
+                callback_data="rate:{}:{}".format(i, group_id))])
+    buttons_list.append([InlineKeyboardButton(
+            text=get_lang.get_string(lang, "cancel"),
+            callback_data="rate:cancel")])
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
@@ -107,20 +116,23 @@ def weekly_group_digest_kb(lang, value):
     no = get_lang.get_string(lang, "no")
     back = get_lang.get_string(lang, "back")
     button_yes = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+yes if value is True else yes, 
-                callback_data="set_weekly_group_digest:true")
+            text=constants.CURRENT_CHOICE+yes if value is True else yes,
+            callback_data="set_weekly_group_digest:true")
     button_no = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+no if value is False else no, 
-                callback_data="set_weekly_group_digest:false")
-    button_back = InlineKeyboardButton(text=back, 
-                callback_data="main_group_settings_creator")
+            text=constants.CURRENT_CHOICE+no if value is False else no,
+            callback_data="set_weekly_group_digest:false")
+    button_back = InlineKeyboardButton(
+            text=back,
+            callback_data="main_group_settings_creator")
     buttons_list = [[button_yes, button_no], [button_back]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
+
 def vote_link_kb(lang):
-    button_back = InlineKeyboardButton(text=get_lang.get_string(lang, "back"), 
-                callback_data="main_group_settings_admin")
+    button_back = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "back"),
+            callback_data="main_group_settings_admin")
     buttons_list = [[button_back]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
@@ -132,10 +144,10 @@ def displayed_pages_kb(pages, chosen_page=1, lb_type="", region=""):
     for page in pages:
         callback_data = "lbpage:{}:{}:{}".format(page, lb_type, region)
         current_page = "current_page" if lb_type not in [leaderboards.GROUP_LEADERBOARD] else "current_page_admin"
-        #this is necessary not to get list out of range
+        # this is necessary not to get list out of range
         # because later it checks pages[1]
         if len(pages) <= 1:
-            # keboard is not needed if one page
+            # keyboard is not needed if one page
             break
 
         if page == chosen_page:
@@ -171,11 +183,13 @@ def private_language_kb(lang, back=True):
             text=str(constants.CURRENT_CHOICE+i if i == lang else i)+str(supported_langs.COUNTRY_FLAG[i]), 
             callback_data="set_private_lang_"+str(i)))
     footer = InlineKeyboardButton(
-                text=get_lang.get_string(lang, "back"), 
-                callback_data="main_private_settings")
+            text=get_lang.get_string(lang, "back"),
+            callback_data="main_private_settings")
     footer_buttons = [footer]
-    buttons_list = build_menu(buttons_list, n_cols=3, 
-                footer_buttons=footer_buttons if back == True else None)
+    buttons_list = build_menu(
+            buttons_list,
+            n_cols=3,
+            footer_buttons=footer_buttons if back is True else None)
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
@@ -187,37 +201,46 @@ def private_region_kb(lang, region, back=True):
             text=str(constants.CURRENT_CHOICE+i if i == region else i)+str(supported_langs.COUNTRY_FLAG[i]), 
             callback_data="set_private_region:"+str(i)))
     footer = InlineKeyboardButton(
-                text=get_lang.get_string(lang, "back"), 
-                callback_data="main_private_settings")
+            text=get_lang.get_string(lang, "back"),
+            callback_data="main_private_settings")
     footer_buttons = [footer]
-    buttons_list = build_menu(buttons_list, n_cols=3, 
-                footer_buttons=footer_buttons if back == True else None)
+    buttons_list = build_menu(
+            buttons_list,
+            n_cols=3,
+            footer_buttons=footer_buttons if back == True else None)
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
 
 def main_private_settings_kb(lang):
-    button0 = InlineKeyboardButton(text=get_lang.get_string(lang, "private_lang_button"), 
-                callback_data="private_lang")
-    button1 = InlineKeyboardButton(text=get_lang.get_string(lang, "private_region_button"), 
-                callback_data="private_region")
-    button2 = InlineKeyboardButton(text=get_lang.get_string(lang, "private_digest_button"), 
-                callback_data="private_digest_button")
+    button0 = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "private_lang_button"),
+            callback_data="private_lang")
+    button1 = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "private_region_button"),
+            callback_data="private_region")
+    button2 = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "private_digest_button"),
+            callback_data="private_digest_button")
     buttons_list = [[button0], [button1], [button2]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
 
 def private_digest_kb(lang):
-    button0 = InlineKeyboardButton(text=get_lang.get_string(lang, "private_your_own_digest_button"), 
-                callback_data="private_your_own_digest")
-    button1 = InlineKeyboardButton(text=get_lang.get_string(lang, "private_groups_digest_button"), 
-                callback_data="private_groups_digest")
-    button2 = InlineKeyboardButton(text=get_lang.get_string(lang, "back"), 
-                callback_data="main_private_settings")
+    button0 = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "private_your_own_digest_button"),
+            callback_data="private_your_own_digest")
+    button1 = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "private_groups_digest_button"),
+            callback_data="private_groups_digest")
+    button2 = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "back"),
+            callback_data="main_private_settings")
     buttons_list = [[button0], [button1], [button2]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
+
 
 def weekly_own_digest_kb(lang, value):
     yes = get_lang.get_string(lang, "yes")

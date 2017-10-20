@@ -27,7 +27,6 @@ from telegram import constants as ptb_consts
 from babel.numbers import format_decimal
 
 
-
 def get_db_lang(user_id):
     query = "SELECT lang FROM users WHERE user_id = %s"
     extract = database.query_r(query, user_id, one=True)
@@ -54,15 +53,14 @@ def private_only(func):
             try:
                 chat_id = update.message.from_user.id
                 bot.send_message(chat_id=chat_id, text=text)
-            except: 
+            except:
                 status = update.effective_chat.get_member(update.message.from_user.id).status
-                if not status in ["administrator", "creator"]:
+                if status not in ["administrator", "creator"]:
                     return
                 update.message.reply_text(text)
             return
         return func(bot, update, *args, **kwargs)
     return wrapped
-
 
 
 def admin_command_only(func):
@@ -75,7 +73,7 @@ def admin_command_only(func):
             return
         if not update.effective_chat.get_member(update.message.from_user.id).status in ["administrator", "creator"]:
             lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_admins")                
+            text = get_lang.get_string(lang, "this_command_only_admins")
             try:
                 chat_id = update.message.from_user.id
                 bot.send_message(chat_id=chat_id, text=text)
@@ -95,7 +93,7 @@ def creator_command_only(func):
             update.message.reply_text(text)
             return
         status = update.effective_chat.get_member(update.message.from_user.id).status
-        if not status in ["creator"]:
+        if status not in ["creator"]:
             lang = get_db_lang(update.effective_user.id)
             text = get_lang.get_string(lang, "this_command_only_creator")
             try:
@@ -122,6 +120,7 @@ def creator_button_only(func):
         return func(bot, query, *args, **kwargs)
     return wrapped
 
+
 def admin_button_only(func):
     @wraps(func)
     def wrapped(bot, query, *args, **kwargs):
@@ -142,30 +141,33 @@ def invalid_command(bot, update):
     update.message.reply_text(text=text, quote=True)
 
 
+def send_message_long(
+            bot, chat_id, text, parse_mode=None, disable_web_page_preview=None,
+            disable_notification=False, reply_to_message_id=None,
+            reply_markup=None, timeout=None):
 
-def send_message_long(bot, chat_id, text, parse_mode=None, disable_web_page_preview=None, 
-                        disable_notification=False, reply_to_message_id=None, 
-                        reply_markup=None, timeout=None):
     list_messages = []
     chars_limit = ptb_consts.MAX_MESSAGE_LENGTH
 
     for i in range(0, len(text), chars_limit):
         splitted_message = text[i:i+chars_limit]
         list_messages.append(splitted_message)
-    
+
     for message in list_messages:
         if message == list_messages[0]:
-            first = bot.sendMessage(chat_id=chat_id, text=message, parse_mode=parse_mode, 
-                                    disable_web_page_preview=disable_web_page_preview, 
-                                    disable_notification=disable_notification, 
-                                    reply_to_message_id=reply_to_message_id, reply_markup=reply_markup, 
-                                    timeout=timeout)
+            first = bot.sendMessage(
+                    chat_id=chat_id, text=message, parse_mode=parse_mode,
+                    disable_web_page_preview=disable_web_page_preview,
+                    disable_notification=disable_notification,
+                    reply_to_message_id=reply_to_message_id, reply_markup=reply_markup,
+                    timeout=timeout)
         else:
-            bot.sendMessage(chat_id=chat_id, text=message, parse_mode=parse_mode, 
-                            disable_web_page_preview=disable_web_page_preview, 
-                            disable_notification=disable_notification, 
-                            reply_to_message_id=reply_to_message_id, reply_markup=reply_markup, 
-                            timeout=timeout)
+            bot.sendMessage(
+                    chat_id=chat_id, text=message, parse_mode=parse_mode,
+                    disable_web_page_preview=disable_web_page_preview,
+                    disable_notification=disable_notification,
+                    reply_to_message_id=reply_to_message_id, reply_markup=reply_markup,
+                    timeout=timeout)
         time.sleep(0.3)
 
     if len(text) > 1000:
@@ -182,13 +184,10 @@ def guessed_user_lang(bot, update):
         return "en"
 
 
-
 def sep(num, none_is_zero=False):
     if num is None:
         return 0 if none_is_zero is False else None
     return "{:,}".format(num)
-
-
 
 
 def sep_l(num, locale='en', none_is_zero=False):

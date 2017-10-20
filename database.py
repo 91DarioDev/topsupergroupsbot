@@ -31,7 +31,6 @@ REDIS = redis.Redis(host=config.REDIS_HOST,
                     db=config.REDIS_DB)
 
 
-
 def conn():
     local = threading.local()
 
@@ -47,13 +46,13 @@ def conn():
 #                   |_|  |_|                 |_|                      
 
 
-
 def query_w(query, *params):
     connect = conn()
     c = connect.cursor()
     c.execute(query, params)
     c.connection.commit()
     c.close()
+
 
 def query_r(query, *params, one=False):
     connect = conn()
@@ -182,13 +181,11 @@ def create_db():
     query_w(query)
 
 
-
 #    _         _         
 #   (_)_ _  __| |_____ __
 #   | | ' \/ _` / -_) \ /
 #   |_|_||_\__,_\___/_\_\
 #     
-
 
 
 def create_index():

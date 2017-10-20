@@ -20,6 +20,7 @@ import keyboards
 import get_lang
 import utils
 
+
 def create_vote_link(group_id):
     schema = "https://t.me/{}?start=vote{}".format(constants.GET_ME.username, group_id)
     return schema

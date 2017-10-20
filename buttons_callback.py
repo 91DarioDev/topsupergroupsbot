@@ -102,14 +102,6 @@ def callback_query(bot, update):
         set_weekly_group_digest(bot, query)
 
 
-
-
-
-
-
-
-
-
 @utils.creator_button_only
 def choose_lang(bot, query):
     lang = query.data.replace("set_group_lang_", "")
@@ -129,6 +121,7 @@ def main_group_settings(bot, query):
     query.answer()
     query.edit_message_text(text=text, reply_markup=reply_markup)
 
+
 @utils.creator_button_only
 def main_group_settings_creator(bot, query):
     main_group_settings(bot, query)
@@ -137,6 +130,7 @@ def main_group_settings_creator(bot, query):
 @utils.admin_button_only
 def main_group_settings_admin(bot, query):
     main_group_settings(bot, query)
+
 
 @utils.creator_button_only
 def group_lang_button(bot, query):
@@ -251,6 +245,7 @@ def current_page_admin(bot, query):
     group_id = query.chat.id
     query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
     extract = database.query_r(query_db, group_id, one=True)
+    lang = extract[0] if extract is not None else None
     query.answer(get_lang.get_string(lang, "already_this_page"), show_alert=True)
 
 
@@ -312,7 +307,6 @@ def set_private_lang(bot, query):
     query.message.edit_reply_markup(reply_markup=keyboards.private_language_kb(lang))
 
 
-
 def set_private_region(bot, query):
     region = query.data.split(":")[1]
     query_db = "UPDATE users SET region = %s WHERE user_id = %s RETURNING lang"
@@ -359,7 +353,6 @@ def private_digest(bot, query):
     query.edit_message_text(text=text, reply_markup=reply_markup)
 
 
-
 def private_your_own_digest(bot, query):
     query_db = "SELECT lang, weekly_own_digest FROM users WHERE user_id = %s"
     extract = database.query_r(query_db, query.from_user.id, one=True)
@@ -376,8 +369,7 @@ def private_your_own_digest(bot, query):
 
 
 def private_groups_digest(bot, query):
-    query.answer("comming soon", show_alert=True)
-
+    query.answer("coming soon", show_alert=True)
 
 
 def set_weekly_own_digest(bot, query):

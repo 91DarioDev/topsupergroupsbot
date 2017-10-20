@@ -28,8 +28,9 @@ def add_user_db(bot, update):
     ON CONFLICT (user_id) DO 
     UPDATE SET bot_blocked = FALSE, tg_lang = COALESCE(%s, users.tg_lang), message_date = %s 
         WHERE users.user_id = %s"""
-    database.query_w(query, m.from_user.id, guessed_lang, guessed_lang, 
-                    m.from_user.language_code, m.date, m.from_user.language_code, 
-                    m.date, m.from_user.id)
+    database.query_w(
+            query, m.from_user.id, guessed_lang, guessed_lang,
+            m.from_user.language_code, m.date, m.from_user.language_code,
+            m.date, m.from_user.id)
 
 

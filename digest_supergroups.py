@@ -45,7 +45,6 @@ def weekly_groups_digest(bot, job):
         """
     lst = database.query_r(query)
 
-
     #############
     # MESSAGES
     ############
@@ -162,8 +161,6 @@ def weekly_groups_digest(bot, job):
         """
     last_week_active_users = database.query_r(query, far_interval, near_interval)
 
-
-
     start_in = 0
     for group in lst:
         start_in += 0.1
@@ -210,7 +207,6 @@ def weekly_groups_digest(bot, job):
                 avg_v_new = i[2]
                 break
 
-
         for i in last_week_votes_avg:
             if i[0] == group_id:
                 sum_v_old = i[1]
@@ -240,8 +236,6 @@ def weekly_groups_digest(bot, job):
                     utils.sep_l(act_users_old, lang), utils.sep_l(act_users_new, lang),
                     diff_act, percent_act)
 
-
-
         ##############
         # TOP n USERS
         ##############
@@ -270,9 +264,8 @@ def weekly_groups_digest(bot, job):
                     utils.sep_l(user[1], lang)
                     )
 
-
         reply_markup = keyboards.disable_group_weekly_digest_kb(lang)
-        #schedule send
+        # schedule send
         job.job_queue.run_once(
                 send_one_by_one_weekly_group_digest, 
                 start_in, 
@@ -297,13 +290,14 @@ def send_one_by_one_weekly_group_digest(bot, job):
     message = job.context[1]
     reply_markup = job.context[2]
     try:
-        bot.send_message(chat_id=group_id, 
-                        text=message, 
-                        reply_markup=reply_markup,
-                        parse_mode='HTML',
-                        disable_notification=True)
+        bot.send_message(
+                chat_id=group_id,
+                text=message,
+                reply_markup=reply_markup,
+                parse_mode='HTML',
+                disable_notification=True)
     except Unauthorized:
         query = "UPDATE supergroups SET bot_inside = FALSE WHERE user_id = %s"
         database.query_w(query, group_id)
     except Exception as e:
-        print("{} exception is send_one_by_one group diges".format(e))
+        print("{} exception is send_one_by_one group digest".format(e))

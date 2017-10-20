@@ -48,8 +48,11 @@ def groupleaderboard(bot, update):
 
     result = offset_groupleaderboard(lang, group_id, chosen_page=1)
 
-    update.message.reply_text(text=result[0], reply_markup=result[1], 
-                            parse_mode=ParseMode.HTML, disable_notification=True)
+    update.message.reply_text(
+            text=result[0],
+            reply_markup=result[1],
+            parse_mode=ParseMode.HTML,
+            disable_notification=True)
 
 
 def offset_groupleaderboard(lang, group_id, chosen_page):
@@ -89,7 +92,6 @@ def offset_groupleaderboard(lang, group_id, chosen_page):
     return text, reply_markup
 
 
-
 @utils.private_only
 def leadervote(bot, update):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
@@ -97,10 +99,11 @@ def leadervote(bot, update):
     lang = extract[0]
     region = extract[1]
     result = offset_leadervote(lang, region, 1)
-    update.message.reply_text(text=result[0], reply_markup=result[1], 
-                            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
-
-
+    update.message.reply_text(
+            text=result[0],
+            reply_markup=result[1],
+            parse_mode=ParseMode.HTML,
+            disable_web_page_preview=True)
 
 
 def offset_leadervote(lang, region, chosen_page):
@@ -163,8 +166,6 @@ def offset_leadervote(lang, region, chosen_page):
     return text, reply_markup
 
 
-
-
 @utils.private_only
 def leadermessage(bot, update):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
@@ -172,8 +173,11 @@ def leadermessage(bot, update):
     lang = extract[0]
     region = extract[1]
     result = offset_leadermessage(lang, region,  1)
-    update.message.reply_text(text=result[0], reply_markup=result[1], 
-                            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    update.message.reply_text(
+            text=result[0],
+            reply_markup=result[1],
+            parse_mode=ParseMode.HTML,
+            disable_web_page_preview=True)
 
 
 def offset_leadermessage(lang, region, chosen_page):
@@ -202,7 +206,6 @@ def offset_leadermessage(lang, region, chosen_page):
         extract = database.query_r(query, region)
         cached_leaderboards.set_leaderboard(MESSAGE_LEADERBOARD, region, extract)
 
-    
     pages = Pages(extract, chosen_page)
 
     reply_markup = keyboards.displayed_pages_kb(
@@ -231,7 +234,6 @@ def offset_leadermessage(lang, region, chosen_page):
     return text, reply_markup
 
 
-
 @utils.private_only
 def leadermember(bot, update):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
@@ -239,8 +241,11 @@ def leadermember(bot, update):
     lang = extract[0]
     region = extract[1]
     result = offset_leadermember(lang, region,  1)
-    update.message.reply_text(text=result[0], reply_markup=result[1], 
-                            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    update.message.reply_text(
+            text=result[0],
+            reply_markup=result[1],
+            parse_mode=ParseMode.HTML,
+            disable_web_page_preview=True)
 
 
 

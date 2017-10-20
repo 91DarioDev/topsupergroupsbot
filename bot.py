@@ -40,6 +40,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"' % (update, error))
 
@@ -54,12 +55,12 @@ def main():
     # define jobs
     j = updater.job_queue
 
-    #this will run async the process_update
+    # this will run async the process_update
     dp.process_update = run_async(dp.process_update)
 
     # handlers
 
-    #before processing
+    # before processing
     dp.add_handler(MessageHandler(Filters.all, messages.before_processing), -1)
 
     # commands
@@ -83,7 +84,7 @@ def main():
                                     pass_args=True))
     dp.add_handler(CommandHandler('bangroup', commands_private.ban_group, pass_args=True))
     dp.add_handler(CommandHandler('unbangroup', commands_private.unban_group, pass_args=True))
-    #invalid command
+    # invalid command
     dp.add_handler(MessageHandler(Filters.command & Filters.private, utils.invalid_command))
     # handle all messages not command. it's obvious because commands are handled before, 
     # but it's more safe

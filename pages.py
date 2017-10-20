@@ -16,17 +16,16 @@
 
 import math
 
-class Pages:
 
+class Pages:
     def __init__(self, lst, chosen_page=1, elements_per_page=10):
         self.elements_per_page = elements_per_page
         self.lst = lst
         self.number_of_pages = self.get_number_of_pages()
         self.chosen_page = self._adjust_chosen_page(chosen_page)
 
-
     def get_number_of_pages(self):
-        return (math.ceil(len(self.lst)/self.elements_per_page))
+        return math.ceil(len(self.lst)/self.elements_per_page)
 
     def _adjust_chosen_page(self, chosen_page):
         if self.number_of_pages == 0:
@@ -36,8 +35,7 @@ class Pages:
         return chosen_page
 
     def first_number_of_page(self):
-        return (self.chosen_page*self.elements_per_page - self.elements_per_page + 1)
-
+        return self.chosen_page*self.elements_per_page - self.elements_per_page + 1
 
     def displayed_pages(self):
         """
@@ -59,16 +57,16 @@ class Pages:
             for i in range(1, self.number_of_pages + 1):
                 pages.append(i)
         else:
-            pages.append(1) # add first page
+            pages.append(1)  # add first page
 
             if self.chosen_page - 1 > 1:
-                pages.append(self.chosen_page - 1) # add before current page
+                pages.append(self.chosen_page - 1)  # add before current page
 
             if self.chosen_page != 1 and self.chosen_page != self.number_of_pages:
-                pages.append(self.chosen_page) # add current page - 1 and last are added with other stuff
+                pages.append(self.chosen_page)  # add current page - 1 and last are added with other stuff
 
             if self.chosen_page + 1 < self.number_of_pages:
-                pages.append(self.chosen_page + 1) #add after current page
+                pages.append(self.chosen_page + 1)  # add after current page
 
             pages.append(self.number_of_pages) # add last page
         return pages

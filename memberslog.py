@@ -56,7 +56,6 @@ def set_bulk(bot, job, extract):
         job.job_queue.run_once(handle_one_by_one, start_in, context=group_id)
         
 
-
 def handle_one_by_one(bot, job):
     group_id = job.context
 
@@ -78,8 +77,9 @@ def handle_one_by_one(bot, job):
         UPDATE SET title = %s, username = COALESCE(%s, supergroups_ref.username) 
         WHERE supergroups_ref.group_id = %s"""
 
-        database.query_w(query, group_id, info.title, info.username, info.title, 
-                        info.username, group_id)
+        database.query_w(
+            query, group_id, info.title, info.username, info.title,
+            info.username, group_id)
     
     except Unauthorized:
         query = """

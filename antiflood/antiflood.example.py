@@ -22,5 +22,6 @@ You should rename the file `antiflood.py` instead of `antiflood.example.py`
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
+
 def is_flood(bot, update):
     pass

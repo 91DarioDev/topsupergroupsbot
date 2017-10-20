@@ -16,7 +16,7 @@
 
 import utils
 import database
-import pages
+import pages as pag
 import keyboards
 import constants
 import get_lang
@@ -67,21 +67,18 @@ def offset_groupleaderboard(lang, group_id, chosen_page):
 
 	extract = database.query_r(query, group_id)
 	
-	num_of_pages = pages.get_total_pages(extract)
-	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
-	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
+	pages = pag.Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
-			pages=list_pages, 
-			chosen_page=chosen_page, 
+			pages=pages.displayed_pages(), 
+			chosen_page=pages.chosen_page, 
 			lb_type=GROUP_LEADERBOARD)
 
 	text = get_lang.get_string(lang, "pre_groupleaderboard")
 	text += "\n\n"
-
-	offset = pages.get_first_number_of_page(chosen_page) -1 # because of IT numeration
-	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
-	for user in extract_lim:
+	first_number_of_page = pages.first_number_of_page()
+	offset = first_number_of_page - 1
+	for user in pages.chosen_page_items():
 		offset += 1 # for before IT numeration
 		text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
 				offset, 
@@ -136,22 +133,20 @@ def offset_leadervote(lang, region, chosen_page):
 		extract = database.query_r(query,region, min_reviews)
 		cached_leaderboards.set_leaderboard(VOTE_LEADERBOARD, region, extract)
 
-	num_of_pages = pages.get_total_pages(extract)
-	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
-	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
+	pages = pag.Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
-			pages=list_pages, 
-			chosen_page=chosen_page, 
+			pages=pages.displayed_pages(), 
+			chosen_page=pages.chosen_page, 
 			lb_type=VOTE_LEADERBOARD, 
 			region=region)
 
 	emoji_region = supported_langs.COUNTRY_FLAG[region]
 	text = get_lang.get_string(lang, "pre_leadervote").format(min_reviews, emoji_region)
-	text += "\n\n"
-	offset = pages.get_first_number_of_page(chosen_page) -1 # because of IT numeration
-	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
-	for group in extract_lim:
+	text += "\n\n" 
+	first_number_of_page = pages.first_number_of_page()
+	offset = first_number_of_page - 1
+	for group in pages.chosen_page_items():
 		nsfw = constants.EMOJI_NSFW if group[5] is True else ""
 		new = constants.EMOJI_NEW if (group[6]+NEW_INTERVAL > time.time()) else ""
 		offset += 1 # for before IT numeration
@@ -208,24 +203,20 @@ def offset_leadermessage(lang, region, chosen_page):
 		cached_leaderboards.set_leaderboard(MESSAGE_LEADERBOARD, region, extract)
 
 	
-	num_of_pages = pages.get_total_pages(extract)
-	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
-
-	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
+	pages = pag.Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
-			pages=list_pages, 
-			chosen_page=chosen_page, 
+			pages=pages.displayed_pages(), 
+			chosen_page=pages.chosen_page, 
 			lb_type=MESSAGE_LEADERBOARD, 
 			region=region)
 
 	emoji_region = supported_langs.COUNTRY_FLAG[region]
 	text = get_lang.get_string(lang, "pre_leadermessage").format(emoji_region)
 	text += "\n\n"
-
-	offset = pages.get_first_number_of_page(chosen_page) -1 # because of IT numeration
-	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
-	for group in extract_lim:
+	first_number_of_page = pages.first_number_of_page()
+	offset = first_number_of_page - 1
+	for group in pages.chosen_page_items():
 		nsfw = constants.EMOJI_NSFW if group[4] is True else ""
 		new = constants.EMOJI_NEW if (group[5]+NEW_INTERVAL) > time.time() else ""
 		offset += 1 # for before IT numeration
@@ -285,24 +276,20 @@ def offset_leadermember(lang, region, chosen_page):
 		extract = database.query_r(query, region)
 		cached_leaderboards.set_leaderboard(MEMBER_LEADERBOARD, region, extract)
 		
-	num_of_pages = pages.get_total_pages(extract)
-	chosen_page = pages.adjust_chosen_page(num_of_pages, chosen_page)
-
-	list_pages = pages.which_pages(chosen_page=chosen_page, total_pages=num_of_pages)
+	pages = pag.Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
-			pages=list_pages, 
-			chosen_page=chosen_page, 
+			pages=pages.displayed_pages(), 
+			chosen_page=pages.chosen_page, 
 			lb_type=MEMBER_LEADERBOARD, 
 			region=region)
 
 	emoji_region = supported_langs.COUNTRY_FLAG[region]
 	text = get_lang.get_string(lang, "pre_leadermember").format(emoji_region)
 	text += "\n\n"
-
-	offset = pages.get_first_number_of_page(chosen_page) -1 # because of IT numeration
-	extract_lim =  extract[offset:offset+pages.ELEMENTS_PER_PAGE]
-	for group in extract_lim:
+	first_number_of_page = pages.first_number_of_page()
+	offset = first_number_of_page - 1	
+	for group in pages.chosen_page_items():
 		nsfw = constants.EMOJI_NSFW if group[6] is True else ""
 		new = constants.EMOJI_NEW if (group[5]+NEW_INTERVAL) > time.time() else ""
 		offset += 1 # for before IT numeration

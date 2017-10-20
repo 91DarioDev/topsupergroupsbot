@@ -16,69 +16,63 @@
 
 import math
 
+class Pages:
 
-ELEMENTS_PER_PAGE = 10
-
-def get_total_pages(all_elements):
-    return (math.ceil(len(all_elements)/ELEMENTS_PER_PAGE))
-
-def adjust_chosen_page(num_of_pages, chosen_page):
-    if num_of_pages == 0:
-        chosen_page = 1
-    if chosen_page > num_of_pages:
-        chosen_page = num_of_pages
-    return chosen_page
-
-def get_first_number_of_page(page):
-    return (page*ELEMENTS_PER_PAGE - ELEMENTS_PER_PAGE + 1)
+    def __init__(self, lst, chosen_page=1, elements_per_page=10):
+        self.elements_per_page = elements_per_page
+        self.lst = lst
+        self.number_of_pages = self.get_number_of_pages()
+        self.chosen_page = self._adjust_chosen_page(chosen_page)
 
 
-def which_pages(chosen_page, total_pages):
-    """
-    Returns a list containing the numbers from 1 to `total_pages`, with
-    `chosen_page` indicated, and abbreviated if too long.
-    """
+    def get_number_of_pages(self):
+        return (math.ceil(len(self.lst)/self.elements_per_page))
 
-    max_on_line_number = 5
+    def _adjust_chosen_page(self, chosen_page):
+        if self.number_of_pages == 0:
+            chosen_page = 1
+        if chosen_page > self.number_of_pages:
+            chosen_page = self.number_of_pages
+        return chosen_page
 
-    # Build list of pages to display
-    pages = []
+    def first_number_of_page(self):
+        return (self.chosen_page*self.elements_per_page - self.elements_per_page + 1)
 
 
-    if total_pages == 0:
+    def displayed_pages(self):
+        """
+        Returns a list containing the numbers from 1 to `total_pages`, with
+        `chosen_page` indicated, and abbreviated if too long.
+        """
+
+        max_on_line_number = 5
+
+        # Build list of pages to display
+        pages = []
+
+        if self.number_of_pages == 0:
+            return pages
+        if self.chosen_page > self.number_of_pages:
+            self.chosen_page = self.number_of_pages
+
+        if self.number_of_pages <= max_on_line_number:
+            for i in range(1, self.number_of_pages + 1):
+                pages.append(i)
+        else:
+            pages.append(1) # add first page
+
+            if self.chosen_page - 1 > 1:
+                pages.append(self.chosen_page - 1) # add before current page
+
+            if self.chosen_page != 1 and self.chosen_page != self.number_of_pages:
+                pages.append(self.chosen_page) # add current page - 1 and last are added with other stuff
+
+            if self.chosen_page + 1 < self.number_of_pages:
+                pages.append(self.chosen_page + 1) #add after current page
+
+            pages.append(self.number_of_pages) # add last page
         return pages
-    if chosen_page > total_pages:
-        chosen_page = total_pages
 
-    if total_pages <= max_on_line_number:
-        for i in range(1, total_pages + 1):
-            pages.append(i)
-    else:
-        pages.append(1) # add first page
-
-        if chosen_page - 1 > 1:
-            pages.append(chosen_page - 1) # add before current page
-
-        if chosen_page != 1 and chosen_page != total_pages:
-            pages.append(chosen_page) # add current page - 1 and last are added with other stuff
-
-        if chosen_page + 1 < total_pages:
-            pages.append(chosen_page + 1) #add after current page
-
-        pages.append(total_pages) # add last page
-    return pages
-
-
-def displayed_pages(pages, chosen_page):
-    """ receive an array and give buttons"""
-    texted_pages = []
-    for page in pages:
-        if page == pages[1] and page > 2:
-            texted_pages.append("..")
-        if page == chosen_page:
-            texted_pages.append("-{}-".format(page))
-            continue
-        texted_pages.append(str(page))
-        if page == pages[-2] and page < (pages[-1] - 1):
-            texted_pages.append("..")
-    print (texted_pages)
+    def chosen_page_items(self):
+        offset = self.first_number_of_page() - 1
+        return self.lst[offset:offset+self.elements_per_page]

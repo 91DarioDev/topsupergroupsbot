@@ -22,8 +22,8 @@ CLEAN_INTERVAL = '1 month'
 
 @run_async
 def clean_db(bot, job):
-	query = "DELETE FROM messages WHERE message_date < now() - interval %s"
-	database.query_w(query, CLEAN_INTERVAL)
+    query = "DELETE FROM messages WHERE message_date < now() - interval %s"
+    database.query_w(query, CLEAN_INTERVAL)
 
-	query = "DELETE FROM members WHERE updated_date < now() - interval %s"
-	database.query_w(query, CLEAN_INTERVAL)
+    query = "DELETE FROM members WHERE updated_date < now() - interval %s"
+    database.query_w(query, CLEAN_INTERVAL)

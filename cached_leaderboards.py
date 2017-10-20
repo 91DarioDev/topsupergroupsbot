@@ -21,18 +21,18 @@ import json
 CACHE_SECONDS = 60*3
 
 def key_name(name_type, region):
-	return 'cached_lb:{}:{}'.format(name_type, region)
+    return 'cached_lb:{}:{}'.format(name_type, region)
 
 def get_leaderboard(name_type, region):
-	key = key_name(name_type, region)
-	lst = db.REDIS.get(key)
-	if lst is None:
-		return None
-	lst = json.loads(lst.decode('UTF-8'))
-	return lst
+    key = key_name(name_type, region)
+    lst = db.REDIS.get(key)
+    if lst is None:
+        return None
+    lst = json.loads(lst.decode('UTF-8'))
+    return lst
 
 
 def set_leaderboard(name_type, region, lst):
-	key = key_name(name_type, region)
-	dumped_lst = json.dumps(lst).encode('UTF-8')
-	db.REDIS.setex(key, dumped_lst, CACHE_SECONDS)
+    key = key_name(name_type, region)
+    dumped_lst = json.dumps(lst).encode('UTF-8')
+    db.REDIS.setex(key, dumped_lst, CACHE_SECONDS)

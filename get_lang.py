@@ -17,26 +17,26 @@
 from langs import en, it
 
 lang_obj = {
-	"en": en,
-	"it": it
+    "en": en,
+    "it": it
 }
 
 
 def get_string(lang, variable):
-	"""
-	returns the right string. example of usage:
-	print(get_string("en", "test"))
-	'en' is the language of the user returned from the db
-	'"test"' is the name of the variable in the relative file lang
-	"""
+    """
+    returns the right string. example of usage:
+    print(get_string("en", "test"))
+    'en' is the language of the user returned from the db
+    '"test"' is the name of the variable in the relative file lang
+    """
 
-	try:
-		string = getattr(lang_obj[lang], variable)
-	except AttributeError:
-		string = getattr(en, variable)
-	except KeyError:
-		string = getattr(en, variable)
-	return string
+    try:
+        string = getattr(lang_obj[lang], variable)
+    except AttributeError:
+        string = getattr(en, variable)
+    except KeyError:
+        string = getattr(en, variable)
+    return string
 
 
 

@@ -23,19 +23,19 @@ from telegram.ext import DispatcherHandlerStop
 
 
 def before_processing(bot, update):
-	if update.message.chat.type == "private":
-		before_processing_private(bot, update)
-		
-	elif update.message.chat.type == "supergroup":
-		before_processing_supergroups(bot, update)
+    if update.message.chat.type == "private":
+        before_processing_private(bot, update)
+        
+    elif update.message.chat.type == "supergroup":
+        before_processing_supergroups(bot, update)
 
 
 def processing(bot, update):
-	if update.message.chat.type == "private":
-		processing_private(bot, update)
+    if update.message.chat.type == "private":
+        processing_private(bot, update)
 
-	elif update.message.chat.type == "supergroup":
-		processing_supergroups(bot, update)
+    elif update.message.chat.type == "supergroup":
+        processing_supergroups(bot, update)
 
 
 
@@ -47,38 +47,38 @@ def processing(bot, update):
 
 
 
-def before_processing_supergroups(bot, update):	
-	# leave if the group is not public
-	if messages_supergroups.leave_unsupported_chat(bot, update):
-		raise DispatcherHandlerStop
+def before_processing_supergroups(bot, update): 
+    # leave if the group is not public
+    if messages_supergroups.leave_unsupported_chat(bot, update):
+        raise DispatcherHandlerStop
 
-	# check if the group is not banned, otherwise leave
-	if messages_supergroups.this_bot_has_been_added(bot, update):
-		if messages_supergroups.is_banned(bot, update):
-			messages_supergroups.leave_banned_group(bot, update)
-			raise DispatcherHandlerStop
+    # check if the group is not banned, otherwise leave
+    if messages_supergroups.this_bot_has_been_added(bot, update):
+        if messages_supergroups.is_banned(bot, update):
+            messages_supergroups.leave_banned_group(bot, update)
+            raise DispatcherHandlerStop
 
-	# log stuff on the tables
-	lang = messages_supergroups.add_supergroup_db(bot, update)
-	messages_supergroups.add_user_ref(bot, update)
-	messages_supergroups.add_supergroup_ref(bot, update)
+    # log stuff on the tables
+    lang = messages_supergroups.add_supergroup_db(bot, update)
+    messages_supergroups.add_user_ref(bot, update)
+    messages_supergroups.add_supergroup_ref(bot, update)
 
 
-	# check if the bot has been added and send a welcome message
-	if messages_supergroups.this_bot_has_been_added(bot, update):
-		if lang is None:
-			messages_supergroups.choose_group_language(bot, update)
-		else:
-			messages_supergroups.added_again_message(bot, update, lang)
-	# if it hasn't been added remember to set the language
-	# this is run even for commands (before processing)
-	else:
-		if lang is None:
-			messages_supergroups.remember_to_set_lang(bot, update)
-		
+    # check if the bot has been added and send a welcome message
+    if messages_supergroups.this_bot_has_been_added(bot, update):
+        if lang is None:
+            messages_supergroups.choose_group_language(bot, update)
+        else:
+            messages_supergroups.added_again_message(bot, update, lang)
+    # if it hasn't been added remember to set the language
+    # this is run even for commands (before processing)
+    else:
+        if lang is None:
+            messages_supergroups.remember_to_set_lang(bot, update)
+        
 
 def before_processing_private(bot, update):
-	messages_private.add_user_db(bot, update)
+    messages_private.add_user_db(bot, update)
 
 
 #                               _           
@@ -89,15 +89,15 @@ def before_processing_private(bot, update):
 
 
 def processing_supergroups(bot, update):
-	# check if flood
-	if antiflood.is_flood(bot, update):
-		raise DispatcherHandlerStop
+    # check if flood
+    if antiflood.is_flood(bot, update):
+        raise DispatcherHandlerStop
 
-	# log message in the database	
-	messages_supergroups.add_message_db(bot, update)
-	messages_supergroups.ee(bot, update)
+    # log message in the database   
+    messages_supergroups.add_message_db(bot, update)
+    messages_supergroups.ee(bot, update)
 
 
 def processing_private(bot, update):
-	# i will implement here buttons
-	pass
+    # i will implement here buttons
+    pass

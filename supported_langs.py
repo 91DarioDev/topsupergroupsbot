@@ -15,34 +15,34 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 COUNTRY_FLAG = {
-	"en": "🌎",
-	"it": "🇮🇹",
-	"other": "",
-	"de": "🇩🇪",
-	"pt": "🇧🇷/🇵🇹",
-	"ru": "🇷🇺",
-	"es": "🇪🇸"
+    "en": "🌎",
+    "it": "🇮🇹",
+    "other": "",
+    "de": "🇩🇪",
+    "pt": "🇧🇷/🇵🇹",
+    "ru": "🇷🇺",
+    "es": "🇪🇸"
 }
 
 
 # GROUPS
 
 GROUP_LANGS = [
-	'it',
-	'en',
-	'other',
-	'de',
-	'pt',
-	'ru',
-	'es'
+    'it',
+    'en',
+    'other',
+    'de',
+    'pt',
+    'ru',
+    'es'
 ]
 
 
 # PRIVATE
 
 PRIVATE_LANGS = [
-	'it',
-	'en'
+    'it',
+    'en'
 ]
 
 PRIVATE_REGIONS = GROUP_LANGS

@@ -30,5 +30,5 @@ REDIS_DB = 1234
 
 # telegram IDs of the admins of the bot
 ADMINS = [
-	1234
+    1234
 ]

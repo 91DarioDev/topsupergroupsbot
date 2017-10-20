@@ -36,74 +36,74 @@ import commands_private
 import digest_supergroups
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-					level=logging.INFO)
+                    level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
 def error(bot, update, error):
-	logger.warning('Update "%s" caused error "%s"' % (update, error))
+    logger.warning('Update "%s" caused error "%s"' % (update, error))
 
 
 def main():
-	# define the updater
-	updater = Updater(token=config.BOT_TOKEN, workers=7)
-	
-	# define the dispatcher
-	dp = updater.dispatcher
+    # define the updater
+    updater = Updater(token=config.BOT_TOKEN, workers=7)
+    
+    # define the dispatcher
+    dp = updater.dispatcher
 
-	# define jobs
-	j = updater.job_queue
+    # define jobs
+    j = updater.job_queue
 
-	#this will run async the process_update
-	dp.process_update = run_async(dp.process_update)
+    #this will run async the process_update
+    dp.process_update = run_async(dp.process_update)
 
-	# handlers
+    # handlers
 
-	#before processing
-	dp.add_handler(MessageHandler(Filters.all, messages.before_processing), -1)
+    #before processing
+    dp.add_handler(MessageHandler(Filters.all, messages.before_processing), -1)
 
-	# commands
-	dp.add_handler(CommandHandler('settings', commands.settings))
-	dp.add_handler(CommandHandler('vote', commands.vote, pass_args=True))
-	dp.add_handler(CommandHandler('start', commands.start, pass_args=True))
-	dp.add_handler(CommandHandler('help', commands.help))
-	dp.add_handler(CommandHandler('groupleaderboard', commands.groupleaderboard))
-	dp.add_handler(CommandHandler('leaderboard', commands.leaderboard))
-	dp.add_handler(CommandHandler('leadervote', leaderboards.leadervote))
-	dp.add_handler(CommandHandler('leadermessage', leaderboards.leadermessage))
-	dp.add_handler(CommandHandler('leadermember', leaderboards.leadermember))
-	dp.add_handler(CommandHandler('aboutyou', commands.aboutyou))
-	dp.add_handler(CommandHandler('language', commands.language))
-	dp.add_handler(CommandHandler('region', commands.region))
-	# private commands
-	dp.add_handler(CommandHandler('statsusers', commands_private.stats_users))
-	dp.add_handler(CommandHandler('statsgroups', commands_private.stats_groups))
-	dp.add_handler(CommandHandler('infoid', commands_private.infoid, pass_args=True))
-	dp.add_handler(CommandHandler('reverseusername', commands_private.reverse_username, 
-									pass_args=True))
-	dp.add_handler(CommandHandler('bangroup', commands_private.ban_group, pass_args=True))
-	dp.add_handler(CommandHandler('unbangroup', commands_private.unban_group, pass_args=True))
-	#invalid command
-	dp.add_handler(MessageHandler(Filters.command & Filters.private, utils.invalid_command))
-	# handle all messages not command. it's obvious because commands are handled before, 
-	# but it's more safe
-	dp.add_handler(MessageHandler(~Filters.command, messages.processing))
+    # commands
+    dp.add_handler(CommandHandler('settings', commands.settings))
+    dp.add_handler(CommandHandler('vote', commands.vote, pass_args=True))
+    dp.add_handler(CommandHandler('start', commands.start, pass_args=True))
+    dp.add_handler(CommandHandler('help', commands.help))
+    dp.add_handler(CommandHandler('groupleaderboard', commands.groupleaderboard))
+    dp.add_handler(CommandHandler('leaderboard', commands.leaderboard))
+    dp.add_handler(CommandHandler('leadervote', leaderboards.leadervote))
+    dp.add_handler(CommandHandler('leadermessage', leaderboards.leadermessage))
+    dp.add_handler(CommandHandler('leadermember', leaderboards.leadermember))
+    dp.add_handler(CommandHandler('aboutyou', commands.aboutyou))
+    dp.add_handler(CommandHandler('language', commands.language))
+    dp.add_handler(CommandHandler('region', commands.region))
+    # private commands
+    dp.add_handler(CommandHandler('statsusers', commands_private.stats_users))
+    dp.add_handler(CommandHandler('statsgroups', commands_private.stats_groups))
+    dp.add_handler(CommandHandler('infoid', commands_private.infoid, pass_args=True))
+    dp.add_handler(CommandHandler('reverseusername', commands_private.reverse_username, 
+                                    pass_args=True))
+    dp.add_handler(CommandHandler('bangroup', commands_private.ban_group, pass_args=True))
+    dp.add_handler(CommandHandler('unbangroup', commands_private.unban_group, pass_args=True))
+    #invalid command
+    dp.add_handler(MessageHandler(Filters.command & Filters.private, utils.invalid_command))
+    # handle all messages not command. it's obvious because commands are handled before, 
+    # but it's more safe
+    dp.add_handler(MessageHandler(~Filters.command, messages.processing))
 
-	# handle buttons callback
-	dp.add_handler(CallbackQueryHandler(buttons_callback.callback_query))
+    # handle buttons callback
+    dp.add_handler(CallbackQueryHandler(buttons_callback.callback_query))
 
-	# jobs
-	j.run_repeating(cleandb.clean_db, interval=60*60*24, first=0)
-	j.run_repeating(memberslog.members_log, interval=60*60*24, first=0)
-	j.run_daily(digest_private.weekly_own_private, time=datetime.time(0, 0, 0), days=(0,))
-	j.run_daily(digest_supergroups.weekly_groups_digest, time=datetime.time(0, 0, 0), days=(0,))
+    # jobs
+    j.run_repeating(cleandb.clean_db, interval=60*60*24, first=0)
+    j.run_repeating(memberslog.members_log, interval=60*60*24, first=0)
+    j.run_daily(digest_private.weekly_own_private, time=datetime.time(0, 0, 0), days=(0,))
+    j.run_daily(digest_supergroups.weekly_groups_digest, time=datetime.time(0, 0, 0), days=(0,))
 
-	# handle errors
-	dp.add_error_handler(error)
+    # handle errors
+    dp.add_error_handler(error)
 
-	updater.start_polling()
-	updater.idle()
+    updater.start_polling()
+    updater.idle()
 
 
 if __name__ == '__main__':
-	main()
+    main()

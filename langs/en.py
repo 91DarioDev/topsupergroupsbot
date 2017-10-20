@@ -16,8 +16,8 @@
 
 
 choose_group_lang = ("Choose the language of the group. "
-					"Your group will be added in the leaderboard of the right language. "
-					"Don't lie or we'll ban this group")
+                    "Your group will be added in the leaderboard of the right language. "
+                    "Don't lie or we'll ban this group")
 group_settings = "Group settings:"
 messages_in_groups_position = "— {} messages in @{}. Position: {}\n"
 have_adult = "Does this group contains adult content?"
@@ -49,7 +49,7 @@ registered_vote = "Vote registered!"
 updated_vote = "Vote updated!"
 
 choose_region = ("Choose your region. It will be the default language filter when you "
-				"ask for a leaderboard")
+                "ask for a leaderboard")
 
 pre_leadervote = "Top supergroups ordered by average of votes. Having at least {} votes.\nRegion: {}"
 pre_leadermessage = "Top supergroups ordered by amount of sent messages during this week (UTC).\nRegion: {}"
@@ -66,79 +66,79 @@ private_groups_digest_button = "About groups"
 private_digest = "You can receive a digest at the end of every week. Disable or enable them anytime you want"
 weekly_own_digest = "Do you want to get anytime a week is over statistic about you during the past week?"
 digest_of_the_week_global = ("Another week is over!\nDuring the last week you globally sent {} messages "
-					"in {} groups. Position: {}\n")
+                    "in {} groups. Position: {}\n")
 
 digest_of_the_week_detail = "— {} messages in @{}. Position: {}\n"
 
 generic_leaderboard = ("Choose one of the following order criterias for the leaderboard.\n" 
-					"If you want to be faster next time there are shortcuts for leaderboards:\n\n"
-					"/leadermember - <i>ordered by amount of members</i>\n"
-					"/leadermessage - <i>ordered by sent messages during the week</i>\n"
-					"/leadervote - <i>ordered by votes average</i>\n\n"
-					"Your region: {}. Press /region in case you want to check groups of other regions")
+                    "If you want to be faster next time there are shortcuts for leaderboards:\n\n"
+                    "/leadermember - <i>ordered by amount of members</i>\n"
+                    "/leadermessage - <i>ordered by sent messages during the week</i>\n"
+                    "/leadervote - <i>ordered by votes average</i>\n\n"
+                    "Your region: {}. Press /region in case you want to check groups of other regions")
 
 by_members = "By members"
 by_messages = "By messages"
 by_votes = "By votes"
 
 help_message = ("This bot does statistics and leaderboards about public supergrous and their users"
-			"here are the commands you can use:\n\n"
-			"/leaderboard - <i>check out supergroups leaderboards</i>\n"
-			"/vote - <i>vote a group</i>\n"
-			"/aboutyou - <i>get stats about you</i>\n"
-			"/settings - <i>change your settings</i>\n\n"
-			"If you are an admin of a group you may be interesting in "
-			"<a href=\"{}\">how to use it in groups</a>")
+            "here are the commands you can use:\n\n"
+            "/leaderboard - <i>check out supergroups leaderboards</i>\n"
+            "/vote - <i>vote a group</i>\n"
+            "/aboutyou - <i>get stats about you</i>\n"
+            "/settings - <i>change your settings</i>\n\n"
+            "If you are an admin of a group you may be interesting in "
+            "<a href=\"{}\">how to use it in groups</a>")
 
 insert_param_vote = ("To vote a group send the username (no matter the presence of the '@')"
-				" as a parameter of the /vote command.\n\nExample:\n<code>/vote @NonEntrate</code>")
+                " as a parameter of the /vote command.\n\nExample:\n<code>/vote @NonEntrate</code>")
 
 
 disable = "Disable"
 hey_no_lang_set = ("Hey! You haven't set any language yet, so in which region of the leaderboards should"
-				" i put this group?. No, really, set a language.")
+                " i put this group?. No, really, set a language.")
 
 you_inactive_this_week = "This week you didn't sent messages in groups yet"
 this_week_you_sent_this = "This week you already sent:"
 you_globally_this_week = "You globally already sent {} messages in {} groups during this week. Position: {}"
 
 unsupported_chat = ("I have been programmed to take part only in public groups. "
-					"This is not a public group. I leave, bye")
+                    "This is not a public group. I leave, bye")
 
 banned_until_leave = "This group has been banned. The ban will end on {} UTC.\nReason: {}.\nI leave."
 not_specified = "Not specified"
 
 group_digest_button = "Digest"
 group_weekly_digest = ("Would you like to receive a digest of this group anytime a week is over?"
-					" You can change your mind at anytime.")
+                    " You can change your mind at anytime.")
 
 
 groups_working = ("Do you want your group to be part of our leaderboards? Simply add this bot in"
-				" your group and be sure to set the right language of the group. The group will "
-				"be added in the region of leaderboards that you specified with the language.\n"
-				"If your group has adult contents, select the right option in /settings. Please "
-				"be sure to insert only the correct values or we may ban your group from our bot.\n"
-				"We do not apply any kind of censorship about topics, but we may ban groups cheating "
-				"in leaderboards.\nIn /settings you will even find the link to redirect users to "
-				"automatically vote your group.\n\n"
-				"<b>SUPPORTED COMMANDS IN GROUPS</b>:\n"
-				"/settings - <i>set group settings</i>\n"
-				"/groupleaderboard - <i>get a message containing leaderboard of users that wrote"
-				"more messages in the group during the current week (UTC)</i>")
+                " your group and be sure to set the right language of the group. The group will "
+                "be added in the region of leaderboards that you specified with the language.\n"
+                "If your group has adult contents, select the right option in /settings. Please "
+                "be sure to insert only the correct values or we may ban your group from our bot.\n"
+                "We do not apply any kind of censorship about topics, but we may ban groups cheating "
+                "in leaderboards.\nIn /settings you will even find the link to redirect users to "
+                "automatically vote your group.\n\n"
+                "<b>SUPPORTED COMMANDS IN GROUPS</b>:\n"
+                "/settings - <i>set group settings</i>\n"
+                "/groupleaderboard - <i>get a message containing leaderboard of users that wrote"
+                "more messages in the group during the current week (UTC)</i>")
 
 weekly_groups_digest = ("Hello! Another week is over. Here there are some stats of this group:\n\n"
-					"sent messages last week: {}\n"
-					"sent messages this week: {}\n"
-					"difference: {}  percent: {}\n\n"
-					"members last week: {}\n"
-					"members this week: {}\n"
-					"difference: {}  percent: {}\n\n"
-					"average and number of votes last week: {}|({})\n"
-					"average and number of votes this week: {}|({})\n\n"
-					"active users last week: {}\n"
-					"active users this week: {}\n"
-					"difference: {}  percent: {}\n\n"
-					"TOP USERS OF THE WEEK:\n"
-					)
+                    "sent messages last week: {}\n"
+                    "sent messages this week: {}\n"
+                    "difference: {}  percent: {}\n\n"
+                    "members last week: {}\n"
+                    "members this week: {}\n"
+                    "difference: {}  percent: {}\n\n"
+                    "average and number of votes last week: {}|({})\n"
+                    "average and number of votes this week: {}|({})\n\n"
+                    "active users last week: {}\n"
+                    "active users this week: {}\n"
+                    "difference: {}  percent: {}\n\n"
+                    "TOP USERS OF THE WEEK:\n"
+                    )
 
 added_again = "Hello! Do you want to check the group settings again?"

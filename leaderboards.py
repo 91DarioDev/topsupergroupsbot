@@ -16,7 +16,6 @@
 
 import utils
 import database
-import pages as pag
 import keyboards
 import constants
 import get_lang
@@ -27,6 +26,7 @@ import datetime
 import html
 import time
 
+from pages import Pages
 from telegram import ParseMode
 
 
@@ -67,7 +67,7 @@ def offset_groupleaderboard(lang, group_id, chosen_page):
 
 	extract = database.query_r(query, group_id)
 	
-	pages = pag.Pages(extract, chosen_page)
+	pages = Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
 			pages=pages.displayed_pages(), 
@@ -133,7 +133,7 @@ def offset_leadervote(lang, region, chosen_page):
 		extract = database.query_r(query,region, min_reviews)
 		cached_leaderboards.set_leaderboard(VOTE_LEADERBOARD, region, extract)
 
-	pages = pag.Pages(extract, chosen_page)
+	pages = Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
 			pages=pages.displayed_pages(), 
@@ -203,7 +203,7 @@ def offset_leadermessage(lang, region, chosen_page):
 		cached_leaderboards.set_leaderboard(MESSAGE_LEADERBOARD, region, extract)
 
 	
-	pages = pag.Pages(extract, chosen_page)
+	pages = Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
 			pages=pages.displayed_pages(), 
@@ -276,7 +276,7 @@ def offset_leadermember(lang, region, chosen_page):
 		extract = database.query_r(query, region)
 		cached_leaderboards.set_leaderboard(MEMBER_LEADERBOARD, region, extract)
 		
-	pages = pag.Pages(extract, chosen_page)
+	pages = Pages(extract, chosen_page)
 
 	reply_markup = keyboards.displayed_pages_kb(
 			pages=pages.displayed_pages(), 

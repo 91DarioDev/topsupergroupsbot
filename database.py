@@ -31,12 +31,12 @@ REDIS = redis.Redis(host=config.REDIS_HOST,
                     db=config.REDIS_DB)
 
 
-def conn():
-    local = threading.local()
+LOCAL = threading.local()
 
-    if not hasattr(local, "db"):
-        local.db = psycopg2.connect(config.POSTGRES_DB)
-    return local.db
+def conn():
+    if not hasattr(LOCAL, "db"):
+        LOCAL.db = psycopg2.connect(config.POSTGRES_DB)
+    return LOCAL.db
 
 
 #                                      _                     _        

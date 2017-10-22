@@ -19,6 +19,7 @@ import get_lang
 import keyboards
 import utils
 import html
+import constants as c
 from telegram.error import (TelegramError, 
                             Unauthorized, 
                             BadRequest, 
@@ -231,8 +232,8 @@ def weekly_groups_digest(bot, job):
                     diff_msg, percent_msg,
                     utils.sep_l(members_old, lang), utils.sep_l(members_new, lang), 
                     diff_members, percent_members, 
-                    utils.sep_l(avg_v_old, lang), utils.sep_l(sum_v_old, lang), 
-                    utils.sep_l(avg_v_new, lang), utils.sep_l(sum_v_new, lang),
+                    utils.sep_l(avg_v_old, lang), c.EMOJI_STAR, utils.sep_l(sum_v_old, lang), 
+                    utils.sep_l(avg_v_new, lang), c.EMOJI_STAR, utils.sep_l(sum_v_new, lang),
                     utils.sep_l(act_users_old, lang), utils.sep_l(act_users_new, lang),
                     diff_act, percent_act)
 
@@ -277,7 +278,7 @@ def diff_percent(new, old, lang):
     diff = new - old
     diff_s = utils.sep_l(diff, lang) if diff < 0 else "+"+utils.sep_l(diff, lang)
     try:
-        percent = diff*100/old
+        percent = round(diff*100/old, 2)
         percent_s = (utils.sep_l(percent, lang) if percent < 0 else "+"+utils.sep_l(percent, lang))+"%"
     except ZeroDivisionError:
         percent_s = "—" 

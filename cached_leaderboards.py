@@ -18,6 +18,9 @@
 import database as db 
 import json
 
+from telegram.ext.dispatcher import run_async
+
+
 CACHE_SECONDS = 60*3
 
 def key_name(name_type, region):
@@ -32,6 +35,7 @@ def get_leaderboard(name_type, region):
     return lst
 
 
+@run_async
 def set_leaderboard(name_type, region, lst):
     key = key_name(name_type, region)
     dumped_lst = json.dumps(lst).encode('UTF-8')

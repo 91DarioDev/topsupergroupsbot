@@ -27,7 +27,7 @@ here_group_vote_link = "Questo è il link per indirizzare gli utenti direttament
 canceled = "Anullato"
 already_this_page = "Sei già in questa pagina!"
 
-vote_this_group = "id: {}\nusername: @{}\titolo: {}"
+vote_this_group = "id: {}\nusername: @{}\ntitolo: {}"
 already_voted = "Già votato {} il {}"
 choose_your_lang = "Seleziona la tua lingua"
 

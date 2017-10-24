@@ -218,18 +218,28 @@ def set_vote(bot, query):
     vote = int(vote)
     group_id = query.data.split(":")[2]
     alert = ""
-    try:
-        query_db = """INSERT INTO votes 
-        (user_id, group_id, vote, vote_date) 
-        VALUES (%s, %s, %s, now())"""
-        database.query_w(query_db, query.from_user.id, group_id, vote)
+    query_db = """
+    INSERT INTO votes 
+    (user_id, group_id, vote, vote_date) 
+    VALUES (%s, %s, %s, now())
+    ON CONFLICT DO NOTHING
+    RETURNING*
+    """
+    extract = database.query_wr(query_db, query.from_user.id, group_id, vote, one=True)
+    if extract is not None:
         alert = get_lang.get_string(lang, "registered_vote")
-    except psycopg2.IntegrityError:
-        query_db = """UPDATE votes 
-        SET vote = %s, vote_date = now() 
-        WHERE user_id = %s AND group_id = %s"""
+    else:
+        query_db = """
+        UPDATE votes 
+        SET 
+            vote = %s, 
+            vote_date = now() 
+        WHERE 
+            user_id = %s AND 
+            group_id = %s
+        """
         database.query_w(query_db, vote, query.from_user.id, group_id)
-        alert = get_lang.get_string(lang, "updated_vote")
+        alert = get_lang.get_string(lang, "updated_vote")         
     query.answer(text=alert, show_alert=True)
     text = "{}\n\n{}\n{}".format(query.message.text, alert, constants.EMOJI_STAR*vote)
     query.edit_message_text(text=text)

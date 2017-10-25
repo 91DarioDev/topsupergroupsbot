@@ -67,18 +67,12 @@ def query(query, *params, one=False, read=False):
 
 # for retrocompatibilty
 def query_w(raw_query, *params):
-    try:
-        query(raw_query, *params)
-    except:
-        raise
+    query(raw_query, *params)
 
 
 # for retrocompatibility
 def query_r(raw_query, *params, one=False):
-    try:
-        return query(raw_query, *params, one=one, read=True)
-    except:
-        raise
+    return query(raw_query, *params, one=one, read=True)
 
 
 # because the commit is now added in the query_r too

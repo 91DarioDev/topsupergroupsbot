@@ -55,7 +55,7 @@ def send_vote_by_link(bot, update, first_arg):
         extract[0], extract[1], extract[2])
     if extract[3] is not None and extract[4] is not None:
         stars = constants.EMOJI_STAR*extract[3]
-        date = extract[4].strftime("%d/%m/%Y")
+        date = utils.formatted_date_l(extract[4].date(), lang)
         text += "\n\n"+get_lang.get_string(lang, "already_voted").format(stars, date)
     reply_markup = keyboards.vote_group_kb(extract[0], lang)
     update.message.reply_text(text=text, reply_markup=reply_markup)

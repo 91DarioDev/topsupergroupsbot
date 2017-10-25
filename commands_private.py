@@ -243,8 +243,9 @@ def ban_group(bot, update, args):
     banned_until = extract[1]
     shown_reason = html.escape(reason) if reason is not None else get_lang.get_string(lang, "not_specified")
     shown_reason = "<code>{}</code>".format(shown_reason)
-    text = get_lang.get_string(lang, "banned_until_leave").format(banned_until.replace(microsecond=0), 
-                                                            shown_reason)
+    text = get_lang.get_string(lang, "banned_until_leave").format(
+            utils.formatted_datetime_l(banned_until.replace(microsecond=0), lang), 
+            shown_reason)
     text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(creator.user.id, 
                                                             html.escape(creator.user.first_name))
     bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')

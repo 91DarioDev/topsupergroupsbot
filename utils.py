@@ -20,10 +20,12 @@ import time
 import get_lang
 import database
 import babel
+import datetime
 from config import config
 from functools import wraps
 from telegram import constants as ptb_consts
 
+from babel.dates import format_datetime, format_date
 from babel.numbers import format_decimal
 
 
@@ -199,3 +201,43 @@ def sep_l(num, locale='en', none_is_zero=False):
         return babel.numbers.format_decimal(num, locale=locale)
     except babel.core.UnknownLocaleError:
         return "{:,}".format(num)
+
+
+def formatted_datetime_l(datetime, locale='en', formate='medium', tzinfo=None):
+    if datetime is None:
+        return None
+    if locale is None:
+        locale = 'en'
+    locale = locale.split("-")[0]  # because babel have problems if contains '-'
+
+    try:
+        return format_datetime(
+                datetime=datetime, 
+                locale=locale, 
+                format=formate, 
+                tzinfo=tzinfo)
+    except babel.core.UnknownLocaleError:
+        return format_datetime(
+                datetime=datetime, 
+                locale='en', 
+                format=formate, 
+                tzinfo=tzinfo)
+
+
+def formatted_date_l(date, locale='en', formate='medium'):
+    if date is None:
+        return None
+    if locale is None:
+        locale = 'en'
+    locale = locale.split("-")[0]  # because babel have problems if contains '-'
+
+    try:
+        return format_date(
+                date=date, 
+                locale=locale, 
+                format=formate)
+    except babel.core.UnknownLocaleError:
+        return format_date(
+                date=date, 
+                locale='en', 
+                format=formate)

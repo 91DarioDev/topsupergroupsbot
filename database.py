@@ -46,12 +46,18 @@ def conn():
 #                   |_|  |_|                 |_|                      
 
 
-def query_w(query, *params):
+
+def query(query, *params, one=False, read=False):
     connect = conn()
     c = connect.cursor()
     try:
         c.execute(query, params)
         c.connection.commit()
+        if read:
+            if not one:
+                return c.fetchall()
+            else:
+                return c.fetchone()
     except:
         c.connection.rollback()
         raise
@@ -59,38 +65,24 @@ def query_w(query, *params):
         c.close()
 
 
-def query_r(query, *params, one=False):
-    connect = conn()
-    c = connect.cursor()
+# for retrocompatibilty
+def query_w(raw_query, *params):
     try:
-        c.execute(query, params)
-        c.connection.commit()
-        if not one:
-            return c.fetchall()
-        else:
-            return c.fetchone()
+        query(raw_query, *params)
     except:
-        c.connection.rollback()
         raise
-    finally:
-        c.close()
 
 
-def query_wr(query, *params, one=False):
-    connect = conn()
-    c = connect.cursor()
+# for retrocompatibility
+def query_r(raw_query, *params, one=False):
     try:
-        c.execute(query, params)
-        c.connection.commit()
-        if not one:
-            return c.fetchall()
-        else:
-            return c.fetchone()
+        return query(raw_query, *params, one=one, read=True)
     except:
-        c.connection.rollback()
         raise
-    finally:
-        c.close()
+
+
+# because the commit is now added in the query_r too
+query_wr = query_r
 
 
 #                    _            _ _    

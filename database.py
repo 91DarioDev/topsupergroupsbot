@@ -49,20 +49,29 @@ def conn():
 def query_w(query, *params):
     connect = conn()
     c = connect.cursor()
-    c.execute(query, params)
-    c.connection.commit()
-    c.close()
+    try:
+        c.execute(query, params)
+        c.connection.commit()
+    except:
+        c.connection.rollback()
+        raise
+    finally:
+        c.close()
 
 
 def query_r(query, *params, one=False):
     connect = conn()
     c = connect.cursor()
-    c.execute(query, params)
     try:
+        c.execute(query, params)
+        c.connection.commit()
         if not one:
             return c.fetchall()
         else:
             return c.fetchone()
+    except:
+        c.connection.rollback()
+        raise
     finally:
         c.close()
 
@@ -70,13 +79,16 @@ def query_r(query, *params, one=False):
 def query_wr(query, *params, one=False):
     connect = conn()
     c = connect.cursor()
-    c.execute(query, params)
-    c.connection.commit()
     try:
+        c.execute(query, params)
+        c.connection.commit()
         if not one:
             return c.fetchall()
         else:
             return c.fetchone()
+    except:
+        c.connection.rollback()
+        raise
     finally:
         c.close()
 

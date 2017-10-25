@@ -64,13 +64,15 @@ def query(query, *params, one=False, read=False):
     finally:
         c.close()
 
-
+# for retrocompatibilty
 def query_w(raw_query, *params):
     try:
         query(raw_query, *params)
     except:
         raise
 
+
+# for retrocompatibility
 def query_r(raw_query, *params, one=False):
     try:
         return query(raw_query, *params, one=one, read=True)

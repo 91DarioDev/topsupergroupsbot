@@ -64,6 +64,7 @@ def query(query, *params, one=False, read=False):
     finally:
         c.close()
 
+
 # for retrocompatibilty
 def query_w(raw_query, *params):
     try:
@@ -79,6 +80,8 @@ def query_r(raw_query, *params, one=False):
     except:
         raise
 
+
+# because the commit is now added in the query_r too
 query_wr = query_r
 
 

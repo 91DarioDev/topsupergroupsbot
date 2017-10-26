@@ -16,12 +16,6 @@
 
 import database
 import utils
-import constants as c
-import commands_private
-import get_lang
-
-from config import config
-
 
 def add_user_db(bot, update):
     m = update.message

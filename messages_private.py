@@ -68,7 +68,8 @@ def receive_feedback(bot, update):
                 quote=True, 
                 disable_notification=True)
         update.message.reply_text(get_lang.get_string(lang, "thanks_feedback"), quote=True)
-
+        return True
 
     else:
         update.message.reply_text(get_lang.get_string(lang, "feedback_flood"), quote=True)
+        return False

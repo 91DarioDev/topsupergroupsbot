@@ -275,6 +275,6 @@ def feedback(bot, update):
     sender_id = update.message.from_user.id
     lang = utils.get_db_lang(sender_id)
     text = constants.FEEDBACK_INV_CHAR
-    text = get_lang.get_string(lang, "feedback_message")
+    text += get_lang.get_string(lang, "feedback_message")
     update.message.reply_text(text=text)
 

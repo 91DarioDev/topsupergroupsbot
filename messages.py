@@ -20,7 +20,7 @@ import messages_supergroups
 from antiflood import antiflood
 
 from telegram.ext import DispatcherHandlerStop
-from feedback import Feedback
+import feedback
 
 def before_processing(bot, update):
     if update.message.chat.type == "private":
@@ -77,11 +77,8 @@ def before_processing_supergroups(bot, update):
 def before_processing_private(bot, update):
     messages_private.add_user_db(bot, update)
 
-    if feedback.is_a_feedback:
-        feedback = Feedback(bot, update)
-        feedback.receive_feedback(bot, update)
-    #if messages_private.is_a_feedback(bot, update):
-    #    messages_private.receive_feedback(bot, update)
+    if feedback.is_a_feedback(bot, update):
+        feedback.handle_receive_feedback(bot, update)
 
 
 #                               _           

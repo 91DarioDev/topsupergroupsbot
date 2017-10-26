@@ -19,46 +19,71 @@ import get_lang
 import commands_private
 import utils
 import constants as c
+import database as db
 
 from config import config
 
+
+
+INTERVAL = 60*60*24*7
+MAX_ALLOWED = 5
+
 class Feedback:
     def __init__(self, bot, update):
-        self.is_a_feedback = self.is_a_feedback(bot, update)
+        self.feedback_from = update.message.from_user
 
-    def is_a_feedback(self, bot, update):
-        if update.message.reply_to_message is None:
-            return False
-        if update.message.reply_to_message.text is None:
-            return False
+    def feedback_key(self):
+        key = "feedback_flood:{}".format(self.feedback_from.id)
+        return key
 
-        if update.message.reply_to_message.from_user.id == bot.id and (
-                update.message.reply_to_message.text).startswith(c.FEEDBACK_INV_CHAR):
+    def is_allowed(self):
+        key = self.feedback_key()
+        result = db.REDIS.get(key)
+        if result is None:
             return True
+        return True if int(result) <= MAX_ALLOWED else False
 
-    def feedback_key(self, sender_id):
-        return self.key = "feedback_flood:{}".from_user(self.sender_id)
+    def increment_feedback(self):
+        key = self.feedback_key()
+        result = db.REDIS.incr(key, amount=1)
+        if result.decode('UTF-8') == 1:
+            db.REDIS.expire(key, INTERVAL)
 
     def receive_feedback(self, bot, update):
-        sender_id = update.message.from_user.id
+        sender_id = self.feedback_from.id
         lang = utils.get_db_lang(sender_id)
-        if is_allowed(sender_id):
-            forwarded = update.message.forward(config.FOUNDER, disable_notification=True)
-            forwarded.reply_text(
-                    "#id_"+str(sender_id)+"\n#feedback_from_user", 
-                    quote=True, 
-                    disable_notification=True)
-            forwarded.reply_text(
-                    commands_private.get_info_id(bot, sender_id), 
-                    quote=True, 
-                    disable_notification=True)
-            update.message.reply_text(get_lang.get_string(lang, "thanks_feedback"), quote=True)
-            return True
+        forwarded = update.message.forward(config.FOUNDER, disable_notification=True)
+        forwarded.reply_text(
+                "#id_"+str(sender_id)+"\n#feedback_from_user", 
+                quote=True, 
+                disable_notification=True)
+        forwarded.reply_text(
+                commands_private.get_info_id(bot, sender_id), 
+                quote=True, 
+                disable_notification=True)
+        update.message.reply_text(get_lang.get_string(lang, "thanks_feedback"), quote=True)
+        self.increment_feedback()
 
-        else:
-            update.message.reply_text(get_lang.get_string(lang, "feedback_flood"), quote=True)
-            return False
+    def do_not_receive_feedback(self, bot, update):
+        sender_id = self.feedback_from.id
+        lang = utils.get_db_lang(sender_id)
+        update.message.reply_text(get_lang.get_string(lang, "feedback_flood"), quote=True)
 
-    def is_allowed(self, sender_id):
-        key = feedback_key(self, sender_id)
 
+def is_a_feedback(bot, update):
+    if update.message.reply_to_message is None:
+        return False
+    if update.message.reply_to_message.text is None:
+        return False
+    if update.message.reply_to_message.from_user.id == bot.id and (
+            update.message.reply_to_message.text).startswith(c.FEEDBACK_INV_CHAR):
+        return True
+
+
+def handle_receive_feedback(bot, update):
+    fb = Feedback(bot, update)
+    if fb.is_allowed():
+        fb.receive_feedback(bot, update)
+        fb.increment_feedback()
+    else:
+        fb.do_not_receive_feedback(bot, update)

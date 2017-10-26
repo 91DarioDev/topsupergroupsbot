@@ -39,6 +39,7 @@ def add_user_db(bot, update):
             m.date, m.from_user.id)
 
 
+"""
 def is_a_feedback(bot, update):
     if update.message.reply_to_message is None:
         return
@@ -73,3 +74,4 @@ def receive_feedback(bot, update):
     else:
         update.message.reply_text(get_lang.get_string(lang, "feedback_flood"), quote=True)
         return False
+"""

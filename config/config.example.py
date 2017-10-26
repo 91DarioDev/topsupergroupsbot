@@ -32,3 +32,6 @@ REDIS_DB = 1234
 ADMINS = [
     1234
 ]
+
+# telegram ID of the founder of the bot (more priviledges)
+FOUNDER = 1234

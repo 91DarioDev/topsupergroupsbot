@@ -162,3 +162,5 @@ thanks_feedback = "Feedback inviato con successo! Grazie!"
 
 feedback_flood = ("Mi dispiace, ma hai già inviato un po' di feedback, aspetta prima una risposta o fai"
                 " passare un po' di tempo prima. Impossibile inviare questo feedback")
+
+from_developer = "Questo è un messaggio da parte dello sviluppatore del bot"

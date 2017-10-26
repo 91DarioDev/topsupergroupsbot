@@ -27,4 +27,6 @@ EMOJI_NEW = "🆕"
 BUTTON_START = "•"
 BUTTON_END = "•"
 
+FEEDBACK_INV_CHAR = "\ufeff"
+
 GET_ME = Bot(config.BOT_TOKEN).getMe()

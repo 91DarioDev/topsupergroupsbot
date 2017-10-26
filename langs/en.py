@@ -156,3 +156,5 @@ added_again = "Hello! Do you want to check the group settings again?"
 
 feedback_message = ("The only way to send a feedback is sending your message as a reply of this message"
         ".\n\nYou can send any kind of message or media.")
+
+thanks_feedback = "Feedback succesfully sent! thank you!"

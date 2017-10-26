@@ -16,6 +16,11 @@
 
 import database
 import utils
+import constants as c
+import commands_private
+import get_lang
+
+from config import config
 
 
 def add_user_db(bot, update):
@@ -34,3 +39,36 @@ def add_user_db(bot, update):
             m.date, m.from_user.id)
 
 
+def is_a_feedback(bot, update):
+    if update.message.reply_to_message is None:
+        return
+    if update.message.reply_to_message.text is None:
+        return
+
+    if update.message.reply_to_message.from_user.id == bot.id and (
+            update.message.reply_to_message.text).startswith(c.FEEDBACK_INV_CHAR):
+        return True
+
+
+def feedback_key(bot, update):
+    key = "feedback_flood:{}".from_user(update.message.from_user.id)
+
+
+def receive_feedback(bot, update):
+    sender_id = update.message.from_user.id
+    lang = utils.get_db_lang(sender_id)
+    if 1:#is_allowed(sender_id):
+        forwarded = update.message.forward(config.FOUNDER, disable_notification=True)
+        forwarded.reply_text(
+                "#id_"+str(sender_id)+"\n#feedback_from_user", 
+                quote=True, 
+                disable_notification=True)
+        forwarded.reply_text(
+                commands_private.get_info_id(bot, sender_id), 
+                quote=True, 
+                disable_notification=True)
+        update.message.reply_text(get_lang.get_string(lang, "thanks_feedback"), quote=True)
+
+
+    else:
+        update.message.reply_text(get_lang.get_string(lang, "feedback_flood"), quote=True)

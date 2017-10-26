@@ -79,6 +79,10 @@ def before_processing_private(bot, update):
 
     if feedback.is_a_feedback(bot, update):
         feedback.handle_receive_feedback(bot, update)
+        raise DispatcherHandlerStop  # nothing should be done anymore
+
+    if feedback.is_a_feedback_reply(bot, update):
+        feedback.handle_reply_feedback(bot, update)
 
 
 #                               _           

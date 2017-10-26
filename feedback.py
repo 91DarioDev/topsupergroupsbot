@@ -34,6 +34,7 @@ from telegram.error import (TelegramError,
 INTERVAL = 60*60*24*7
 MAX_ALLOWED = 5
 
+
 class Feedback:
     def __init__(self, bot, update, receive=False, reply=False):
         if receive:
@@ -55,7 +56,7 @@ class Feedback:
     def increment_feedback(self):
         key = self.feedback_key()
         result = db.REDIS.incr(key, amount=1)
-        if result.decode('UTF-8') == 1:
+        if result == 1:
             db.REDIS.expire(key, INTERVAL)
 
     def remove_key(self):
@@ -83,7 +84,7 @@ class Feedback:
         update.message.reply_text(get_lang.get_string(lang, "feedback_flood"), quote=True)
 
     def reply_feedback(self, bot, update):
-        sender_id = update.message.from_user.id
+        first = None
         try:
             lang = utils.get_db_lang(update.message.reply_to_message.forward_from.id)
 

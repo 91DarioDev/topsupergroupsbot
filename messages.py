@@ -77,8 +77,8 @@ def before_processing_supergroups(bot, update):
 def before_processing_private(bot, update):
     messages_private.add_user_db(bot, update)
 
-    feedback = Feedback(bot, update)
     if feedback.is_a_feedback:
+        feedback = Feedback(bot, update)
         feedback.receive_feedback(bot, update)
     #if messages_private.is_a_feedback(bot, update):
     #    messages_private.receive_feedback(bot, update)

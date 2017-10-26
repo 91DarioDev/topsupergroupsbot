@@ -37,12 +37,12 @@ class Feedback:
             return True
 
     def feedback_key(self, sender_id):
-        self.key = "feedback_flood:{}".from_user(self.sender_id)
+        return self.key = "feedback_flood:{}".from_user(self.sender_id)
 
     def receive_feedback(self, bot, update):
         sender_id = update.message.from_user.id
         lang = utils.get_db_lang(sender_id)
-        if 1:#is_allowed(sender_id):
+        if is_allowed(sender_id):
             forwarded = update.message.forward(config.FOUNDER, disable_notification=True)
             forwarded.reply_text(
                     "#id_"+str(sender_id)+"\n#feedback_from_user", 
@@ -58,3 +58,7 @@ class Feedback:
         else:
             update.message.reply_text(get_lang.get_string(lang, "feedback_flood"), quote=True)
             return False
+
+    def is_allowed(self, sender_id):
+        key = feedback_key(self, sender_id)
+

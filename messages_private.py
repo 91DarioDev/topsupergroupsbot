@@ -17,7 +17,6 @@
 import database
 import utils
 
-
 def add_user_db(bot, update):
     m = update.message
 
@@ -32,5 +31,4 @@ def add_user_db(bot, update):
             query, m.from_user.id, guessed_lang, guessed_lang,
             m.from_user.language_code, m.date, m.from_user.language_code,
             m.date, m.from_user.id)
-
 

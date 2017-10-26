@@ -119,11 +119,14 @@ def infoid(bot, update, args):
         update.message.reply_text("1 args per time")
         return
     tgid = int(args[0])
+    update.message.reply_text(text=get_info_id(bot, tgid))
+
+
+def get_info_id(bot, tgid):
     try:
         result = bot.getChat(chat_id=tgid)
     except BadRequest as e:
-        update.message.reply_text(str(e))
-        return
+        text = str(e)
 
     if tgid < 0:
         text = "title: {}".format(result.title)
@@ -134,7 +137,7 @@ def infoid(bot, update, args):
         text += "\nLast name: {}".format(result.last_name)
         text += "\nUsername: @{}".format(result.username)
         text += "\n"+infoid_from_db(tgid)
-    update.message.reply_text(text)
+    return text
 
 
 def infoid_from_db(user_id):

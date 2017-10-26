@@ -153,3 +153,12 @@ weekly_groups_digest = (
         )
 
 added_again = "Ciao! Vuoi dare un'occhiata di nuovo alle impostazioni del gruppo?"
+
+feedback_message = ("L'unico modo per inviare il feedback è inviando il tuo messaggio come risposta di"
+        " questo messaggio."
+        ".\n\nPuoi inviare qualsiasi messaggio o media.")
+
+thanks_feedback = "Feedback inviato con successo! Grazie!"
+
+feedback_flood = ("Mi dispiace, ma hai già inviato un po' di feedback, aspetta prima una risposta o fai"
+                " passare un po' di tempo prima. Impossibile inviare questo feedback")

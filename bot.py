@@ -76,6 +76,7 @@ def main():
     dp.add_handler(CommandHandler('aboutyou', commands.aboutyou))
     dp.add_handler(CommandHandler('language', commands.language))
     dp.add_handler(CommandHandler('region', commands.region))
+    dp.add_handler(CommandHandler('feedback', commands.feedback))
     # private commands
     dp.add_handler(CommandHandler('statsusers', commands_private.stats_users))
     dp.add_handler(CommandHandler('statsgroups', commands_private.stats_groups))

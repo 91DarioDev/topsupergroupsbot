@@ -18,7 +18,7 @@ from topsupergroupsbot import database
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import keyboards
 from topsupergroupsbot import utils
-from topsupergroupsbot import html
+import html
 from topsupergroupsbot import constants as c
 from telegram.error import (TelegramError, 
                             Unauthorized, 

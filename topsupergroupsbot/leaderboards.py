@@ -26,7 +26,7 @@ import datetime
 import html
 import time
 
-from topsupergroups.pages import Pages
+from topsupergroupsbot.pages import Pages
 from telegram import ParseMode
 
 

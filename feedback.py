@@ -76,7 +76,6 @@ class Feedback:
                 quote=True, 
                 disable_notification=True)
         update.message.reply_text(get_lang.get_string(lang, "thanks_feedback"), quote=True)
-        self.increment_feedback()
 
     def do_not_receive_feedback(self, bot, update):
         sender_id = self.feedback_from.id

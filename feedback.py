@@ -85,11 +85,11 @@ class Feedback:
     def reply_feedback(self, bot, update):
         first = None
         try:
-            lang = utils.get_db_lang(update.message.reply_to_message.forward_from.id)
+            lang = utils.get_db_lang(self.feedback_from.id)
 
             if update.message.text:
                 first = bot.sendMessage(
-                        chat_id=update.message.reply_to_message.forward_from.id, 
+                        chat_id=self.feedback_from.id, 
                         text=update.message.text)
 
             elif update.message.voice:
@@ -97,7 +97,7 @@ class Feedback:
                 duration = update.message.voice.duration
                 caption = update.message.caption
                 first = bot.sendVoice(
-                        chat_id=update.message.reply_to_message.forward_from.id, 
+                        chat_id=self.feedback_from.id, 
                         voice=media, 
                         duration=duration, 
                         caption=caption)
@@ -106,14 +106,14 @@ class Feedback:
                 media = update.message.photo[-1].file_id
                 caption = update.message.caption
                 first = bot.sendPhoto(
-                        chat_id=update.message.reply_to_message.forward_from.id, 
+                        chat_id=self.feedback_from.id, 
                         photo=media, 
                         caption=caption)
 
             elif update.message.sticker:
                 media = update.message.sticker.file_id
                 first = bot.sendSticker(
-                        chat_id=update.message.reply_to_message.forward_from.id, 
+                        chat_id=self.feedback_from.id, 
                         sticker=media)
 
             elif update.message.document:
@@ -121,7 +121,7 @@ class Feedback:
                 filename = update.message.document.file_name
                 caption = update.message.caption
                 first = bot.sendDocument(
-                        chat_id=update.message.reply_to_message.forward_from.id, 
+                        chat_id=self.feedback_from.id, 
                         document=media, 
                         filename=filename, 
                         caption=caption)
@@ -133,7 +133,7 @@ class Feedback:
                 title = update.message.audio.title
                 caption = update.message.caption
                 first = bot.sendAudio(
-                        chat_id=update.message.reply_to_message.forward_from.id, 
+                        chat_id=self.feedback_from.id, 
                         audio=media, 
                         duration=duration, 
                         performer=performer, 
@@ -145,18 +145,18 @@ class Feedback:
                 caption = update.message.caption
                 duration = update.message.video.duration
                 first = bot.sendVideo(
-                        chat_id=update.message.reply_to_message.forward_from.id, 
+                        chat_id=self.feedback_from.id, 
                         video=media, 
                         duration=duration, 
                         caption=caption)
 
             bot.sendMessage(
-                    chat_id=update.message.reply_to_message.forward_from.id, 
+                    chat_id=self.feedback_from.id, 
                     text=get_lang.get_string(lang, "from_developer"), 
                     parse_mode='HTML', 
                     reply_to_message_id=first.message_id)
 
-            confirm = "sent to #id_"+str(update.message.reply_to_message.forward_from.id)
+            confirm = "sent to #id_"+str(update.message.from_user.id)
             bot.sendMessage(chat_id=config.FOUNDER, text=confirm, disable_notification=True)
             
         except Unauthorized as e:

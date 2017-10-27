@@ -156,7 +156,7 @@ class Feedback:
                     parse_mode='HTML', 
                     reply_to_message_id=first.message_id)
 
-            confirm = "sent to #id_"+str(update.message.from_user.id)
+            confirm = "sent to #id_{}".format(self.feedback_from.id)
             bot.sendMessage(chat_id=config.FOUNDER, text=confirm, disable_notification=True)
             
         except Unauthorized as e:

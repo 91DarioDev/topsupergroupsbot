@@ -15,12 +15,11 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import get_lang
-import commands_private
-import utils
-import constants as c
-import database as db
-
+from topsupergroupsbot import get_lang
+from topsupergroupsbot import commands_private
+from topsupergroupsbot import utils
+from topsupergroupsbot import constants as c
+from topsupergroupsbot import database as db
 from config import config
 
 from telegram.error import (TelegramError, 

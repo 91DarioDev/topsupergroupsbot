@@ -14,19 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-import utils
-import database
-import keyboards
-import constants
-import get_lang
-import supported_langs
-import cached_leaderboards
 
 import datetime
 import html
 import time
 
-from pages import Pages
+from topsupergroupsbot import utils
+from topsupergroupsbot import database
+from topsupergroupsbot import keyboards
+from topsupergroupsbot import constants
+from topsupergroupsbot import get_lang
+from topsupergroupsbot import supported_langs
+from topsupergroupsbot import cached_leaderboards
+from topsupergroupsbot.pages import Pages
+
 from telegram import ParseMode
 
 

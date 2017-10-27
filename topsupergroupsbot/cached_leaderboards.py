@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-
-import database as db 
 import json
+
+from topsupergroupsbot import database as db 
 
 from telegram.ext.dispatcher import run_async
 

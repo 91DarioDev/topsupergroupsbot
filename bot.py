@@ -24,16 +24,16 @@ import logging
 import datetime
 
 from config import config
-import messages
-import buttons_callback
-import commands
-import utils
-import leaderboards
-import cleandb
-import memberslog
-import digest_private
-import commands_private
-import digest_supergroups
+from topsupergroupsbot import messages
+from topsupergroupsbot import buttons_callback
+from topsupergroupsbot import commands
+from topsupergroupsbot import utils
+from topsupergroupsbot import leaderboards
+from topsupergroupsbot import cleandb
+from topsupergroupsbot import memberslog
+from topsupergroupsbot import digest_private
+from topsupergroupsbot import commands_private
+from topsupergroupsbot import digest_supergroups
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)

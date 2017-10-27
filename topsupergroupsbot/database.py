@@ -17,6 +17,7 @@
 import threading
 import psycopg2
 import redis
+
 from config import config
 
 #                            _   _          

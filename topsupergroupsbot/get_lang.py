@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-from langs import en, it
+from resources.langs import en, it
 
 lang_obj = {
     "en": en,

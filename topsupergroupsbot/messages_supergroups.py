@@ -14,14 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-import keyboards
-import database
-import constants
-import get_lang
+
 import datetime
 import time
 import html
-import utils
+
+from topsupergroupsbot import keyboards
+from topsupergroupsbot import database
+from topsupergroupsbot import constants
+from topsupergroupsbot import get_lang
+from topsupergroupsbot import utils
 
 import telegram
 

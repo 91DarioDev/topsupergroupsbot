@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-import database
+from topsupergroupsbot import database
 
 from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, 
                             ChatMigrated, NetworkError)

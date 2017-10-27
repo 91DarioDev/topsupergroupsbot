@@ -14,10 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-import database
-import get_lang
-import keyboards
-import utils
+from topsupergroupsbot import database
+from topsupergroupsbot import get_lang
+from topsupergroupsbot import keyboards
+from topsupergroupsbot import utils
 from collections import OrderedDict
 
 

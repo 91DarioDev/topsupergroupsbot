@@ -14,29 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-from langs import en, it
+from topsupergroupsbot import database
 
-lang_obj = {
-    "en": en,
-    "it": it
-}
+from telegram.ext.dispatcher import run_async
 
-
-def get_string(lang, variable):
-    """
-    returns the right string. example of usage:
-    print(get_string("en", "test"))
-    'en' is the language of the user returned from the db
-    '"test"' is the name of the variable in the relative file lang
-    """
-
-    try:
-        string = getattr(lang_obj[lang], variable)
-    except AttributeError:
-        string = getattr(en, variable)
-    except KeyError:
-        string = getattr(en, variable)
-    return string
+CLEAN_INTERVAL = '1 month'
 
 
+@run_async
+def clean_db(bot, job):
+    query = "DELETE FROM messages WHERE message_date < now() - interval %s"
+    database.query_w(query, CLEAN_INTERVAL)
 
+    query = "DELETE FROM members WHERE updated_date < now() - interval %s"
+    database.query_w(query, CLEAN_INTERVAL)

@@ -24,10 +24,10 @@ from telegram import InlineKeyboardMarkup
 from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, ChatMigrated, NetworkError)
 
 # files
-import supported_langs
-import constants
-import leaderboards
-import get_lang
+from topsupergroupsbot import supported_langs
+from topsupergroupsbot import constants
+from topsupergroupsbot import leaderboards
+from topsupergroupsbot import get_lang
 
 
 # INLINE KEYBOARDS

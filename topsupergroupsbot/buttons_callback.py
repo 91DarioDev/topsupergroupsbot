@@ -14,14 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-import keyboards
-import database
-import utils
-import constants
+from topsupergroupsbot import keyboards
+from topsupergroupsbot import database
+from topsupergroupsbot import utils
+from topsupergroupsbot import constants
 import psycopg2
-import votelink
-import leaderboards
-import get_lang
+from topsupergroupsbot import votelink
+from topsupergroupsbot import leaderboards
+from topsupergroupsbot import get_lang
 
 from telegram import ParseMode
 

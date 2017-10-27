@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-import constants
-import database
-import keyboards
-import get_lang
-import utils
+from topsupergroupsbot import constants
+from topsupergroupsbot import database
+from topsupergroupsbot import keyboards
+from topsupergroupsbot import get_lang
+from topsupergroupsbot import utils
 
 
 def create_vote_link(group_id):

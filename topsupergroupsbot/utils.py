@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-import supported_langs
-import constants
+from topsupergroupsbot import supported_langs
+from topsupergroupsbot import constants
 import time
-import get_lang
-import database
+from topsupergroupsbot import get_lang
+from topsupergroupsbot import database
 import babel
 import datetime
 from config import config

@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
+
+import datetime
+
 from topsupergroupsbot import utils
 from topsupergroupsbot import keyboards
 from topsupergroupsbot import database
@@ -23,8 +26,6 @@ from topsupergroupsbot import leaderboards
 from topsupergroupsbot import messages_supergroups
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
-
-import datetime
 
 
 def start(bot, update, args):

@@ -14,11 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
+import psycopg2
+
 from topsupergroupsbot import keyboards
 from topsupergroupsbot import database
 from topsupergroupsbot import utils
 from topsupergroupsbot import constants
-import psycopg2
+
 from topsupergroupsbot import votelink
 from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang

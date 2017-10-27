@@ -20,7 +20,6 @@ from topsupergroupsbot import commands_private
 from topsupergroupsbot import utils
 from topsupergroupsbot import constants as c
 from topsupergroupsbot import database as db
-
 from config import config
 
 from telegram.error import (TelegramError, 

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-from config import config
+from topsupergroupsbot import config
 
 from telegram import Bot
 

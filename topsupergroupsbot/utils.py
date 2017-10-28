@@ -23,7 +23,7 @@ from topsupergroupsbot import supported_langs
 from topsupergroupsbot import constants
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import database
-from config import config
+from topsupergroupsbot import config
 
 from telegram import constants as ptb_consts
 

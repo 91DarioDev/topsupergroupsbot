@@ -91,7 +91,8 @@ help_message = (
         "/leaderboard - <i>check out supergroups leaderboards</i>\n"
         "/vote - <i>vote a group</i>\n"
         "/aboutyou - <i>get stats about you</i>\n"
-        "/settings - <i>change your settings</i>\n\n"
+        "/settings - <i>change your settings</i>\n"
+        "/feedback - <i>send a feedback</i>\n\n"
         "If you are an admin of a group you may be interesting in "
         "<a href=\"{}\">how to use it in groups</a>\n\n"
         "<a href=\"{source_code}\">source code</a> (for developers)")

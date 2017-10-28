@@ -91,7 +91,8 @@ help_message = (
         "/leaderboard - <i>guarda classifiche dei gruppi</i>\n"
         "/vote - <i>vota un gruppo</i>\n"
         "/aboutyou - <i>ottieni statistiche su di te</i>\n"
-        "/settings - <i>cambia le tue impostazioni</i>\n\n"
+        "/settings - <i>cambia le tue impostazioni</i>\n"
+        "/feedback - <i>invia un feedback</i>\n\n"
         "Se sei un admin di un gruppo potresti essere interessato in "
         "<a href=\"{}\">come usare il bot nei gruppi</a>\n\n"
         "<a href=\"{source_code}\">codice sorgente</a> (per sviluppatori)")

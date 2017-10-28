@@ -90,7 +90,7 @@ def handle_one_by_one(bot, job):
         database.query_w(query, group_id)
 
     except Exception as e:
-        print("{} in memberslog".format(e))
+        print("{} in memberslog: group_id: {}".format(e, group_id))
 
 
 

@@ -82,6 +82,7 @@ def admin_command_only(func):
                 chat_id = update.message.from_user.id
                 bot.send_message(chat_id=chat_id, text=text)
             except Exception as e:
+                print("admin_command_only")
                 print(e)
             return
         return func(bot, update, *args, **kwargs)

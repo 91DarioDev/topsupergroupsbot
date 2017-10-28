@@ -93,7 +93,8 @@ help_message = (
         "/aboutyou - <i>get stats about you</i>\n"
         "/settings - <i>change your settings</i>\n\n"
         "If you are an admin of a group you may be interesting in "
-        "<a href=\"{}\">how to use it in groups</a>")
+        "<a href=\"{}\">how to use it in groups</a>\n\n"
+        "<a href=\"{source_code}\">source code</a> (for developers)")
 
 insert_param_vote = (
         "To vote a group send the username (no matter the presence of the '@')"

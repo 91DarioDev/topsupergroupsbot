@@ -46,6 +46,7 @@ def error(bot, update, error):
 
 
 def main():
+    print("\nrunning...")
     # define the updater
     updater = Updater(token=config.BOT_TOKEN, workers=7)
     

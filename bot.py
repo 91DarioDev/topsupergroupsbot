@@ -23,7 +23,7 @@ from telegram import InlineKeyboardButton
 import logging
 import datetime
 
-from config import config
+from topsupergroupsbot import config
 from topsupergroupsbot import messages
 from topsupergroupsbot import buttons_callback
 from topsupergroupsbot import commands

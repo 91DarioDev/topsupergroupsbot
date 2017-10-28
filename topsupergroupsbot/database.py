@@ -18,7 +18,7 @@ import threading
 import psycopg2
 import redis
 
-from config import config
+from topsupergroupsbot import config
 
 #                            _   _          
 #    __ ___ _ _  _ _  ___ __| |_(_)___ _ _  

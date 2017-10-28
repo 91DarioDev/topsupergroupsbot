@@ -93,7 +93,8 @@ help_message = (
         "/aboutyou - <i>ottieni statistiche su di te</i>\n"
         "/settings - <i>cambia le tue impostazioni</i>\n\n"
         "Se sei un admin di un gruppo potresti essere interessato in "
-        "<a href=\"{}\">come usare il bot nei gruppi</a>")
+        "<a href=\"{}\">come usare il bot nei gruppi</a>\n\n"
+        "<a href=\"{source_code}\">codice sorgente</a> (per sviluppatori)")
 
 insert_param_vote = (
         "Per votare un gruppo invia il suo username (non importa se c'è o no '@')"

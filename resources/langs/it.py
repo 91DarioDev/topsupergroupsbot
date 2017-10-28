@@ -166,3 +166,5 @@ feedback_flood = ("Mi dispiace, ma hai già inviato un po' di feedback, aspetta 
                 " passare un po' di tempo prima. Impossibile inviare questo feedback")
 
 from_developer = "Questo è un messaggio da parte dello sviluppatore del bot"
+
+feedback_reply = "Rispondi"

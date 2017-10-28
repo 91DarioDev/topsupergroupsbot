@@ -290,3 +290,12 @@ def disable_group_weekly_digest_kb(lang):
     buttons_list = [[disable]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
+
+
+def feedback_reply_kb(lang):
+    reply = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "feedback_reply"),
+            callback_data="feedback_reply")
+    buttons_list = [[reply]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard

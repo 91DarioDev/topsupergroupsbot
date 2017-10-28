@@ -103,6 +103,9 @@ def callback_query(bot, update):
     elif query.data.startswith("set_weekly_group_digest"):
         set_weekly_group_digest(bot, query)
 
+    elif query.data == "feedback_reply":
+        feedback_reply(bot, query)
+
 
 @utils.creator_button_only
 def choose_lang(bot, query):
@@ -408,3 +411,10 @@ def redirect_ledearboard(bot, query):
         lbpage_ml(bot, query, 1, region)
     elif lb_type == leaderboards.VOTE_LEADERBOARD:
         lbpage_vl(bot, query, 1, region)
+
+
+def feedback_reply(bot, query):
+    query.message.edit_reply_markup(reply_markup=None)
+    lang = utils.get_db_lang(query.from_user.id)
+    text = get_lang.get_string(lang, "feedback_message")
+    bot.sendMessage(chat_id=query.from_user.id, text=text)

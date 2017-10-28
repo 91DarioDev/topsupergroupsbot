@@ -21,6 +21,7 @@ from topsupergroupsbot import utils
 from topsupergroupsbot import constants as c
 from topsupergroupsbot import database as db
 from topsupergroupsbot import config
+from topsupergroupsbot import keyboards
 
 from telegram.error import (TelegramError, 
                             Unauthorized, 
@@ -153,7 +154,8 @@ class Feedback:
                     chat_id=self.feedback_from.id, 
                     text=get_lang.get_string(lang, "from_developer"), 
                     parse_mode='HTML', 
-                    reply_to_message_id=first.message_id)
+                    reply_to_message_id=first.message_id,
+                    reply_markup=keyboards.feedback_reply_kb(lang))
 
             confirm = "sent to #id_{}".format(self.feedback_from.id)
             bot.sendMessage(chat_id=config.FOUNDER, text=confirm, disable_notification=True)

@@ -44,6 +44,12 @@ class Leaderboard:
         self.region = region
         self.page = page
 
+    def buttons_callback_base(self):
+        return "lbpage:{page}:{lb_type}:{region}".format(
+                page='{page}',
+                lb_type=self.CODE, 
+                region=self.region)
+
 
 class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
@@ -79,11 +85,7 @@ class VotesLeaderboard(Leaderboard):
 
         pages = Pages(extract, self.page)
 
-        reply_markup = keyboards.displayed_pages_kb(
-                pages=pages.displayed_pages(), 
-                chosen_page=pages.chosen_page, 
-                lb_type=self.CODE, 
-                region=self.region)
+        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
@@ -137,12 +139,8 @@ class MessagesLeaderboard(Leaderboard):
             cached_leaderboards.set_leaderboard(self.CODE, self.region, extract)
 
         pages = Pages(extract, self.page)
-
-        reply_markup = keyboards.displayed_pages_kb(
-                pages=pages.displayed_pages(), 
-                chosen_page=pages.chosen_page, 
-                lb_type=self.CODE, 
-                region=self.region)
+        
+        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
@@ -201,11 +199,7 @@ class MembersLeaderboard(Leaderboard):
             
         pages = Pages(extract, self.page)
 
-        reply_markup = keyboards.displayed_pages_kb(
-                pages=pages.displayed_pages(), 
-                chosen_page=pages.chosen_page, 
-                lb_type=self.CODE, 
-                region=self.region)
+        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
@@ -224,6 +218,7 @@ class MembersLeaderboard(Leaderboard):
                 utils.sep_l(group[1], self.lang), 
                 new)
         return text, reply_markup
+
 
 class GroupLeaderboard(Leaderboard):
     CODE = 'igl'
@@ -245,10 +240,7 @@ class GroupLeaderboard(Leaderboard):
         
         pages = Pages(extract, self.page)
 
-        reply_markup = keyboards.displayed_pages_kb(
-                pages=pages.displayed_pages(), 
-                chosen_page=pages.chosen_page, 
-                lb_type=self.CODE)
+        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard")
         text += "\n\n"

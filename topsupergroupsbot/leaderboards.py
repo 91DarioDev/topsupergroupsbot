@@ -227,6 +227,7 @@ class MembersLeaderboard(Leaderboard):
 
 class GroupLeaderboard(Leaderboard):
     CODE = 'igl'
+    
     def build_page(self, group_id):
         query = """
             SELECT m.user_id, COUNT(m.user_id) AS leaderboard,

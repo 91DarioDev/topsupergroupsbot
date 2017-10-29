@@ -122,29 +122,29 @@ def infoid(bot, update, args):
         update.message.reply_text("1 args per time")
         return
     tgid = int(args[0])
-    update.message.reply_text(text=get_info_id(bot, tgid))
+    text = get_info_id(bot, tgid)
+    text += "\n"+infoid_from_db(tgid)
+    update.message.reply_text(text=text)
 
 
 def get_info_id(bot, tgid):
     try:
         result = bot.getChat(chat_id=tgid)
     except BadRequest as e:
-        text = str(e)
+        return str(e)
 
     if tgid < 0:
         text = "title: {}".format(result.title)
         text += "\nusername: @{}".format(result.username)
-        text += "\n"+infoid_from_db(tgid)
     else:
         text = "\nName: {}".format(result.first_name)
         text += "\nLast name: {}".format(result.last_name)
         text += "\nUsername: @{}".format(result.username)
-        text += "\n"+infoid_from_db(tgid)
     return text
 
 
-def infoid_from_db(user_id):
-    if user_id > 0:
+def infoid_from_db(tgid):
+    if tgid > 0:
         query = """
             SELECT      
                 lang,
@@ -158,7 +158,9 @@ def infoid_from_db(user_id):
                 message_date
             FROM users
             WHERE user_id = %s"""
-        extract = database.query_r(query, user_id, one=True)
+        extract = database.query_r(query, tgid, one=True)
+        if extract is None:
+            return "Not in the db"
         text = ""
         text += "lang: {}\n".format(extract[0])
         text += "region: {}\n".format(extract[1])
@@ -183,7 +185,9 @@ def infoid_from_db(user_id):
         FROM supergroups
         WHERE group_id = %s
         """
-        extract = database.query_r(query, group_id, one=True)
+        extract = database.query_r(query, tgid, one=True)
+        if extract is None:
+            return "Not in the db"
         text = ""
         text += "lang: {}\n".format(extract[0])
         text += "nsfw: {}\n".format(extract[1])

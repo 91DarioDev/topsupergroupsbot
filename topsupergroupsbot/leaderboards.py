@@ -30,14 +30,82 @@ from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
 
+class Leaderboard:
+    GROUP = 'igl' # inside the group
+    VOTES = 'vl'
+    MESSAGES = 'ml'
+    MEMBERS = 'mml'
 
-GROUP_LEADERBOARD = 'igl' # inside the group
-VOTE_LEADERBOARD = 'vl'
-MESSAGE_LEADERBOARD = 'ml'
-MEMBER_LEADERBOARD = 'mml'
+    NEW_INTERVAL = 60*60*24*7
+
+    def __init__(self, lang, region=None, page=1):
+        self.lang = lang
+        self.region = region
+        self.page = page
+
+class Votes_leaderboad(Leaderboard):
+    CODE = 'vl'
+    MIN_REVIEWS = 1
+
+    def build_page(self):
+        query = """
+        SELECT 
+            v.group_id, 
+            s_ref.title, 
+            s_ref.username, 
+            COUNT(vote) AS amount, 
+            ROUND(AVG(vote), 1)::float AS average,
+            s.nsfw, 
+            extract(epoch from s.joined_the_bot at time zone 'utc') AS dt
+        FROM votes AS v
+        LEFT OUTER JOIN supergroups_ref AS s_ref
+        ON s_ref.group_id = v.group_id
+        LEFT OUTER JOIN supergroups AS s
+        ON s.group_id = v.group_id
+        GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
+        HAVING 
+            (s.banned_until IS NULL OR s.banned_until < now()) 
+            AND s.lang = %s
+            AND COUNT(vote) >= %s 
+        ORDER BY average DESC, amount DESC
+        """
+
+        extract = cached_leaderboards.get_leaderboard(name_type=CODE, region=self.region)
+        if extract is None:
+            extract = database.query_r(query, self.region, MIN_REVIEWS)
+            cached_leaderboards.set_leaderboard(CODE, self.region, extract)
+
+        pages = Pages(extract, self.page)
+
+        reply_markup = keyboards.displayed_pages_kb(
+                pages=pages.displayed_pages(), 
+                chosen_page=pages.chosen_page, 
+                lb_type=CODE, 
+                region=self.region)
+
+        emoji_region = supported_langs.COUNTRY_FLAG[self.region]
+        text = get_lang.get_string(self.lang, "pre_leadervote").format(MIN_REVIEWS, emoji_region)
+        text += "\n\n" 
+        first_number_of_page = pages.first_number_of_page()
+        offset = first_number_of_page - 1
+        for group in pages.chosen_page_items():
+            nsfw = constants.EMOJI_NSFW if group[5] is True else ""
+            new = constants.EMOJI_NEW if (group[6]+NEW_INTERVAL > time.time()) else ""
+            offset += 1 # for before IT numeration
+            text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(
+                    offset, 
+                    nsfw, 
+                    group[2], 
+                    html.escape(group[1]), 
+                    group[4], 
+                    constants.EMOJI_STAR, 
+                    utils.sep_l(group[3], self.lang),
+                    new
+                    )
+        return text, reply_markup
 
 
-NEW_INTERVAL = 60*60*24*7
+
 
 
 @utils.admin_command_only
@@ -56,42 +124,6 @@ def groupleaderboard(bot, update):
             disable_notification=True)
 
 
-def offset_groupleaderboard(lang, group_id, chosen_page):
-    query = """
-    SELECT m.user_id, COUNT(m.user_id) AS leaderboard,
-        u_ref.name, u_ref.last_name, u_ref.username
-    FROM messages AS m
-    LEFT OUTER JOIN users_ref AS u_ref
-    ON u_ref.user_id = m.user_id
-    WHERE m.group_id = %s
-        AND m.message_date > date_trunc('week', now())
-    GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
-    ORDER BY leaderboard DESC
-    """
-
-    extract = database.query_r(query, group_id)
-    
-    pages = Pages(extract, chosen_page)
-
-    reply_markup = keyboards.displayed_pages_kb(
-            pages=pages.displayed_pages(), 
-            chosen_page=pages.chosen_page, 
-            lb_type=GROUP_LEADERBOARD)
-
-    text = get_lang.get_string(lang, "pre_groupleaderboard")
-    text += "\n\n"
-    first_number_of_page = pages.first_number_of_page()
-    offset = first_number_of_page - 1
-    for user in pages.chosen_page_items():
-        offset += 1 # for before IT numeration
-        text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
-                offset, 
-                user[0], 
-                html.escape(user[2]), 
-                utils.sep_l(user[1], lang)
-                )
-    return text, reply_markup
-
 
 @utils.private_only
 def leadervote(bot, update):
@@ -99,7 +131,8 @@ def leadervote(bot, update):
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    result = offset_leadervote(lang, region, 1)
+    leaderboard = Votes_leaderboad(lang, region, 1)
+    result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],
             reply_markup=result[1],

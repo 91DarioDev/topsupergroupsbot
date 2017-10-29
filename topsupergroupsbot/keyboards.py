@@ -143,7 +143,7 @@ def displayed_pages_kb(pages, chosen_page=1, lb_type="", region=""):
 
     for page in pages:
         callback_data = "lbpage:{}:{}:{}".format(page, lb_type, region)
-        current_page = "current_page" if lb_type not in [leaderboards.GROUP_LEADERBOARD] else "current_page_admin"
+        current_page = "current_page" if lb_type not in [leaderboards.Leaderboard.GROUP] else "current_page_admin"
         # this is necessary not to get list out of range
         # because later it checks pages[1]
         if len(pages) <= 1:

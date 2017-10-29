@@ -270,14 +270,14 @@ def lbpage(bot, query):
     lb_type = params[2]
     region = params[3]
 
-    if lb_type == leaderboards.GROUP_LEADERBOARD:
+    if lb_type == leaderboards.Leaderboard.GROUP:
         lbpage_igl(bot, query, params)
-    elif lb_type == leaderboards.VOTE_LEADERBOARD:
-        lbpage_vl(bot, query, page, region)
-    elif lb_type == leaderboards.MESSAGE_LEADERBOARD:
-        lbpage_ml(bot, query, page, region)
-    elif lb_type == leaderboards.MEMBER_LEADERBOARD:
-        lbpage_mml(bot, query, page, region)
+    elif lb_type in [
+            leaderboards.Leaderboard.VOTES, 
+            leaderboards.Leaderboard.MESSAGES, 
+            leaderboards.Leaderboard.MEMBERS
+        ]:
+        lbpage_private(bot, query, lb_type, page, region)
     query.answer()
 
 
@@ -294,25 +294,15 @@ def lbpage_igl(bot, query, params):
             parse_mode=ParseMode.HTML, disable_notification=True)
 
 
-def lbpage_vl(bot, query, page, region):
+def lbpage_private(bot, query, lb_type, page, region):
     lang = utils.get_db_lang(query.from_user.id)
-    result = leaderboards.offset_leadervote(lang, region, int(page))
-    query.edit_message_text(
-            text=result[0], reply_markup=result[1],
-            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
-
-
-def lbpage_ml(bot, query, page, region):
-    lang = utils.get_db_lang(query.from_user.id)
-    result = leaderboards.offset_leadermessage(lang, region, int(page))
-    query.edit_message_text(
-            text=result[0], reply_markup=result[1],
-            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
-
-
-def lbpage_mml(bot, query, page, region):
-    lang = utils.get_db_lang(query.from_user.id)
-    result = leaderboards.offset_leadermember(lang, region, int(page))
+    if lb_type == leaderboard.Leaderboard.VOTES:
+        leaderboard = VotesLeaderboard(lang, region, int(page))
+    elif lb_type == leaderboard.Leaderboard.MESSAGES:
+        leaderboard = MessagesLeaderboard(lang, region, int(page))
+    elif lb_type == leaderboard.Leaderboard.MEMBERS:
+        leaderboard = MembersLeaderboard(lang, region, int(page))
+    result = leaderboard.build_page()
     query.edit_message_text(
             text=result[0], reply_markup=result[1],
             parse_mode=ParseMode.HTML, disable_web_page_preview=True)

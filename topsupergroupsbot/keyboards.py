@@ -209,13 +209,14 @@ def weekly_own_digest_kb(lang, value):
     no = get_lang.get_string(lang, "no")
     back = get_lang.get_string(lang, "back")
     button_yes = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+yes if value is True else yes, 
-                callback_data="set_weekly_own_digest:true")
+            text=constants.CURRENT_CHOICE+yes if value is True else yes,
+            callback_data="set_weekly_own_digest:true")
     button_no = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+no if value is False else no, 
-                callback_data="set_weekly_own_digest:false")
-    button_back = InlineKeyboardButton(text=back, 
-                callback_data="back_private_digest")
+            text=constants.CURRENT_CHOICE+no if value is False else no,
+            callback_data="set_weekly_own_digest:false")
+    button_back = InlineKeyboardButton(
+            text=back,
+            callback_data="back_private_digest")
     buttons_list = [[button_yes, button_no], [button_back]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

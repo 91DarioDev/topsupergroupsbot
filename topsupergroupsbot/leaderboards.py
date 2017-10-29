@@ -15,13 +15,11 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import datetime
 import html
 import time
 
 from topsupergroupsbot import utils
 from topsupergroupsbot import database
-from topsupergroupsbot import keyboards
 from topsupergroupsbot import constants
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
@@ -32,7 +30,7 @@ from telegram import ParseMode
 
 
 class Leaderboard:
-    GROUP = 'igl' # inside the group
+    GROUP = 'igl'  # inside the group
     VOTES = 'vl'
     MESSAGES = 'ml'
     MEMBERS = 'mml'

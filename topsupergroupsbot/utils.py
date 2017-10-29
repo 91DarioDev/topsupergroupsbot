@@ -30,6 +30,14 @@ from telegram import constants as ptb_consts
 from babel.dates import format_datetime, format_date
 from babel.numbers import format_decimal
 
+from telegram.error import (
+        TelegramError, 
+        Unauthorized, 
+        BadRequest, 
+        TimedOut, 
+        ChatMigrated, 
+        NetworkError)
+
 
 def get_db_lang(user_id):
     query = "SELECT lang FROM users WHERE user_id = %s"
@@ -81,9 +89,8 @@ def admin_command_only(func):
             try:
                 chat_id = update.message.from_user.id
                 bot.send_message(chat_id=chat_id, text=text)
-            except Exception as e:
-                print("admin_command_only")
-                print(e)
+            except Unauthorized:
+                pass
             return
         return func(bot, update, *args, **kwargs)
     return wrapped

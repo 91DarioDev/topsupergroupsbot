@@ -30,6 +30,7 @@ from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
 
+
 class Leaderboard:
     GROUP = 'igl' # inside the group
     VOTES = 'vl'

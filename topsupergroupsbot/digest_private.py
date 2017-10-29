@@ -111,10 +111,10 @@ def schedule_own_private_digest(bot, job, data):
         tot_pos = user[4]
 
         text = get_lang.get_string(lang, "digest_of_the_week_global").format(
-                                                                        utils.sep_l(tot_msg, lang), 
-                                                                        utils.sep_l(tot_grps, lang), 
-                                                                        utils.sep_l(tot_pos, lang)
-                                                                        )
+                utils.sep_l(tot_msg, lang), 
+                utils.sep_l(tot_grps, lang), 
+                utils.sep_l(tot_pos, lang)
+                )
         reply_markup = keyboards.disable_private_own_weekly_digest_kb(lang)
         # append the text of any group for the same user
         for group in groups:
@@ -123,10 +123,10 @@ def schedule_own_private_digest(bot, job, data):
             msg_g = group[2]
             pos_g = group[3]    
             text += get_lang.get_string(lang, "digest_of_the_week_detail").format(
-                                                                        utils.sep_l(msg_g, lang), 
-                                                                        utils.sep_l(username, lang), 
-                                                                        utils.sep_l(pos_g, lang)
-                                                                                )
+                    utils.sep_l(msg_g, lang), 
+                    utils.sep_l(username, lang), 
+                    utils.sep_l(pos_g, lang)
+                    )
 
         # text completed can be scheduled
         job.job_queue.run_once(send_one_by_one, start_in, context=[user_id, text, reply_markup])
@@ -138,11 +138,12 @@ def send_one_by_one(bot, job):
     message = job.context[1]
     reply_markup = job.context[2]
     try:
-        utils.send_message_long(bot, 
-                                chat_id=user_id, 
-                                text=message, 
-                                reply_markup=reply_markup,
-                                disable_notification=True)
+        utils.send_message_long(
+                bot, 
+                chat_id=user_id, 
+                text=message, 
+                reply_markup=reply_markup,
+                disable_notification=True)
     except Unauthorized:
         query = "UPDATE users SET bot_blocked = TRUE WHERE user_id = %s"
         database.query_w(query, user_id)

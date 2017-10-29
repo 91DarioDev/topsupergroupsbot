@@ -270,14 +270,14 @@ def lbpage(bot, query):
     lb_type = params[2]
     region = params[3]
 
-    if lb_type == leaderboards.GROUP_LEADERBOARD:
+    if lb_type == leaderboards.Leaderboard.GROUP:
         lbpage_igl(bot, query, params)
-    elif lb_type == leaderboards.VOTE_LEADERBOARD:
-        lbpage_vl(bot, query, page, region)
-    elif lb_type == leaderboards.MESSAGE_LEADERBOARD:
-        lbpage_ml(bot, query, page, region)
-    elif lb_type == leaderboards.MEMBER_LEADERBOARD:
-        lbpage_mml(bot, query, page, region)
+    elif lb_type in [
+            leaderboards.Leaderboard.VOTES, 
+            leaderboards.Leaderboard.MESSAGES, 
+            leaderboards.Leaderboard.MEMBERS
+        ]:
+        lbpage_private(bot, query, lb_type, page, region)
     query.answer()
 
 
@@ -288,31 +288,22 @@ def lbpage_igl(bot, query, params):
     extract = database.query_r(query_db, group_id, one=True)
     lang = extract[0]
     page = params[1]
-    result = leaderboards.offset_groupleaderboard(lang, group_id, int(page))
+    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=int(page))
+    result = leaderboard.build_page(group_id)
     query.edit_message_text(
             text=result[0], reply_markup=result[1],
             parse_mode=ParseMode.HTML, disable_notification=True)
 
 
-def lbpage_vl(bot, query, page, region):
+def lbpage_private(bot, query, lb_type, page, region):
     lang = utils.get_db_lang(query.from_user.id)
-    result = leaderboards.offset_leadervote(lang, region, int(page))
-    query.edit_message_text(
-            text=result[0], reply_markup=result[1],
-            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
-
-
-def lbpage_ml(bot, query, page, region):
-    lang = utils.get_db_lang(query.from_user.id)
-    result = leaderboards.offset_leadermessage(lang, region, int(page))
-    query.edit_message_text(
-            text=result[0], reply_markup=result[1],
-            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
-
-
-def lbpage_mml(bot, query, page, region):
-    lang = utils.get_db_lang(query.from_user.id)
-    result = leaderboards.offset_leadermember(lang, region, int(page))
+    if lb_type == leaderboards.Leaderboard.VOTES:
+        leaderboard = leaderboards.VotesLeaderboard(lang, region, int(page))
+    elif lb_type == leaderboards.Leaderboard.MESSAGES:
+        leaderboard = leaderboards.MessagesLeaderboard(lang, region, int(page))
+    elif lb_type == leaderboards.Leaderboard.MEMBERS:
+        leaderboard = leaderboards.MembersLeaderboard(lang, region, int(page))
+    result = leaderboard.build_page()
     query.edit_message_text(
             text=result[0], reply_markup=result[1],
             parse_mode=ParseMode.HTML, disable_web_page_preview=True)
@@ -405,12 +396,13 @@ def redirect_ledearboard(bot, query):
     splitted = query.data.split(":")
     lb_type = splitted[1]
     region = splitted[2]
-    if lb_type == leaderboards.MEMBER_LEADERBOARD:
-        lbpage_mml(bot, query, 1, region)
-    elif lb_type == leaderboards.MESSAGE_LEADERBOARD:
-        lbpage_ml(bot, query, 1, region)
-    elif lb_type == leaderboards.VOTE_LEADERBOARD:
-        lbpage_vl(bot, query, 1, region)
+    if lb_type in [
+            leaderboards.Leaderboard.VOTES, 
+            leaderboards.Leaderboard.MESSAGES, 
+            leaderboards.Leaderboard.MEMBERS
+        ]:
+        lbpage_private(bot, query, lb_type, 1, region)
+    query.answer()
 
 
 def feedback_reply(bot, query):

@@ -143,7 +143,7 @@ def displayed_pages_kb(pages, chosen_page=1, lb_type="", region=""):
 
     for page in pages:
         callback_data = "lbpage:{}:{}:{}".format(page, lb_type, region)
-        current_page = "current_page" if lb_type not in [leaderboards.GROUP_LEADERBOARD] else "current_page_admin"
+        current_page = "current_page" if lb_type not in [leaderboards.Leaderboard.GROUP] else "current_page_admin"
         # this is necessary not to get list out of range
         # because later it checks pages[1]
         if len(pages) <= 1:
@@ -262,13 +262,13 @@ def weekly_own_digest_kb(lang, value):
 def generic_leaderboard_kb(lang, region):
     members = InlineKeyboardButton(
                 text=get_lang.get_string(lang, "by_members"), 
-                callback_data="leaderboard_by:"+leaderboards.MEMBER_LEADERBOARD+":"+region)
+                callback_data="leaderboard_by:"+leaderboards.Leaderboard.MEMBERS+":"+region)
     messages = InlineKeyboardButton(
                 text=get_lang.get_string(lang, "by_messages"), 
-                callback_data="leaderboard_by:"+leaderboards.MESSAGE_LEADERBOARD+":"+region)
+                callback_data="leaderboard_by:"+leaderboards.Leaderboard.MESSAGES+":"+region)
     votes = InlineKeyboardButton(
                 text=get_lang.get_string(lang, "by_votes"), 
-                callback_data="leaderboard_by:"+leaderboards.VOTE_LEADERBOARD+":"+region)
+                callback_data="leaderboard_by:"+leaderboards.Leaderboard.VOTES+":"+region)
     buttons_list = [[members], [messages], [votes]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

@@ -138,44 +138,6 @@ def vote_link_kb(lang):
     return keyboard
 
 
-def displayed_pages_kb(pages, chosen_page=1, lb_type="", region=""):
-    texted_pages = []
-
-    for page in pages:
-        callback_data = "lbpage:{}:{}:{}".format(page, lb_type, region)
-        current_page = "current_page" if lb_type not in [leaderboards.Leaderboard.GROUP] else "current_page_admin"
-        # this is necessary not to get list out of range
-        # because later it checks pages[1]
-        if len(pages) <= 1:
-            # keyboard is not needed if one page
-            break
-
-        if page == chosen_page:
-            texted_pages.append(InlineKeyboardButton(
-                    text="•{}•".format(page), 
-                    callback_data=current_page))
-            continue
-
-        if page == pages[0] and pages[1] > 2:
-            texted_pages.append(InlineKeyboardButton(
-                    text="«"+str(page), 
-                    callback_data=callback_data))
-            continue
-
-        if page == pages[-1] and pages[-2] < (pages[-1] - 1):
-            texted_pages.append(InlineKeyboardButton(
-                    text=str(page)+"»", 
-                    callback_data=callback_data))
-            continue
-
-        texted_pages.append(InlineKeyboardButton(
-                text=str(page), 
-                callback_data=callback_data))
-
-    keyboard = InlineKeyboardMarkup(build_menu(texted_pages, n_cols=8))
-    return keyboard
-
-
 def private_language_kb(lang, back=True):
     buttons_list = []
     for i in sorted(supported_langs.PRIVATE_LANGS):
@@ -247,13 +209,14 @@ def weekly_own_digest_kb(lang, value):
     no = get_lang.get_string(lang, "no")
     back = get_lang.get_string(lang, "back")
     button_yes = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+yes if value is True else yes, 
-                callback_data="set_weekly_own_digest:true")
+            text=constants.CURRENT_CHOICE+yes if value is True else yes,
+            callback_data="set_weekly_own_digest:true")
     button_no = InlineKeyboardButton(
-                text=constants.CURRENT_CHOICE+no if value is False else no, 
-                callback_data="set_weekly_own_digest:false")
-    button_back = InlineKeyboardButton(text=back, 
-                callback_data="back_private_digest")
+            text=constants.CURRENT_CHOICE+no if value is False else no,
+            callback_data="set_weekly_own_digest:false")
+    button_back = InlineKeyboardButton(
+            text=back,
+            callback_data="back_private_digest")
     buttons_list = [[button_yes, button_no], [button_back]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

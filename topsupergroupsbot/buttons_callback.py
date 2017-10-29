@@ -288,7 +288,8 @@ def lbpage_igl(bot, query, params):
     extract = database.query_r(query_db, group_id, one=True)
     lang = extract[0]
     page = params[1]
-    result = leaderboards.offset_groupleaderboard(lang, group_id, int(page))
+    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=int(page))
+    result = leaderboard.build_page(group_id)
     query.edit_message_text(
             text=result[0], reply_markup=result[1],
             parse_mode=ParseMode.HTML, disable_notification=True)

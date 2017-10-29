@@ -225,44 +225,45 @@ class MembersLeaderboard(Leaderboard):
                 new)
         return text, reply_markup
 
+class GroupLeaderboard(Leaderboard):
+    CODE = 'igl'
+    def build_page(self, group_id):
+        query = """
+            SELECT m.user_id, COUNT(m.user_id) AS leaderboard,
+                u_ref.name, u_ref.last_name, u_ref.username
+            FROM messages AS m
+            LEFT OUTER JOIN users_ref AS u_ref
+            ON u_ref.user_id = m.user_id
+            WHERE m.group_id = %s
+                AND m.message_date > date_trunc('week', now())
+            GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
+            ORDER BY leaderboard DESC
+            """
 
-def offset_groupleaderboard(lang, group_id, chosen_page):
-    query = """
-    SELECT m.user_id, COUNT(m.user_id) AS leaderboard,
-        u_ref.name, u_ref.last_name, u_ref.username
-    FROM messages AS m
-    LEFT OUTER JOIN users_ref AS u_ref
-    ON u_ref.user_id = m.user_id
-    WHERE m.group_id = %s
-        AND m.message_date > date_trunc('week', now())
-    GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
-    ORDER BY leaderboard DESC
-    """
+        extract = database.query_r(query, group_id)
+        
+        pages = Pages(extract, self.page)
 
-    extract = database.query_r(query, group_id)
-    
-    pages = Pages(extract, chosen_page)
+        reply_markup = keyboards.displayed_pages_kb(
+                pages=pages.displayed_pages(), 
+                chosen_page=pages.chosen_page, 
+                lb_type=self.CODE)
 
-    reply_markup = keyboards.displayed_pages_kb(
-            pages=pages.displayed_pages(), 
-            chosen_page=pages.chosen_page, 
-            lb_type=GROUP_LEADERBOARD)
+        text = get_lang.get_string(self.lang, "pre_groupleaderboard")
+        text += "\n\n"
+        first_number_of_page = pages.first_number_of_page()
+        offset = first_number_of_page - 1
+        for user in pages.chosen_page_items():
+            offset += 1 # for before IT numeration
+            text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
+                    offset, 
+                    user[0], 
+                    html.escape(user[2]), 
+                    utils.sep_l(user[1], self.lang)
+                    )
+        return text, reply_markup
 
-    text = get_lang.get_string(lang, "pre_groupleaderboard")
-    text += "\n\n"
-    first_number_of_page = pages.first_number_of_page()
-    offset = first_number_of_page - 1
-    for user in pages.chosen_page_items():
-        offset += 1 # for before IT numeration
-        text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
-                offset, 
-                user[0], 
-                html.escape(user[2]), 
-                utils.sep_l(user[1], lang)
-                )
-    return text, reply_markup
 
-    
 @utils.admin_command_only
 def groupleaderboard(bot, update):
     group_id = update.message.chat.id
@@ -270,8 +271,8 @@ def groupleaderboard(bot, update):
     extract = database.query_r(query, group_id, one=True)
     lang = extract[0]
 
-    result = offset_groupleaderboard(lang, group_id, chosen_page=1)
-
+    leaderboard = GroupLeaderboard(lang=lang, page=1)
+    result = leaderboard.build_page(group_id)
     update.message.reply_text(
             text=result[0],
             reply_markup=result[1],

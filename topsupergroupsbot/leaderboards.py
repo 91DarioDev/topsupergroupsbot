@@ -44,7 +44,7 @@ class Leaderboard:
         self.page = page
 
 
-class VotesLeaderboad(Leaderboard):
+class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
     MIN_REVIEWS = 1
 
@@ -247,7 +247,7 @@ def leadervote(bot, update):
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    leaderboard = VotesLeaderboad(lang, region, 1)
+    leaderboard = VotesLeaderboard(lang, region, 1)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],

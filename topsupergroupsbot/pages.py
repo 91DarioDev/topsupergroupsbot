@@ -15,7 +15,10 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
+from topsupergroupsbot import keyboards
 
+from telegram import KeyboardButton
+from telegram import InlineKeyboardMarkup
 
 class Pages:
     def __init__(self, lst, chosen_page=1, elements_per_page=10):
@@ -74,3 +77,42 @@ class Pages:
     def chosen_page_items(self):
         offset = self.first_number_of_page() - 1
         return self.lst[offset:offset+self.elements_per_page]
+
+    def build_buttons(self, base, only_admins=False):
+        pages = self.displayed_pages()
+        chosen_page = self.chosen_page
+        texted_pages = []
+
+        for page in pages:
+            callback_data = base.format(page=page)
+            current_page = "current_page_admin" if only_admins is True else "current_page" 
+            # this is necessary not to get list out of range
+            # because later it checks pages[1]
+            if len(pages) <= 1:
+                # keyboard is not needed if one page
+                break
+
+            if page == chosen_page:
+                texted_pages.append(InlineKeyboardButton(
+                        text="•{}•".format(page), 
+                        callback_data=current_page))
+                continue
+
+            if page == pages[0] and pages[1] > 2:
+                texted_pages.append(InlineKeyboardButton(
+                        text="«"+str(page), 
+                        callback_data=callback_data))
+                continue
+
+            if page == pages[-1] and pages[-2] < (pages[-1] - 1):
+                texted_pages.append(InlineKeyboardButton(
+                        text=str(page)+"»", 
+                        callback_data=callback_data))
+                continue
+
+            texted_pages.append(InlineKeyboardButton(
+                    text=str(page), 
+                    callback_data=callback_data))
+
+        keyboard = InlineKeyboardMarkup(keyboards.build_menu(texted_pages, n_cols=8))
+        return keyboard

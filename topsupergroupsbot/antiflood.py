@@ -32,11 +32,12 @@ class Antiflood:
         return a redis key to store the amount of sent messages
         during the interval. The key is unique during the interval.
         """
-        key = "af:{}:{}:{}:{}".format(
+        key = "af:{}:{}:{}:{}:{}".format(
                 self.group_id, 
                 self.user_id, 
                 (time.time()//self.interval),
-                self.interval)
+                self.interval,
+                self.limit)
         return key
 
     def expire_key(self):

@@ -37,6 +37,7 @@ setuptools.setup(
 
     packages=[
         "topsupergroupsbot",
+        "langs"
     ],
 
     entry_points={

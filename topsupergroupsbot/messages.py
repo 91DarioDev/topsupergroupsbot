@@ -18,7 +18,8 @@
 from topsupergroupsbot import feedback
 from topsupergroupsbot import messages_private
 from topsupergroupsbot import messages_supergroups
-from topsupergroupsbot.antiflood import antiflood
+from topsupergroupsbot import config
+from topsupergroupsbot.antiflood import Antiflood
 
 from telegram.ext import DispatcherHandlerStop
 
@@ -94,9 +95,17 @@ def before_processing_private(bot, update):
 
 
 def processing_supergroups(bot, update):
-    # check if flood
-    if antiflood.is_flood(bot, update):
-        raise DispatcherHandlerStop
+    user_id = update.message.from_user.id
+    group_id = update.message.chat.id
+    # check if is flood and handle flood
+    for i in config.FLOOD_CHECKS:
+        af = Antiflood(
+                limit=i, 
+                interval=config.FLOOD_CHECKS[i], 
+                user_id=user_id, 
+                group_id=group_id)
+        if af.is_flood():
+            raise DispatcherHandlerStop
 
     # log message in the database   
     messages_supergroups.add_message_db(bot, update)

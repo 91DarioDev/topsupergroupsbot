@@ -49,7 +49,7 @@ class Antiflood:
         return the lower value of the interval of time
         when the key has been created.
         """
-        return float(self.flood_key.split(":")[3])
+        return float(self.flood_key.split(":")[3])*self.interval
 
     def del_messages_from_db(self):
         """
@@ -74,7 +74,7 @@ class Antiflood:
                 self.user_id, 
                 self.group_id, 
                 (self.limit-1), 
-                (self.get_time_key_started()*self.interval))
+                self.get_time_key_started())
 
     def is_flood(self):
         """

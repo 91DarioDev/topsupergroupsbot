@@ -32,7 +32,8 @@ setuptools.setup(
 		"redis",
 		"Babel",
 		"python-telegram-bot",
-		"psycopg2"
+		"psycopg2",
+        "Pyyaml"
     ],
 
     packages=[

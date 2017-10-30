@@ -17,16 +17,17 @@
 
 import html
 import time
+import json
 
 from topsupergroupsbot import utils
 from topsupergroupsbot import database
 from topsupergroupsbot import constants
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
-from topsupergroupsbot import cached_leaderboards
 from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
+from telegram.ext.dispatcher import run_async
 
 
 class Leaderboard:
@@ -48,10 +49,30 @@ class Leaderboard:
                 lb_type=self.CODE, 
                 region=self.region)
 
+    def cache_key_base(self):
+        return 'cached_lb:{}:{}'.format(
+                self.CODE, 
+                self.region)
+
+    def get_list_from_cache(self):
+        key = self.cache_key_base()
+        lst = database.REDIS.get(key)
+        if lst is None:
+            return None
+        lst = json.loads(lst.decode('UTF-8'))
+        return lst
+
+    @run_async
+    def cache_the_list(self, lst):
+        key = self.cache_key_base()
+        dumped_lst = json.dumps(lst).encode('UTF-8')
+        database.REDIS.setex(key, dumped_lst, self.CACHE_SECONDS)
+
 
 class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
     MIN_REVIEWS = 1
+    CACHE_SECONDS = 60*3
 
     def build_page(self):
         query = """
@@ -76,10 +97,10 @@ class VotesLeaderboard(Leaderboard):
         ORDER BY average DESC, amount DESC
         """
 
-        extract = cached_leaderboards.get_leaderboard(name_type=self.CODE, region=self.region)
+        extract = self.get_list_from_cache()
         if extract is None:
             extract = database.query_r(query, self.region, self.MIN_REVIEWS)
-            cached_leaderboards.set_leaderboard(self.CODE, self.region, extract)
+            self.cache_the_list(extract)
 
         pages = Pages(extract, self.page)
 
@@ -109,7 +130,8 @@ class VotesLeaderboard(Leaderboard):
 
 class MessagesLeaderboard(Leaderboard):
     CODE = 'ml'
-    
+    CACHE_SECONDS = 60*3
+
     def build_page(self):
         query = """
         SELECT 
@@ -131,10 +153,10 @@ class MessagesLeaderboard(Leaderboard):
         ORDER BY leaderboard DESC
         """
 
-        extract = cached_leaderboards.get_leaderboard(name_type=self.CODE, region=self.region)
+        extract = self.get_list_from_cache()
         if extract is None:
             extract = database.query_r(query, self.region)
-            cached_leaderboards.set_leaderboard(self.CODE, self.region, extract)
+            self.cache_the_list(extract)
 
         pages = Pages(extract, self.page)
         
@@ -162,6 +184,7 @@ class MessagesLeaderboard(Leaderboard):
 
 class MembersLeaderboard(Leaderboard):
     CODE = 'mml'
+    CACHE_SECONDS = 60*10
 
     def build_page(self):
         # Thank https://stackoverflow.com/a/46496407/8372336 to make clear this query
@@ -190,10 +213,10 @@ class MembersLeaderboard(Leaderboard):
         ORDER BY members.amount DESC
         """
 
-        extract = cached_leaderboards.get_leaderboard(name_type=self.CODE, region=self.region)
+        extract = self.get_list_from_cache()
         if extract is None:
             extract = database.query_r(query, self.region)
-            cached_leaderboards.set_leaderboard(self.CODE, self.region, extract)
+            self.cache_the_list(extract)
             
         pages = Pages(extract, self.page)
 

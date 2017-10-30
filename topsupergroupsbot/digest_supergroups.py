@@ -300,7 +300,7 @@ def send_one_by_one_weekly_group_digest(bot, job):
                 parse_mode='HTML',
                 disable_notification=True)
     except Unauthorized:
-        query = "UPDATE supergroups SET bot_inside = FALSE WHERE user_id = %s"
+        query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
         database.query_w(query, group_id)
     except Exception as e:
         print("{} exception is send_one_by_one group digest".format(e))

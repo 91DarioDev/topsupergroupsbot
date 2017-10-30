@@ -26,7 +26,7 @@ try:
     with open(path, 'r') as stream:
         conf = yaml.load(stream)
 except FileNotFoundError:
-    print("\n\nATTENTION:\n"
+    print("\n\WARNING:\n"
             "before of running topsupergroupsbot you should create a file named `config.yaml`"
             " in `config`.\n\nOpen `config/config.example.yaml`\ncopy all\ncreate a file "
             "named `config.yaml`\nPaste and replace sample variables with true data."

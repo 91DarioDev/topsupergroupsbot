@@ -243,7 +243,8 @@ class MembersLeaderboard(Leaderboard):
 
 class GroupLeaderboard(Leaderboard):
     CODE = 'igl'
-    
+    CACHE_SECONDS = 60*3
+
     def build_page(self, group_id):
         query = """
             SELECT m.user_id, COUNT(m.user_id) AS leaderboard,
@@ -257,8 +258,11 @@ class GroupLeaderboard(Leaderboard):
             ORDER BY leaderboard DESC
             """
 
-        extract = database.query_r(query, group_id)
-        
+        extract = self.get_list_from_cache()
+        if extract is None:
+            extract = database.query_r(query, group_id)
+            self.cache_the_list(extract)
+
         pages = Pages(extract, self.page)
 
         reply_markup = pages.build_buttons(base=self.buttons_callback_base())

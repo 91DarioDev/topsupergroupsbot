@@ -17,7 +17,7 @@
 import math
 from topsupergroupsbot import keyboards
 
-from telegram import KeyboardButton
+from telegram import InlineKeyboardButton
 from telegram import InlineKeyboardMarkup
 
 class Pages:

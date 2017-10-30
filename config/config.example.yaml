@@ -32,7 +32,16 @@ redis_db: 1234
 
 # telegram IDs of the admins of the bot (list)
 admins:
-- 1234
+  - 1234
+  - 5678
+  - 9012
 
 # telegram ID of the founder of the bot (more priviledges)
 founder: 1234
+
+# pairs of maximu allowed messages (key) in seconds interval (value)
+flood_checks:
+  1234: 1234
+  5678: 5678
+  9012: 9012
+  1357: 2468

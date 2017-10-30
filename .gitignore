@@ -1,7 +1,4 @@
-/antiflood/antiflood.py
-/config/config.py
 *.pyc
 /resources/logo/logobase.png
 /.idea
-/topsupergroupsbot/antiflood/antiflood.py
 /config/config.yaml

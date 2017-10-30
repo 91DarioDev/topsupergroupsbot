@@ -45,3 +45,5 @@ REDIS_DB = conf["redis_db"]
 ADMINS = conf["admins"]
 
 FOUNDER = conf["founder"]
+
+FLOOD_CHECKS = conf["flood_checks"]

@@ -72,9 +72,9 @@ class Antiflood:
         db.query_w(
                 query, 
                 self.user_id, 
-                self.group_id, 
-                (self.limit-1), 
-                self.get_time_key_started())
+                self.group_id,
+                self.get_time_key_started(),
+                (self.limit-1))
 
     def is_flood(self):
         """

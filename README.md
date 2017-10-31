@@ -30,5 +30,7 @@ A telegram bot for telegram public groups leaderboards
 
 - To delete everything:
 
-`cd ..`
-`rm -rf tsbenv`
+```
+cd ..
+rm -rf tsbenv
+```

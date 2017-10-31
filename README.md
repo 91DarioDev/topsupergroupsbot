@@ -20,7 +20,7 @@ virtualenv -p python3 tsbenv
 ```
 tsbenv/bin/pip install https://github.com/91dariodev/topsupergroupsbot/archive/master.zip
 ```
-- Run the bot. The first parameter of the command is `the config.yaml` file. Copy from the source `config.example.yaml` and create a file named `config.yaml` replacing values.
+- Run the bot. The first parameter of the command is the `config.yaml` file. Copy from the source `config.example.yaml` and create a file named `config.yaml` replacing values.
 ```
 tsbenv/bin/topsupergroupsbot path/config.yaml
 ```

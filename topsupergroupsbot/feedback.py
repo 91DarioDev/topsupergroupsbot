@@ -129,7 +129,7 @@ class Feedback:
             elif update.message.audio:
                 media = update.message.audio.file_id
                 duration = update.message.audio.duration
-                performer = udpate.message.audio.performer
+                performer = update.message.audio.performer
                 title = update.message.audio.title
                 caption = update.message.caption
                 first = bot.sendAudio(

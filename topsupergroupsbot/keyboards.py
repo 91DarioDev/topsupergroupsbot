@@ -25,7 +25,6 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut, C
 
 # files
 from topsupergroupsbot import supported_langs
-from topsupergroupsbot import constants
 from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import emojis

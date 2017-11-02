@@ -19,7 +19,7 @@ import psycopg2
 from topsupergroupsbot import keyboards
 from topsupergroupsbot import database
 from topsupergroupsbot import utils
-from topsupergroupsbot import constants
+from topsupergroupsbot import emojis
 
 from topsupergroupsbot import votelink
 from topsupergroupsbot import leaderboards
@@ -246,7 +246,7 @@ def set_vote(bot, query):
         database.query_w(query_db, vote, query.from_user.id, group_id)
         alert = get_lang.get_string(lang, "updated_vote")         
     query.answer(text=alert, show_alert=True)
-    text = "{}\n\n{}\n{}".format(query.message.text, alert, constants.EMOJI_STAR*vote)
+    text = "{}\n\n{}\n{}".format(query.message.text, alert, emojis.STAR*vote)
     query.edit_message_text(text=text)
 
 

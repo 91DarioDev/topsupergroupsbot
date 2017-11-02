@@ -24,6 +24,7 @@ from topsupergroupsbot import database
 from topsupergroupsbot import constants
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
+from topsupergroupsbot import emojis
 from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
@@ -112,8 +113,8 @@ class VotesLeaderboard(Leaderboard):
         first_number_of_page = pages.first_number_of_page()
         offset = first_number_of_page - 1
         for group in pages.chosen_page_items():
-            nsfw = constants.EMOJI_NSFW if group[5] is True else ""
-            new = constants.EMOJI_NEW if (group[6]+self.NEW_INTERVAL > time.time()) else ""
+            nsfw = emojis.NSFW if group[5] is True else ""
+            new = emojis.NEW if (group[6]+self.NEW_INTERVAL > time.time()) else ""
             offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(
                     offset, 
@@ -121,7 +122,7 @@ class VotesLeaderboard(Leaderboard):
                     group[2], 
                     html.escape(group[1]), 
                     group[4], 
-                    constants.EMOJI_STAR, 
+                    emojis.STAR,
                     utils.sep_l(group[3], self.lang),
                     new
                     )
@@ -168,8 +169,8 @@ class MessagesLeaderboard(Leaderboard):
         first_number_of_page = pages.first_number_of_page()
         offset = first_number_of_page - 1
         for group in pages.chosen_page_items():
-            nsfw = constants.EMOJI_NSFW if group[4] is True else ""
-            new = constants.EMOJI_NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
+            nsfw = emojis.NSFW if group[4] is True else ""
+            new = emojis.NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
             offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
                     offset, 
@@ -228,8 +229,8 @@ class MembersLeaderboard(Leaderboard):
         first_number_of_page = pages.first_number_of_page()
         offset = first_number_of_page - 1   
         for group in pages.chosen_page_items():
-            nsfw = constants.EMOJI_NSFW if group[6] is True else ""
-            new = constants.EMOJI_NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
+            nsfw = emojis.NSFW if group[6] is True else ""
+            new = emojis.NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
             offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
                 offset, 

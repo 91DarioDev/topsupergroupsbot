@@ -14,15 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-from topsupergroupsbot import config
 
-from telegram import Bot
-
-
-
-BUTTON_START = "•"
-BUTTON_END = "•"
-
-FEEDBACK_INV_CHAR = "\ufeff"
-
-GET_ME = Bot(config.BOT_TOKEN).getMe()
+STAR = "⭐️"
+NSFW = "🔞"
+NEW = "🆕"
+CURRENT_CHOICE = "🔘"

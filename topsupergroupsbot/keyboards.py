@@ -28,6 +28,7 @@ from topsupergroupsbot import supported_langs
 from topsupergroupsbot import constants
 from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang
+from topsupergroupsbot import emojis
 
 
 # INLINE KEYBOARDS
@@ -66,7 +67,7 @@ def select_group_lang_kb(group_lang, back=True):
     buttons_list = []
     for i in sorted(supported_langs.GROUP_LANGS):
         buttons_list.append(InlineKeyboardButton(
-            text=str(constants.CURRENT_CHOICE+i if i == group_lang else i)+str(supported_langs.COUNTRY_FLAG[i]), 
+            text=str(emojis.CURRENT_CHOICE+i if i == group_lang else i)+str(supported_langs.COUNTRY_FLAG[i]),
             callback_data="set_group_lang_"+str(i)))
     footer = InlineKeyboardButton(
                 text=get_lang.get_string(group_lang, "back"), 
@@ -85,10 +86,10 @@ def adult_content_kb(lang, value):
     no = get_lang.get_string(lang, "no")
     back = get_lang.get_string(lang, "back")
     button_yes = InlineKeyboardButton(
-            text=constants.CURRENT_CHOICE+yes if value is True else yes,
+            text=emojis.CURRENT_CHOICE+yes if value is True else yes,
             callback_data="set_adult_true")
     button_no = InlineKeyboardButton(
-            text=constants.CURRENT_CHOICE+no if value is False else no,
+            text=emojis.CURRENT_CHOICE+no if value is False else no,
             callback_data="set_adult_false")
     button_back = InlineKeyboardButton(
             text=back,
@@ -102,7 +103,7 @@ def vote_group_kb(group_id, lang):
     buttons_list = []
     for i in range(1, 6):
         buttons_list.append([InlineKeyboardButton(
-                text=(constants.EMOJI_STAR*i),
+                text=(emojis.STAR*i),
                 callback_data="rate:{}:{}".format(i, group_id))])
     buttons_list.append([InlineKeyboardButton(
             text=get_lang.get_string(lang, "cancel"),
@@ -116,10 +117,10 @@ def weekly_group_digest_kb(lang, value):
     no = get_lang.get_string(lang, "no")
     back = get_lang.get_string(lang, "back")
     button_yes = InlineKeyboardButton(
-            text=constants.CURRENT_CHOICE+yes if value is True else yes,
+            text=emojis.CURRENT_CHOICE+yes if value is True else yes,
             callback_data="set_weekly_group_digest:true")
     button_no = InlineKeyboardButton(
-            text=constants.CURRENT_CHOICE+no if value is False else no,
+            text=emojis.CURRENT_CHOICE+no if value is False else no,
             callback_data="set_weekly_group_digest:false")
     button_back = InlineKeyboardButton(
             text=back,
@@ -142,7 +143,7 @@ def private_language_kb(lang, back=True):
     buttons_list = []
     for i in sorted(supported_langs.PRIVATE_LANGS):
         buttons_list.append(InlineKeyboardButton(
-            text=str(constants.CURRENT_CHOICE+i if i == lang else i)+str(supported_langs.COUNTRY_FLAG[i]), 
+            text=str(emojis.CURRENT_CHOICE+i if i == lang else i)+str(supported_langs.COUNTRY_FLAG[i]),
             callback_data="set_private_lang_"+str(i)))
     footer = InlineKeyboardButton(
             text=get_lang.get_string(lang, "back"),
@@ -160,7 +161,7 @@ def private_region_kb(lang, region, back=True):
     buttons_list = []
     for i in sorted(supported_langs.PRIVATE_REGIONS):
         buttons_list.append(InlineKeyboardButton(
-            text=str(constants.CURRENT_CHOICE+i if i == region else i)+str(supported_langs.COUNTRY_FLAG[i]), 
+            text=str(emojis.CURRENT_CHOICE+i if i == region else i)+str(supported_langs.COUNTRY_FLAG[i]),
             callback_data="set_private_region:"+str(i)))
     footer = InlineKeyboardButton(
             text=get_lang.get_string(lang, "back"),
@@ -209,10 +210,10 @@ def weekly_own_digest_kb(lang, value):
     no = get_lang.get_string(lang, "no")
     back = get_lang.get_string(lang, "back")
     button_yes = InlineKeyboardButton(
-            text=constants.CURRENT_CHOICE+yes if value is True else yes,
+            text=emojis.CURRENT_CHOICE+yes if value is True else yes,
             callback_data="set_weekly_own_digest:true")
     button_no = InlineKeyboardButton(
-            text=constants.CURRENT_CHOICE+no if value is False else no,
+            text=emojis.CURRENT_CHOICE+no if value is False else no,
             callback_data="set_weekly_own_digest:false")
     button_back = InlineKeyboardButton(
             text=back,

@@ -20,7 +20,7 @@ from topsupergroupsbot import database
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import keyboards
 from topsupergroupsbot import utils
-from topsupergroupsbot import constants as c
+from topsupergroupsbot import emojis
 
 from telegram.error import (TelegramError, 
                             Unauthorized, 
@@ -234,8 +234,8 @@ def weekly_groups_digest(bot, job):
                     diff_msg, percent_msg,
                     utils.sep_l(members_old, lang), utils.sep_l(members_new, lang), 
                     diff_members, percent_members, 
-                    utils.sep_l(avg_v_old, lang), c.EMOJI_STAR, utils.sep_l(sum_v_old, lang), 
-                    utils.sep_l(avg_v_new, lang), c.EMOJI_STAR, utils.sep_l(sum_v_new, lang),
+                    utils.sep_l(avg_v_old, lang), emojis.STAR, utils.sep_l(sum_v_old, lang),
+                    utils.sep_l(avg_v_new, lang), emojis.STAR, utils.sep_l(sum_v_new, lang),
                     utils.sep_l(act_users_old, lang), utils.sep_l(act_users_new, lang),
                     diff_act, percent_act)
 

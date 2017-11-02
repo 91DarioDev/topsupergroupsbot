@@ -129,7 +129,7 @@ groups_working = (
         " questo bot nel tuo gruppo e impostare la giusta lingua del gruppo. Il gruppo sarà "
         "aggiunto nella regione di classifiche che hai specificato con la lingua.\n"
         "Se il tuo gruppo ha contenuti per adulti, selezionalo in /settings. Per piacere "
-        "assicurati di inserire solamente valore corretti o potremmo bannare il tuo gruppo dal nostro bot.\n"
+        "assicurati di inserire solamente valori corretti o potremmo bannare il tuo gruppo dal nostro bot.\n"
         "Non applichiamo nessun tipo di censura sugli argomenti, ma banniamo i gruppi che barano "
         " nelle classifiche.\nIn /settings potrai perfino trovare il link per indirizzarei tuoi utenti "
         " a votare direttamente il tuo gruppo.\n\n"

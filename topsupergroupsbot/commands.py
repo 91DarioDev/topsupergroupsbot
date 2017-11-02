@@ -26,6 +26,7 @@ from topsupergroupsbot import leaderboards
 from topsupergroupsbot import messages_supergroups
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
+from topsupergroupsbot import emojis
 
 
 def start(bot, update, args):
@@ -99,7 +100,7 @@ def vote(bot, update, args):
     text = get_lang.get_string(lang, "vote_this_group").format(
                     extract[0], extract[1], extract[2])
     if extract[3] and extract[4] is not None:
-        stars = constants.EMOJI_STAR*extract[3]
+        stars = emojis.STAR*extract[3]
         date = utils.formatted_date_l(extract[4].date(), lang)
         text += "\n\n"+get_lang.get_string(lang, "already_voted").format(stars, date)
     reply_markup = keyboards.vote_group_kb(extract[0], lang)

@@ -19,6 +19,7 @@ from topsupergroupsbot import database
 from topsupergroupsbot import keyboards
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import utils
+from topsupergroupsbot import emojis
 
 
 def create_vote_link(group_id):
@@ -54,7 +55,7 @@ def send_vote_by_link(bot, update, first_arg):
     text = get_lang.get_string(lang, "vote_this_group").format(
         extract[0], extract[1], extract[2])
     if extract[3] is not None and extract[4] is not None:
-        stars = constants.EMOJI_STAR*extract[3]
+        stars = emojis.STAR*extract[3]
         date = utils.formatted_date_l(extract[4].date(), lang)
         text += "\n\n"+get_lang.get_string(lang, "already_voted").format(stars, date)
     reply_markup = keyboards.vote_group_kb(extract[0], lang)

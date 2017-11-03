@@ -26,7 +26,7 @@ class RegularButtons:
         self.bot = bot
         self.update = update
         self.string = self.button_string()
-        self.kee = self.get_corresponding_key()
+        self.key = self.get_corresponding_key()
 
     def button_string(self):
         return self.update.message.text[1:-1]
@@ -34,21 +34,21 @@ class RegularButtons:
     def get_corresponding_key(self):
         for lang in get_lang.lang_obj:
             dct = getattr(get_lang.lang_obj[lang], 'buttons_strings')
-            for kee in dct:
-                if dct[kee] == self.string:
-                    return kee
+            for key in dct:
+                if dct[key] == self.string:
+                    return key
         return None
 
     def call_button_func(self):
-        if self.kee is None:
+        if self.key is None:
             self.unrecognized_button()
-        elif self.kee == 'leaderboard':
+        elif self.key == 'leaderboard':
             commands.leaderboard(self.bot, self.update)
-        elif self.kee == 'about_you':
+        elif self.key == 'about_you':
             commands.aboutyou(self.bot, self.update)
-        elif self.kee == 'region':
+        elif self.key == 'region':
             commands.region(self.bot, self.update)
-        elif self.kee == 'settings':
+        elif self.key == 'settings':
             commands.settings(self.bot, self.update)
 
     def unrecognized_button(self):

@@ -90,8 +90,17 @@ def handle_one_by_one(bot, job):
         database.query_w(query, group_id)
 
     except BadRequest as e:
-        print(e)
-        
+        if str(e) == "Chat not found":
+            query = """
+            UPDATE supergroups
+            SET bot_inside = FALSE
+            WHERE group_id = %s
+            """
+            database.query_w(query, group_id)
+        else:
+            rint("{} in memberslog BadRequest: group_id: {}".format(e, group_id))
+
+
     except Exception as e:
         print("{} in memberslog: group_id: {}".format(e, group_id))
 

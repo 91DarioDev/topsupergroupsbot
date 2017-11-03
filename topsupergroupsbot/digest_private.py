@@ -124,7 +124,7 @@ def schedule_own_private_digest(bot, job, data):
             pos_g = group[3]    
             text += get_lang.get_string(lang, "digest_of_the_week_detail").format(
                     utils.sep_l(msg_g, lang), 
-                    utils.sep_l(username, lang), 
+                    username, 
                     utils.sep_l(pos_g, lang)
                     )
 

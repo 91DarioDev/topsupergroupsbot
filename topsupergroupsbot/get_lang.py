@@ -39,4 +39,12 @@ def get_string(lang, variable):
     return string
 
 
+def get_string_buttons(lang, variable):
+    try:
+        dct = getattr(lang_obj[lang], 'buttons_strings')
+    except AttributeError:
+        dct = getattr(en, 'buttons_strings')
+    except KeyError:
+        dct = getattr(en, 'buttons_strings')
+    return dct[variable]
 

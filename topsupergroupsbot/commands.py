@@ -29,7 +29,9 @@ from topsupergroupsbot import supported_langs
 from topsupergroupsbot import emojis
 
 
+@utils.private_only
 def start(bot, update, args):
+    start_help_buttons(bot, update)
     if len(args) == 0:
         if update.message.chat.type == "private":
             start_no_params(bot, update)
@@ -261,6 +263,7 @@ def leaderboard(bot, update):
 
 @utils.private_only
 def help(bot, update):
+    start_help_buttons(bot, update)
     lang = utils.get_db_lang(update.message.from_user.id)
     group_working_link = "https://t.me/{}?start=groups_working".format(constants.GET_ME.username)
     text = get_lang.get_string(lang, "help_message").format(
@@ -284,3 +287,9 @@ def feedback(bot, update):
     text += get_lang.get_string(lang, "feedback_message")
     update.message.reply_text(text=text)
 
+
+def start_help_buttons(bot, update):
+    lang = utils.get_db_lang(update.message.from_user.id)
+    text = get_lang.get_string(lang, "hello")
+    reply_markup = keyboards.default_regular_buttons_kb(lang)
+    update.message.reply_text(text=text, reply_markup=reply_markup)

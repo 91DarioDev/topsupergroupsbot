@@ -19,6 +19,7 @@ from topsupergroupsbot import feedback
 from topsupergroupsbot import messages_private
 from topsupergroupsbot import messages_supergroups
 from topsupergroupsbot import config
+from topsupergroupsbot import regular_buttons
 from topsupergroupsbot.antiflood import Antiflood
 
 from telegram.ext import DispatcherHandlerStop
@@ -113,5 +114,6 @@ def processing_supergroups(bot, update):
 
 
 def processing_private(bot, update):
-    # i will implement here buttons
-    pass
+    if regular_buttons.is_button_syntax(bot, update):
+        button = regular_buttons.RegularButtons(bot, update)
+        button.call_button_func()

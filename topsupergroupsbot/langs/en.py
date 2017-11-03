@@ -15,6 +15,16 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 
+buttons_strings = {
+    "leaderboard": "leaderboard",
+    "about_you": "about you",
+    "region": "region",
+    "settings": "settings"
+}
+
+
+hello = "Hello!"
+
 choose_group_lang = (
         "Choose the language of the group. "
         "Your group will be added in the leaderboard of the right language. "
@@ -167,3 +177,9 @@ feedback_flood = ("Sorry, you already sent many feedbacks. Wait for a reply firs
 from_developer = "This is a message from the developer of the bot."
 
 feedback_reply = "Reply"
+
+unrecognized_button = ("a message starting and ending with that character is handled as a button. "
+        "The button you pressed is invalid. I sent you an updated keyboard.\n\nIf you were instead "
+        "sending that message as just message, append another char at the beginning or at the end.")
+
+

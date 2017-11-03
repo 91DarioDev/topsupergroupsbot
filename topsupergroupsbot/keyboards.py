@@ -28,6 +28,7 @@ from topsupergroupsbot import supported_langs
 from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import emojis
+from topsupergroupsbot import constants as c
 
 
 # INLINE KEYBOARDS
@@ -261,4 +262,14 @@ def feedback_reply_kb(lang):
             callback_data="feedback_reply")
     buttons_list = [[reply]]
     keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
+def default_regular_buttons_kb(lang):
+    leaderboards = c.BUTTON_START + get_lang.get_string_buttons(lang, "leaderboard") + c.BUTTON_END
+    about_you = c.BUTTON_START + get_lang.get_string_buttons(lang, "about_you") + c.BUTTON_END
+    region = c.BUTTON_START + get_lang.get_string_buttons(lang, "region") + c.BUTTON_END
+    settings = c.BUTTON_START + get_lang.get_string_buttons(lang, "settings") + c.BUTTON_END
+    keyboard_buttons = [[leaderboards, about_you],[region, settings]]
+    keyboard = ReplyKeyboardMarkup(keyboard_buttons, resize_keyboard=True)
     return keyboard

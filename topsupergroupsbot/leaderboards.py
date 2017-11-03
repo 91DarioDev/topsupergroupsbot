@@ -39,7 +39,7 @@ class Leaderboard:
 
     NEW_INTERVAL = 60*60*24*7
 
-    def __init__(self, lang, region=None, page=1):
+    def __init__(self, lang, region="", page=1):
         self.lang = lang
         self.region = region
         self.page = page

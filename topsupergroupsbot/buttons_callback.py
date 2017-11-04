@@ -192,6 +192,7 @@ def set_adult(bot, query):
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 
+
 @utils.admin_button_only
 def vote_link(bot, query):
     group_id = query.message.chat.id
@@ -206,6 +207,7 @@ def vote_link(bot, query):
         query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
+
 
 @utils.creator_button_only
 def group_digest_menu(bot, query):
@@ -225,6 +227,7 @@ def group_digest_menu(bot, query):
         query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
+
 
 def set_weekly_group_digest(bot, query):
     value = True if query.data.split(":")[1] == "true" else False
@@ -271,13 +274,14 @@ def set_vote(bot, query):
             group_id = %s
         """
         database.query_w(query_db, vote, query.from_user.id, group_id)
-        alert = get_lang.get_string(lang, "updated_vote")         
+        alert = get_lang.get_string(lang, "updated_vote")
     query.answer(text=alert, show_alert=True)
-    text = "{}\n\n{}\n{}".format(query.message.text, alert, emojis.STAR*vote)
+    text = "{}\n\n{}\n{}".format(query.message.text, alert, emojis.STAR * vote)
     try:
         query.edit_message_text(text=text)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
+
 
 def current_page(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
@@ -302,10 +306,10 @@ def lbpage(bot, query):
     if lb_type == leaderboards.Leaderboard.GROUP:
         lbpage_igl(bot, query, params)
     elif lb_type in [
-            leaderboards.Leaderboard.VOTES, 
-            leaderboards.Leaderboard.MESSAGES, 
-            leaderboards.Leaderboard.MEMBERS
-        ]:
+        leaderboards.Leaderboard.VOTES,
+        leaderboards.Leaderboard.MESSAGES,
+        leaderboards.Leaderboard.MEMBERS
+    ]:
         lbpage_private(bot, query, lb_type, page, region)
     query.answer()
 
@@ -326,6 +330,7 @@ def lbpage_igl(bot, query, params):
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 
+
 def lbpage_private(bot, query, lb_type, page, region):
     lang = utils.get_db_lang(query.from_user.id)
     if lb_type == leaderboards.Leaderboard.VOTES:
@@ -341,6 +346,7 @@ def lbpage_private(bot, query, lb_type, page, region):
             parse_mode=ParseMode.HTML, disable_web_page_preview=True)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
+
 
 def set_private_lang(bot, query):
     lang = query.data.replace("set_private_lang_", "")
@@ -369,6 +375,7 @@ def main_private_settings(bot, query):
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 
+
 def private_region(bot, query):
     query.answer()
     query_db = "SELECT lang, region FROM users WHERE user_id = %s"
@@ -382,6 +389,7 @@ def private_region(bot, query):
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 
+
 def private_lang(bot, query):
     query.answer()
     query_db = "SELECT lang FROM users WHERE user_id = %s"
@@ -394,6 +402,7 @@ def private_lang(bot, query):
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 
+
 def private_digest(bot, query):
     query.answer()
     lang = utils.get_db_lang(query.from_user.id)
@@ -403,6 +412,7 @@ def private_digest(bot, query):
         query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
+
 
 def private_your_own_digest(bot, query):
     query_db = "SELECT lang, weekly_own_digest FROM users WHERE user_id = %s"
@@ -420,6 +430,7 @@ def private_your_own_digest(bot, query):
         query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
+
 
 def private_groups_digest(bot, query):
     query.answer("coming soon", show_alert=True)
@@ -440,10 +451,10 @@ def redirect_ledearboard(bot, query):
     lb_type = splitted[1]
     region = splitted[2]
     if lb_type in [
-            leaderboards.Leaderboard.VOTES, 
-            leaderboards.Leaderboard.MESSAGES, 
-            leaderboards.Leaderboard.MEMBERS
-        ]:
+        leaderboards.Leaderboard.VOTES,
+        leaderboards.Leaderboard.MESSAGES,
+        leaderboards.Leaderboard.MEMBERS
+    ]:
         lbpage_private(bot, query, lb_type, 1, region)
     query.answer()
 

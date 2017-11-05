@@ -39,7 +39,7 @@ class Leaderboard:
 
     NEW_INTERVAL = 60*60*24*7
 
-    def __init__(self, lang, region="", page=1):
+    def __init__(self, lang=None, region="", page=1):
         self.lang = lang
         self.region = region
         self.page = page
@@ -63,7 +63,7 @@ class Leaderboard:
         lst = json.loads(lst.decode('UTF-8'))
         return lst
 
-    @run_async
+    #@run_async
     def cache_the_list(self, lst):
         key = self.cache_key_base()
         dumped_lst = json.dumps(lst).encode('UTF-8')
@@ -74,12 +74,14 @@ class Leaderboard:
         #print(total)
         by_language = utils.split_list_grouping_by_column(total, 7)
         #print(by_language)
+        before_modifying = self.region
         for split in by_language:
             #print(split)
             #print(by_language[split])
             self.region = split
             print(self.region)
             self.cache_the_list(by_language[split])
+        self.region = before_modifying
 
             
 class VotesLeaderboard(Leaderboard):
@@ -139,6 +141,30 @@ class VotesLeaderboard(Leaderboard):
                     new
                     )
         return text, reply_markup
+
+    def all_results_no_filters(self):
+        query = """
+              SELECT 
+                  v.group_id, 
+                  s_ref.title, 
+                  s_ref.username, 
+                  COUNT(vote) AS amount, 
+                  ROUND(AVG(vote), 1)::float AS average,
+                  s.nsfw, 
+                  extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                  s.lang
+              FROM votes AS v
+              LEFT OUTER JOIN supergroups_ref AS s_ref
+              ON s_ref.group_id = v.group_id
+              LEFT OUTER JOIN supergroups AS s
+              ON s.group_id = v.group_id
+              GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
+              HAVING 
+                  (s.banned_until IS NULL OR s.banned_until < now()) 
+                  AND COUNT(vote) >= %s 
+              ORDER BY average DESC, amount DESC
+              """
+        return database.query_r(query, self.MIN_REVIEWS)
 
 
 class MessagesLeaderboard(Leaderboard):
@@ -358,3 +384,4 @@ def leadermember(bot, update):
 
 
 
+VotesLeaderboard(lang=None).set_scheduled_cache()

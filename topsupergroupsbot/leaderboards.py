@@ -69,7 +69,19 @@ class Leaderboard:
         dumped_lst = json.dumps(lst).encode('UTF-8')
         database.REDIS.setex(key, dumped_lst, self.CACHE_SECONDS)
 
+    def set_scheduled_cache(self):
+        total = self.all_results_no_filters()
+        #print(total)
+        by_language = utils.split_list_grouping_by_column(total, 7)
+        #print(by_language)
+        for split in by_language:
+            #print(split)
+            #print(by_language[split])
+            self.region = split
+            print(self.region)
+            self.cache_the_list(by_language[split])
 
+            
 class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
     MIN_REVIEWS = 1

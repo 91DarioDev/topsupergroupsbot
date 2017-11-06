@@ -22,7 +22,7 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest, TimedOut,
 from telegram.ext.dispatcher import run_async
 
 
-INTERVAL = 2
+INTERVAL = 5
 
 DEADLINE = '5 hours' # so if i restart the bot they are not updated after few time
 

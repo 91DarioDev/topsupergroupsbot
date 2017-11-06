@@ -431,14 +431,17 @@ def leadermember(bot, update):
 
 @run_async
 def scheduling_votes_leaderboard_cache(bot, job):
-    VotesLeaderboard().set_scheduled_cache()
+    lb = VotesLeaderboard()
+    lb.set_scheduled_cache()
 
 
 @run_async
 def scheduling_messages_leaderboard_cache(bot, job):
-    MessagesLeaderboard().set_scheduled_cache()
+    lb = MessagesLeaderboard()
+    lb.set_scheduled_cache()
 
 
 @run_async
 def scheduling_members_leaderboard_cache(bot, job):
-    MembersLeaderboard().set_scheduled_cache()
+    lb = MembersLeaderboard()
+    lb.set_scheduled_cache()

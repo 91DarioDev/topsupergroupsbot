@@ -63,24 +63,21 @@ class Leaderboard:
         lst = json.loads(lst.decode('UTF-8'))
         return lst
 
-    #@run_async
-    def cache_the_list(self, lst):
+    @run_async
+    def cache_the_list(self, lst, doubled_cache_seconds=False):
         key = self.cache_key_base()
         dumped_lst = json.dumps(lst).encode('UTF-8')
-        database.REDIS.setex(key, dumped_lst, self.CACHE_SECONDS)
+        sec = self.CACHE_SECONDS if doubled_cache_seconds is False else self.CACHE_SECONDS*2
+        database.REDIS.setex(key, dumped_lst, sec)
 
     def set_scheduled_cache(self):
         total = self.all_results_no_filters()
-        #print(total)
-        by_language = utils.split_list_grouping_by_column(total, 7)
-        #print(by_language)
+        by_language = utils.split_list_grouping_by_column(total, self.INDEX_LANG)
         before_modifying = self.region
         for split in by_language:
-            #print(split)
-            #print(by_language[split])
             self.region = split
             print(self.region)
-            self.cache_the_list(by_language[split])
+            self.cache_the_list(by_language[split], doubled_cache_seconds=True)
         self.region = before_modifying
 
             
@@ -88,6 +85,7 @@ class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
     MIN_REVIEWS = 1
     CACHE_SECONDS = 60*3
+    INDEX_LANG = 7
 
     def build_page(self):
         query = """
@@ -170,6 +168,7 @@ class VotesLeaderboard(Leaderboard):
 class MessagesLeaderboard(Leaderboard):
     CODE = 'ml'
     CACHE_SECONDS = 60*3
+    INDEX_LANG = 6
 
     def build_page(self):
         query = """
@@ -220,10 +219,33 @@ class MessagesLeaderboard(Leaderboard):
                     )
         return text, reply_markup
 
+    def all_results_no_filters(self):
+        query = """
+            SELECT 
+                m.group_id, 
+                COUNT (m.group_id) AS leaderboard,
+                s_ref.title, 
+                s_ref.username,
+                s.nsfw, 
+                extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                s.lang
+            FROM messages AS m
+            LEFT OUTER JOIN supergroups_ref AS s_ref
+            ON s_ref.group_id = m.group_id
+            LEFT OUTER JOIN supergroups AS s
+            ON s.group_id = m.group_id
+            WHERE m.message_date > date_trunc('week', now())
+                AND (s.banned_until IS NULL OR s.banned_until < now()) 
+            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
+            ORDER BY leaderboard DESC
+            """
+        return database.query_r(query)
+
 
 class MembersLeaderboard(Leaderboard):
     CODE = 'mml'
     CACHE_SECONDS = 60*10
+    INDEX_LANG = 2
 
     def build_page(self):
         # Thank https://stackoverflow.com/a/46496407/8372336 to make clear this query
@@ -279,6 +301,32 @@ class MembersLeaderboard(Leaderboard):
                 new)
         return text, reply_markup
 
+    def all_results_no_filters(self):
+        query = """
+            SELECT 
+                members.*, 
+                supergroups.lang, 
+                supergroups_ref.title, 
+                supergroups_ref.username, 
+                extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
+                supergroups.nsfw
+            FROM
+            -- Window function to get only de last_date:
+                (SELECT last_members.group_id,last_members.amount
+                FROM
+                (SELECT *, ROW_NUMBER() OVER (PARTITION BY group_id
+                ORDER BY updated_date DESC) AS row FROM members) AS last_members
+                WHERE last_members.row=1) AS members
+            -- Joins with other tables
+            LEFT JOIN supergroups
+            ON members.group_id = supergroups.group_id
+            LEFT JOIN supergroups_ref 
+            ON supergroups.group_id = supergroups_ref.group_id
+            WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
+            ORDER BY members.amount DESC
+            """
+        return database.query_r(query)
+
 
 class GroupLeaderboard(Leaderboard):
     CODE = 'igl'
@@ -297,10 +345,7 @@ class GroupLeaderboard(Leaderboard):
             ORDER BY leaderboard DESC
             """
 
-        extract = self.get_list_from_cache()
-        if extract is None:
-            extract = database.query_r(query, group_id)
-            self.cache_the_list(extract)
+        extract = database.query_r(query, group_id)
 
         pages = Pages(extract, self.page)
 
@@ -383,5 +428,16 @@ def leadermember(bot, update):
             disable_web_page_preview=True)
 
 
+@run_async
+def scheduling_votes_leaderboard_cache(bot, job):
+    VotesLeaderboard().set_scheduled_cache()
 
-VotesLeaderboard(lang=None).set_scheduled_cache()
+
+@run_async
+def scheduling_messages_leaderboard_cache(bot, job):
+    MessagesLeaderboard().set_scheduled_cache()
+
+
+@run_async
+def scheduling_members_leaderboard_cache(bot, job):
+    MembersLeaderboard().set_scheduled_cache()

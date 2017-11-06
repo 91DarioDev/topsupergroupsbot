@@ -15,7 +15,7 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import datetime
+import time
 
 from topsupergroupsbot import utils
 from topsupergroupsbot import keyboards
@@ -257,7 +257,10 @@ def aboutyou(bot, update):
             utils.sep_l(user_cache[0][3], lang),
             utils.sep_l(user_cache[0][4], lang)
         )
-
+    text += "\n\n{}: {}.".format(
+        utils.get_lang.get_string(lang, "latest_update"),
+        utils.round_seconds(int(time.time()-latest_update), lang)
+    )
     utils.send_message_long(bot, chat_id=user_id, text=text)
 
 

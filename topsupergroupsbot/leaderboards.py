@@ -73,13 +73,10 @@ class Leaderboard:
     def set_scheduled_cache(self):
         total = self.all_results_no_filters()
         by_language = utils.split_list_grouping_by_column(total, self.INDEX_LANG)
-        before_modifying = self.region
         for split in by_language:
-            self.region = split
-            print(self.region)
+            lb = self.__class__()
             print(by_language[split])
-            self.cache_the_list(by_language[split], doubled_cache_seconds=True)
-        self.region = before_modifying
+            lb.cache_the_list(by_language[split], doubled_cache_seconds=True)
 
             
 class VotesLeaderboard(Leaderboard):

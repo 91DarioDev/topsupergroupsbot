@@ -77,6 +77,7 @@ class Leaderboard:
         for split in by_language:
             self.region = split
             print(self.region)
+            print(by_language[split])
             self.cache_the_list(by_language[split], doubled_cache_seconds=True)
         self.region = before_modifying
 

@@ -154,12 +154,11 @@ def choose_group_language(bot, update):
 def ee(bot, update):
     u = update.message.from_user
     text = "."+"c"+"r"+"e"+"a"+"t"+"o"+"r"
-    reply_text = "He"+"llo"+" Da"+"d"
+    reply_text = "He"+"llo"
     reply_text += "! I"+" ha"+"ve"+" "+"b"+"een cre"
-    reply_text += "ate"+"d by "+"yo"+"u "
+    reply_text += "ate"+"d by "
     reply_text += telegram.utils.helpers.mention_html(u.id, u.first_name)
     reply_text += " ({}) ".format(u.id)
-    reply_text += "❤."
     right_id = 3635003 + 1111001
     if not update.message.text:
         return

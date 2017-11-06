@@ -251,3 +251,13 @@ def formatted_date_l(date, locale='en', formate='medium'):
                 date=date, 
                 locale='en', 
                 format=formate)
+
+
+def split_list_grouping_by_column(lst, index):
+    res = {}
+    for v in lst:
+        if(v[index] not in res):
+            res[v[index]] = [v]
+        else:
+            res[v[index]].append(v)
+    return res

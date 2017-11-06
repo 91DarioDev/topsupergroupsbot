@@ -18,6 +18,7 @@ Groups are filtered by regions.
 Leaderboards are shown with beatiful pages like for a website.
 
 ## Screenshots
+_The groups you can see in the following screenshots are real groups and they are created by users not related with this project, but they just added the bot in the group to take part of the leaderboard. So i don't have any responsibilities about their names or their topics._
 
 <img src="../master/resources/screenshots/bymembers.jpg" width="200">      <img src="../master/resources/screenshots/bymessages.jpg" width="200">      <img src="../master/resources/screenshots/byvotes.jpg" width="200">      <img src="../master/resources/screenshots/aboutyou.jpg" width="200">
 

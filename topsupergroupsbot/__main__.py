@@ -34,6 +34,7 @@ from topsupergroupsbot import memberslog
 from topsupergroupsbot import digest_private
 from topsupergroupsbot import commands_private
 from topsupergroupsbot import digest_supergroups
+from topsupergroupsbot import cache_users_stats
 
 
 license = (
@@ -127,7 +128,7 @@ def main():
     j.run_repeating(memberslog.members_log, interval=60*60*24, first=0)
     j.run_daily(digest_private.weekly_own_private, time=datetime.time(0, 0, 0), days=(0,))
     j.run_daily(digest_supergroups.weekly_groups_digest, time=datetime.time(0, 0, 0), days=(0,))
-    #leaderboards pre-cache
+    # leaderboards pre-cache
 
     j.run_repeating(
         leaderboards.scheduling_votes_leaderboard_cache,
@@ -144,6 +145,13 @@ def main():
         interval=leaderboards.MembersLeaderboard.CACHE_SECONDS,
         first=0
     )
+    # pre-cached users stats
+    j.run_repeating(
+        cache_users_stats.cache_users_stats,
+        interval=cache_users_stats.CACHE_SECONDS,
+        first=0
+    )
+
 
     # handle errors
     dp.add_error_handler(error)

@@ -15,7 +15,7 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import datetime
+import time
 
 from topsupergroupsbot import utils
 from topsupergroupsbot import keyboards
@@ -27,7 +27,7 @@ from topsupergroupsbot import messages_supergroups
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
 from topsupergroupsbot import emojis
-
+from topsupergroupsbot import cache_users_stats
 
 @utils.private_only
 def start(bot, update, args):
@@ -172,82 +172,96 @@ def aboutyou(bot, update):
     user_id = update.message.from_user.id
 
     query = """
-    SELECT main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos, u.lang 
-    FROM (
-        SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
-            RANK() OVER (
-                PARTITION BY group_id
-                ORDER BY COUNT(group_id) DESC
-                ) AS pos 
-        FROM messages
-        WHERE message_date > date_trunc('week', now())
-        GROUP BY group_id, user_id
-    ) AS main 
-    LEFT OUTER JOIN supergroups_ref AS s_ref
-    USING (group_id)
-    RIGHT JOIN users AS u
-    ON u.user_id = main.user_id
-    WHERE main.user_id = %s
-    ORDER BY m_per_group DESC
-    """
-    extract = database.query_r(query, user_id)
+        WITH tleft AS (
+            SELECT  main.user_id, u.lang, main.num_msgs, main.num_grps, main.rnk 
+            FROM (
+            SELECT
+                user_id,
+                num_grps,
+                num_msgs,
+                DENSE_RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
+            FROM (
+                SELECT
+                    user_id,
+                    COUNT(distinct group_id) AS num_grps,
+                    COUNT(*)                 AS num_msgs
+                FROM messages
+                WHERE message_date > date_trunc('week', now())
+                GROUP BY user_id
+                ) AS sub
+            ) AS main
+            LEFT OUTER JOIN users AS u
+            USING (user_id)
+            WHERE u.weekly_own_digest = TRUE AND user_id = %s
+            AND bot_blocked = FALSE
+            )
+        , tright AS (
+            SELECT main.user_id, main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos
+            FROM (
+                SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY group_id
+                        ORDER BY COUNT(group_id) DESC
+                        ) AS pos 
+                FROM messages
+                WHERE message_date > date_trunc('week', now()) AND user_id = %s
+                GROUP BY group_id, user_id
+            ) AS main 
+            LEFT OUTER JOIN supergroups_ref AS s_ref
+            USING (group_id)
+            ORDER BY m_per_group DESC
+            )
+            SELECT l.user_id, l.lang, l.num_msgs, l.num_grps, l.rnk, r.title, r.username, r.m_per_group, r.pos
+            FROM tleft AS l
+            INNER JOIN tright AS r
+            USING (user_id)
+            """
 
-    if len(extract) == 0:
+    #######################
+    #     WARNING!!!!     #
+    #######################
+    # No more using the query to the db, but using the scheduled cache.
+    # by the way the result is returned in the very same form
+    # so it can be changed anytime
+
+    # FOLLOWING LINES ARE COMMENTED TO NOT EXECUTE THE QUERY
+
+    #extract = database.query_r(query, user_id, user_id)
+    #extract = cache_users_stats.group_extract(extract)[0]
+    #print(extract)
+
+    user_cache, latest_update = cache_users_stats.get_cached_user(user_id)
+
+    if user_cache is None:
         lang = utils.get_db_lang(user_id)
         text = get_lang.get_string(lang, "you_inactive_this_week")
 
     else:
-        lang = extract[0][5]
+        lang = user_cache[0][1]
         text = get_lang.get_string(lang, "this_week_you_sent_this")+"\n\n"
-        for i in extract:
-            title = i[1]
-            username = i[2]
-            m_per_group = i[3]
-            pos_per_group = i[4]
-            add_t = get_lang.get_string(lang, "messages_in_groups_position")
-            add_t = add_t.format(
-                            utils.sep_l(m_per_group, lang), 
-                            username, 
-                            utils.sep_l(pos_per_group, lang)
-                            )
-            text += add_t
-        text += about_you_world(user_id, lang)
+        groups = user_cache[1]
+        for group in groups:
+            title = group[0]
+            username = group[1]
+            m_per_group = group[2]
+            pos_per_group = group[3]
+            text += get_lang.get_string(lang, "messages_in_groups_position").format(
+                utils.sep_l(m_per_group, lang),
+                username,
+                utils.sep_l(pos_per_group, lang)
+            )
 
-    utils.send_message_long(bot, chat_id=user_id, text=text)
-
-
-def about_you_world(user_id, lang):
-    # thank https://stackoverflow.com/a/46437403/8372336 for the help in creating the query
-    query = """
-    SELECT  main.num_msgs, main.num_grps, main.rnk
-    FROM (
-    SELECT
-        user_id,
-        num_grps,
-        num_msgs,
-        RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
-    FROM (
-        SELECT
-            user_id,
-            COUNT(distinct group_id) AS num_grps,
-            COUNT(*)                 AS num_msgs
-        FROM messages
-        WHERE message_date > date_trunc('week', now())
-        GROUP BY user_id
-        ) AS sub
-    ) AS main
-    WHERE main.user_id = %s
-    """
-
-    extract = database.query_r(query, user_id, one=True)
-
-    text = "\n"+get_lang.get_string(lang, "you_globally_this_week")
-    text = text.format(
-            utils.sep_l(extract[0], lang),
-            utils.sep_l(extract[1], lang),
-            utils.sep_l(extract[2], lang)
+        # global stats
+        text += "\n"+get_lang.get_string(lang, "you_globally_this_week").format(
+            utils.sep_l(user_cache[0][2], lang),
+            utils.sep_l(user_cache[0][3], lang),
+            utils.sep_l(user_cache[0][4], lang)
+        )
+    text += "\n\n{}: {}.".format(
+        utils.get_lang.get_string(lang, "latest_update"),
+        utils.round_seconds(int(time.time()-latest_update), lang)
     )
-    return text
+    utils.send_message_long(bot, chat_id=user_id, text=text)
 
 
 @utils.private_only

@@ -183,3 +183,7 @@ unrecognized_button = ("a message starting and ending with that character is han
         "sending that message as just message, append another char at the beginning or at the end.")
 
 updating_buttons = "I update buttons"
+
+latest_update = "Updated"
+seconds_ago = "{} seconds ago"
+about_minutes_ago = "about {} minutes ago"

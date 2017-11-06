@@ -52,7 +52,6 @@ def get_cached_user(user_id):
     user_cache, latest_update = db.REDIS.hmget(REDIS_KEY, user_id, LATEST_UPDATE_KEY)
     user_cache = user_cache if user_cache is None else json.loads(user_cache.decode('UTF-8'))
     latest_update = latest_update if latest_update is None else float(latest_update.decode('UTF-8'))
-    print(type(user_cache))
     return user_cache, latest_update
 
 def get_all_users_stats():

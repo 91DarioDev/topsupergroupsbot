@@ -36,7 +36,7 @@ def group_extract(lst):
     final = list(d.items())
     return final
 
-def cache_users_stats():
+def cache_users_stats(bot, job):
     at_seconds = time.time()
     lst = get_all_users_stats()
     dct = {}

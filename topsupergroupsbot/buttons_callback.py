@@ -219,7 +219,10 @@ def group_digest_menu(bot, query):
     text = get_lang.get_string(lang, "group_weekly_digest")
     reply_markup = keyboards.weekly_group_digest_kb(lang, weekly_digest)
     if query.data.endswith("new_msg"):
-        query.message.edit_reply_markup()
+        try:
+            query.message.edit_reply_markup()
+        except TelegramError as e:
+            if str(e) != "Message is not modified": print(e)
         query.message.reply_text(text=text, reply_markup=reply_markup)
         return
     query.answer()
@@ -236,8 +239,10 @@ def set_weekly_group_digest(bot, query):
     lang = extract[0][0]
     reply_markup = keyboards.weekly_group_digest_kb(lang, value)
     query.answer()
-    query.message.edit_reply_markup(reply_markup=reply_markup)
-
+    try:
+        query.message.edit_reply_markup(reply_markup=reply_markup)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
 
 def set_vote(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
@@ -353,7 +358,10 @@ def set_private_lang(bot, query):
     query_db = "UPDATE users SET lang = %s WHERE user_id = %s"
     database.query_w(query_db, lang, query.from_user.id)
     query.answer()
-    query.message.edit_reply_markup(reply_markup=keyboards.private_language_kb(lang))
+    try:
+        query.message.edit_reply_markup(reply_markup=keyboards.private_language_kb(lang))
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
     bot.sendMessage(
         chat_id=query.from_user.id, 
         text=get_lang.get_string(lang, "updating_buttons"), 
@@ -367,8 +375,10 @@ def set_private_region(bot, query):
     extract = database.query_wr(query_db, region, query.from_user.id, one=True)
     lang = extract[0]
     query.answer()
-    query.message.edit_reply_markup(reply_markup=keyboards.private_region_kb(lang, region))
-
+    try:
+        query.message.edit_reply_markup(reply_markup=keyboards.private_region_kb(lang, region))
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
 
 def main_private_settings(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
@@ -427,7 +437,10 @@ def private_your_own_digest(bot, query):
     text = get_lang.get_string(lang, "weekly_own_digest")
     reply_markup = keyboards.weekly_own_digest_kb(lang, weekly_own_digest)
     if query.data.endswith("new_msg"):
-        query.message.edit_reply_markup()
+        try:
+            query.message.edit_reply_markup()
+        except TelegramError as e:
+            if str(e) != "Message is not modified": print(e)
         query.message.reply_text(text=text, reply_markup=reply_markup)
         return
     query.answer()
@@ -448,8 +461,10 @@ def set_weekly_own_digest(bot, query):
     lang = extract[0][0]
     reply_markup = keyboards.weekly_own_digest_kb(lang, value)
     query.answer()
-    query.message.edit_reply_markup(reply_markup=reply_markup)
-
+    try:
+        query.message.edit_reply_markup(reply_markup=reply_markup)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
 
 def redirect_ledearboard(bot, query):
     splitted = query.data.split(":")
@@ -465,7 +480,10 @@ def redirect_ledearboard(bot, query):
 
 
 def feedback_reply(bot, query):
-    query.message.edit_reply_markup(reply_markup=None)
+    try:
+        query.message.edit_reply_markup(reply_markup=None)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
     lang = utils.get_db_lang(query.from_user.id)
     text = get_lang.get_string(lang, "feedback_message")
     bot.sendMessage(chat_id=query.from_user.id, text=text)

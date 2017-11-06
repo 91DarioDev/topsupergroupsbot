@@ -231,13 +231,11 @@ def aboutyou(bot, update):
     #print(extract)
 
     user_cache, latest_update = cache_users_stats.get_cached_user(user_id)
-
+    lang = utils.get_db_lang(user_id)
     if user_cache is None:
-        lang = utils.get_db_lang(user_id)
         text = get_lang.get_string(lang, "you_inactive_this_week")
 
     else:
-        lang = user_cache[0][1]
         text = get_lang.get_string(lang, "this_week_you_sent_this")+"\n\n"
         groups = user_cache[1]
         for group in groups:

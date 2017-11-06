@@ -17,6 +17,10 @@ Texting the bot in private chat, you can get **statistics about you** and **grou
 Groups are filtered by regions.
 Leaderboards are shown with beatiful pages like for a website.
 
+## Screenshots
+
+<img src="../master/resources/screenshots/bymembers.jpg" width="200">      <img src="../master/resources/screenshots/bymessages.jpg" width="200">      <img src="../master/resources/screenshots/byvotes.jpg" width="200">      <img src="../master/resources/screenshots/aboutyou.jpg" width="200">
+
 ## Commmands
 
 ### private chat:

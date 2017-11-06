@@ -5,7 +5,10 @@ A telegram bot for telegram public groups leaderboards
 
 ## What does this bot do?
 **This bot does statistics and leaderboards about public supergrous and their users.**
+
+
 This bot can be added in telegram public groups. The creator of the group can set the language and some other options.
+
 Texting the bot in private chat, you can get **statistics about you** and **groups leaderboard**. Users can choose the order of the groups by:
 
 - number of members
@@ -13,6 +16,7 @@ Texting the bot in private chat, you can get **statistics about you** and **grou
 - votes average (Users can vote groups)
 
 Groups are filtered by regions.
+
 Leaderboards are shown with beatiful pages like for a website.
 
 ## Commmands

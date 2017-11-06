@@ -75,8 +75,6 @@ class Leaderboard:
         by_language = utils.split_list_grouping_by_column(total, self.INDEX_LANG)
         for split in by_language:
             lb = self.__class__(region=split)
-            print(self.__class__.__name__)
-            print(split)
             lb.cache_the_list(by_language[split], doubled_cache_seconds=True)
 
             

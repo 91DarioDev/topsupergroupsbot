@@ -354,6 +354,11 @@ def set_private_lang(bot, query):
     database.query_w(query_db, lang, query.from_user.id)
     query.answer()
     query.message.edit_reply_markup(reply_markup=keyboards.private_language_kb(lang))
+    bot.sendMessage(
+        chat_id=query.from_user.id, 
+        text=get_lang.get_string(lang, "updating_buttons"), 
+        reply_markup=keyboards.default_regular_buttons_kb(lang)
+    )
 
 
 def set_private_region(bot, query):

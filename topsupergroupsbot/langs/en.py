@@ -182,4 +182,4 @@ unrecognized_button = ("a message starting and ending with that character is han
         "The button you pressed is invalid. I sent you an updated keyboard.\n\nIf you were instead "
         "sending that message as just message, append another char at the beginning or at the end.")
 
-
+updating_buttons = "I update buttons"

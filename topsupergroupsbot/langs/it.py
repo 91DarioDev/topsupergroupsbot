@@ -182,3 +182,5 @@ unrecognized_button = ("Un messaggio che inizia e finisce con quel carattere è 
         "bottone. Il bottone che hai premuto non è valido. Ti ho appena inviato una tastiera "
         "aggiornata.\n\nSe invece stavi semplicemente inviando un messaggio, non farlo iniziare "
         "e finire con quel carattere, ma aggiungi qualcosa all'inizio o alla fine.")
+
+updating_buttons = "Aggiorno i bottoni"

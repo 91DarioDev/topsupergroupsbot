@@ -132,25 +132,31 @@ def weekly_groups_digest(bot, job):
     ####################
 
     query = """
-        SELECT 
+        SELECT
             group_id,
-            COUNT(vote) AS amount, 
-            ROUND(AVG(vote), 1) AS average
-        FROM votes
-        GROUP BY group_id
+            COUNT(vote) AS amount,
+            ROUND(AVG(vote), 1) AS average, 
+            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC)
+        FROM votes 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
+        GROUP BY group_id, s.lang;
     """
     this_week_votes_avg = database.query_r(query, near_interval)
 
     query = """
         SELECT 
             group_id,
-            COUNT(vote) AS amount, 
-            ROUND(AVG(vote), 1) AS average
+            COUNT(vote) AS amount,
+            ROUND(AVG(vote), 1) AS average, 
+            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC)
         FROM votes
-        WHERE vote_date BETWEEN (now() - interval %s) AND (now() - interval %s)
-        GROUP BY group_id
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
+        WHERE vote_date <= now() - interval %s
+        GROUP BY group_id, s.lang;
     """
-    last_week_votes_avg = database.query_r(query, far_interval, near_interval)
+    last_week_votes_avg = database.query_r(query, near_interval)
 
     ##################
     # ACTIVE USERS

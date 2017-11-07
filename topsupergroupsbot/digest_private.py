@@ -51,7 +51,7 @@ def weekly_own_private(bot, job):
         user_id,
         num_grps,
         num_msgs,
-        DENSE_RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
+        RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
     FROM (
         SELECT
             user_id,

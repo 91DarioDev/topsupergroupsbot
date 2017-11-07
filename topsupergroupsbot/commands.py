@@ -171,51 +171,51 @@ def language_private(bot, update):
 def aboutyou(bot, update):
     user_id = update.message.from_user.id
 
-    query = """
-        WITH tleft AS (
-            SELECT  main.user_id, u.lang, main.num_msgs, main.num_grps, main.rnk 
-            FROM (
-            SELECT
-                user_id,
-                num_grps,
-                num_msgs,
-                DENSE_RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
-            FROM (
-                SELECT
-                    user_id,
-                    COUNT(distinct group_id) AS num_grps,
-                    COUNT(*)                 AS num_msgs
-                FROM messages
-                WHERE message_date > date_trunc('week', now())
-                GROUP BY user_id
-                ) AS sub
-            ) AS main
-            LEFT OUTER JOIN users AS u
-            USING (user_id)
-            WHERE u.weekly_own_digest = TRUE AND user_id = %s
-            AND bot_blocked = FALSE
-            )
-        , tright AS (
-            SELECT main.user_id, main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos
-            FROM (
-                SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
-                    ROW_NUMBER() OVER (
-                        PARTITION BY group_id
-                        ORDER BY COUNT(group_id) DESC
-                        ) AS pos 
-                FROM messages
-                WHERE message_date > date_trunc('week', now()) AND user_id = %s
-                GROUP BY group_id, user_id
-            ) AS main 
-            LEFT OUTER JOIN supergroups_ref AS s_ref
-            USING (group_id)
-            ORDER BY m_per_group DESC
-            )
-            SELECT l.user_id, l.lang, l.num_msgs, l.num_grps, l.rnk, r.title, r.username, r.m_per_group, r.pos
-            FROM tleft AS l
-            INNER JOIN tright AS r
-            USING (user_id)
-            """
+    # query = """
+    #     WITH tleft AS (
+    #         SELECT  main.user_id, u.lang, main.num_msgs, main.num_grps, main.rnk
+    #         FROM (
+    #         SELECT
+    #             user_id,
+    #             num_grps,
+    #             num_msgs,
+    #             DENSE_RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
+    #         FROM (
+    #             SELECT
+    #                 user_id,
+    #                 COUNT(distinct group_id) AS num_grps,
+    #                 COUNT(*)                 AS num_msgs
+    #             FROM messages
+    #             WHERE message_date > date_trunc('week', now())
+    #             GROUP BY user_id
+    #             ) AS sub
+    #         ) AS main
+    #         LEFT OUTER JOIN users AS u
+    #         USING (user_id)
+    #         WHERE u.weekly_own_digest = TRUE AND user_id = %s
+    #         AND bot_blocked = FALSE
+    #         )
+    #     , tright AS (
+    #         SELECT main.user_id, main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos
+    #         FROM (
+    #             SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
+    #                 ROW_NUMBER() OVER (
+    #                     PARTITION BY group_id
+    #                     ORDER BY COUNT(group_id) DESC
+    #                     ) AS pos
+    #             FROM messages
+    #             WHERE message_date > date_trunc('week', now()) AND user_id = %s
+    #             GROUP BY group_id, user_id
+    #         ) AS main
+    #         LEFT OUTER JOIN supergroups_ref AS s_ref
+    #         USING (group_id)
+    #         ORDER BY m_per_group DESC
+    #         )
+    #         SELECT l.user_id, l.lang, l.num_msgs, l.num_grps, l.rnk, r.title, r.username, r.m_per_group, r.pos
+    #         FROM tleft AS l
+    #         INNER JOIN tright AS r
+    #         USING (user_id)
+    #         """
 
     #######################
     #     WARNING!!!!     #
@@ -228,7 +228,7 @@ def aboutyou(bot, update):
 
     #extract = database.query_r(query, user_id, user_id)
     #extract = cache_users_stats.group_extract(extract)[0]
-    #print(extract)
+
 
     user_cache, latest_update = cache_users_stats.get_cached_user(user_id)
     lang = utils.get_db_lang(user_id)

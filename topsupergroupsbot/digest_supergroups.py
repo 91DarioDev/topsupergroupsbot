@@ -84,28 +84,32 @@ def weekly_groups_digest(bot, job):
     ############
 
     query = """
-        SELECT 
-            last_members.group_id, 
-            last_members.amount
+         SELECT
+            last_members.group_id,
+            last_members.amount, 
+            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
         FROM
             (
-            SELECT 
-                *, 
+            SELECT
+                *,
                 ROW_NUMBER() OVER (
                     PARTITION BY group_id
                     ORDER BY updated_date DESC
-                    ) AS row 
+                    ) AS row
             FROM members
-            ) AS last_members
+        ) AS last_members 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE last_members.row=1
-        """
+    """
     members_this_week = database.query_r(query)
 
 
     query = """
         SELECT 
             last_members.group_id, 
-            last_members.amount
+            last_members.amount,
+            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
         FROM
             (
             SELECT 
@@ -116,7 +120,9 @@ def weekly_groups_digest(bot, job):
                     ) AS row 
             FROM members
             WHERE updated_date <= now() - interval %s
-            ) AS last_members
+        ) AS last_members 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE last_members.row=1
         """
     members_last_week = database.query_r(query, near_interval)

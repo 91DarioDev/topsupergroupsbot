@@ -71,7 +71,7 @@ def weekly_own_private(bot, job):
     SELECT main.user_id, main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos
     FROM (
         SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
-            ROW_NUMBER() OVER (
+            RANK() OVER (
                 PARTITION BY group_id
                 ORDER BY COUNT(group_id) DESC
                 ) AS pos 

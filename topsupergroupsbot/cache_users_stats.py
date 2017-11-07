@@ -63,7 +63,7 @@ def get_all_users_stats():
             user_id,
             num_grps,
             num_msgs,
-            DENSE_RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
+            RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
         FROM (
             SELECT
                 user_id,
@@ -83,7 +83,7 @@ def get_all_users_stats():
         SELECT main.user_id, main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos
         FROM (
             SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
-                ROW_NUMBER() OVER (
+                RANK() OVER (
                     PARTITION BY group_id
                     ORDER BY COUNT(group_id) DESC
                     ) AS pos 

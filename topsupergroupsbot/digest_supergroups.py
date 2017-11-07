@@ -221,7 +221,7 @@ def weekly_groups_digest(bot, job):
                 act_users_new = i[1]
                 break
 
-        for i in last_week_votes_avg:
+        for i in last_week_active_users:
             if i[0] == group_id:
                 act_users_old = i[1]
                 break

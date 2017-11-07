@@ -248,7 +248,8 @@ class MembersLeaderboard(Leaderboard):
             supergroups_ref.title, 
             supergroups_ref.username, 
             extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
-            supergroups.nsfw
+            supergroups.nsfw,
+            RANK() OVER(ORDER BY members.amount DESC)
         FROM
         -- Window function to get only de last_date:
             (SELECT last_members.group_id,last_members.amount
@@ -263,7 +264,6 @@ class MembersLeaderboard(Leaderboard):
         ON supergroups.group_id = supergroups_ref.group_id
         WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
             AND lang = %s
-        ORDER BY members.amount DESC
         """
 
         extract = self.get_list_from_cache()
@@ -278,14 +278,11 @@ class MembersLeaderboard(Leaderboard):
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
         text += "\n\n"
-        first_number_of_page = pages.first_number_of_page()
-        offset = first_number_of_page - 1   
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[6] is True else ""
             new = emojis.NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
-            offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
-                offset, 
+                group[7],
                 nsfw, 
                 group[4], 
                 html.escape(group[3]), 
@@ -301,7 +298,8 @@ class MembersLeaderboard(Leaderboard):
                 supergroups_ref.title, 
                 supergroups_ref.username, 
                 extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
-                supergroups.nsfw
+                supergroups.nsfw,
+                RANK() OVER (PARTITION BY supergroups.lang ORDER BY members.amount DESC)
             FROM
             -- Window function to get only de last_date:
                 (SELECT last_members.group_id,last_members.amount
@@ -315,7 +313,6 @@ class MembersLeaderboard(Leaderboard):
             LEFT JOIN supergroups_ref 
             ON supergroups.group_id = supergroups_ref.group_id
             WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
-            ORDER BY members.amount DESC
             """
         return database.query_r(query)
 
@@ -326,15 +323,19 @@ class GroupLeaderboard(Leaderboard):
 
     def build_page(self, group_id):
         query = """
-            SELECT m.user_id, COUNT(m.user_id) AS leaderboard,
-                u_ref.name, u_ref.last_name, u_ref.username
+            SELECT 
+                m.user_id, 
+                COUNT(m.msg_id) AS leaderboard,
+                u_ref.name, 
+                u_ref.last_name, 
+                u_ref.username,
+                RANK() OVER (ORDER BY COUNT(m.msg_id) DESC)
             FROM messages AS m
             LEFT OUTER JOIN users_ref AS u_ref
-            ON u_ref.user_id = m.user_id
+            USING (user_id)
             WHERE m.group_id = %s
                 AND m.message_date > date_trunc('week', now())
             GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
-            ORDER BY leaderboard DESC
             """
 
         extract = database.query_r(query, group_id)

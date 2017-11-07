@@ -271,7 +271,8 @@ def weekly_groups_digest(bot, job):
             SELECT 
                 user_id,
                 COUNT(msg_id) AS num_msgs, 
-                name 
+                name, 
+                RANK() OVER (ORDER BY COUNT(msg_id) DESC)
             FROM messages AS m
             LEFT OUTER JOIN users_ref AS u_ref
             USING (user_id)
@@ -281,11 +282,9 @@ def weekly_groups_digest(bot, job):
             LIMIT %s
             """
         top_users_of_the_group = database.query_r(query_top_users, group_id, near_interval, 10)
-        count = 0
         for user in top_users_of_the_group:
-            count += 1
             text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
-                    count,
+                    user[3],
                     user[0],
                     html.escape(user[2]),
                     utils.sep_l(user[1], lang)

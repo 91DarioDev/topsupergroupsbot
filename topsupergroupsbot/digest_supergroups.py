@@ -196,17 +196,25 @@ def weekly_groups_digest(bot, job):
 
         msgs_new = 0
         msgs_old = 0
+        msgs_pos_old = 0
+        msgs_pos_new = 0
 
         members_new = 0
         members_old = 0
+        members_pos_old = 0
+        members_pos_new = 0
 
         sum_v_new = 0
         avg_v_new = 0
         sum_v_old = 0
         avg_v_old = 0
+        avg_pos_old = 0
+        avg_pos_new = 0
 
         act_users_new = 0
         act_users_old = 0
+        act_users_pos_old = 0
+        act_users_pos_new = 0
 
         for i in msgs_this_week:
             if i[0] == group_id:
@@ -261,15 +269,32 @@ def weekly_groups_digest(bot, job):
         diff_msg, percent_msg = diff_percent(msgs_new, msgs_old, lang)
         diff_members, percent_members = diff_percent(members_new, members_old, lang) 
         diff_act, percent_act = diff_percent(act_users_new, act_users_old, lang)
+
         text = get_lang.get_string(lang, "weekly_groups_digest").format(
-                    utils.sep_l(msgs_old, lang), utils.sep_l(msgs_new, lang), 
-                    diff_msg, percent_msg,
-                    utils.sep_l(members_old, lang), utils.sep_l(members_new, lang), 
-                    diff_members, percent_members, 
-                    utils.sep_l(avg_v_old, lang), emojis.STAR, utils.sep_l(sum_v_old, lang),
-                    utils.sep_l(avg_v_new, lang), emojis.STAR, utils.sep_l(sum_v_new, lang),
-                    utils.sep_l(act_users_old, lang), utils.sep_l(act_users_new, lang),
-                    diff_act, percent_act)
+            # by messages
+            utils.sep_l(msgs_old, lang),
+            utils.sep_l(msgs_new, lang),
+            diff_msg, percent_msg,
+            utils.sep_l(msgs_pos_old, lang),
+            utils.sep_l(msgs_pos_new, lang),
+            # by members
+            utils.sep_l(members_old, lang),
+            utils.sep_l(members_new, lang),
+            diff_members, percent_members,
+            utils.sep_l(members_pos_old, lang),
+            utils.sep_l(members_pos_new, lang),
+            # by votes average
+            utils.sep_l(avg_v_old, lang), emojis.STAR, utils.sep_l(sum_v_old, lang),
+            utils.sep_l(avg_v_new, lang), emojis.STAR, utils.sep_l(sum_v_new, lang),
+            utils.sep_l(avg_pos_old, lang),
+            utils.sep_l(avg_pos_new, lang),
+            # by active users
+            utils.sep_l(act_users_old, lang),
+            utils.sep_l(act_users_new, lang),
+            diff_act, percent_act,
+            utils.sep_l(act_users_pos_old, lang),
+            utils.sep_l(act_users_pos_new, lang)
+        )
 
         ##############
         # TOP n USERS

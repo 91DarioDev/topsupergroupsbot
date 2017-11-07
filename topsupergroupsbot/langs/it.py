@@ -149,17 +149,34 @@ groups_working = (
 
 weekly_groups_digest = (
         "Ciao!  Un'altra settimana è passata. Ecco alcune statistiche di questo gruppo:\n\n"
+        
+        "-- PER MESSAGGI --\n"
         "messaggi inviati la scorsa settimana: {}\n"
         "messaggi inviati questa settimana: {}\n"
-        "differenza: {}  in percentuale: {}\n\n"
+        "differenza: {}  in percentuale: {}\n"
+        "posizione la scorsa settimana: {}\n"
+        "posizione questa settimana: {}\n\n"
+        
+        "-- PER MEMBRI --\n"
         "membri la scorsa settimana: {}\n"
         "membri questa settimana: {}\n"
-        "differenza: {}  in percentuale: {}\n\n"
+        "differenza: {}  in percentuale: {}\n"
+        "posizione la scorsa settimana: {}\n"
+        "posizione questa settimana: {}\n\n"
+        
+        "-- PER MEDIA VOTI --"
         "media e numero di voti la scorsa settimana: {}{}|({})\n"
-        "media e numero di voti questa settimana: {}{}|({})\n\n"
+        "media e numero di voti questa settimana: {}{}|({})\n"
+        "posizione la scorsa settimana: {}\n"
+        "posizione questa settimana: {}\n\n"
+        
+        "-- PER UTENTI ATTIVI --"
         "utenti attivi la scorsa settimana: {}\n"
         "utenti attivi questa settimana: {}\n"
-        "differenza: {}  in percentuale: {}\n\n"
+        "differenza: {}  in percentuale: {}\n"
+        "posizione la scorsa settimana: {}\n"
+        "posizione questa settimanan: {}\n\n"
+        
         "TOP UTENTI DELLA SETTIMANA:\n"
         )
 

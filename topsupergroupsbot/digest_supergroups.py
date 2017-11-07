@@ -251,7 +251,7 @@ def weekly_groups_digest(bot, job):
             if i[0] == group_id:
                 sum_v_old = i[1]
                 avg_v_old = i[2]
-                avg_pos_old = i[2]
+                avg_pos_old = i[3]
                 break
 
         for i in this_week_active_users:

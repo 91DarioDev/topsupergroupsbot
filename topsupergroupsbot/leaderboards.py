@@ -93,18 +93,18 @@ class VotesLeaderboard(Leaderboard):
             COUNT(vote) AS amount, 
             ROUND(AVG(vote), 1)::float AS average,
             s.nsfw, 
-            extract(epoch from s.joined_the_bot at time zone 'utc') AS dt
+            extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+            RANK() OVER (ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC)
         FROM votes AS v
         LEFT OUTER JOIN supergroups_ref AS s_ref
-        ON s_ref.group_id = v.group_id
+        USING (group_id)
         LEFT OUTER JOIN supergroups AS s
-        ON s.group_id = v.group_id
+        USING (group_id)
         GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND s.lang = %s
             AND COUNT(vote) >= %s 
-        ORDER BY average DESC, amount DESC
         """
 
         extract = self.get_list_from_cache()
@@ -118,15 +118,12 @@ class VotesLeaderboard(Leaderboard):
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
-        text += "\n\n" 
-        first_number_of_page = pages.first_number_of_page()
-        offset = first_number_of_page - 1
+        text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[5] is True else ""
             new = emojis.NEW if (group[6]+self.NEW_INTERVAL > time.time()) else ""
-            offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(
-                    offset, 
+                    group[7],
                     nsfw, 
                     group[2], 
                     html.escape(group[1]), 
@@ -147,7 +144,8 @@ class VotesLeaderboard(Leaderboard):
                   ROUND(AVG(vote), 1)::float AS average,
                   s.nsfw, 
                   extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
-                  s.lang
+                  s.lang,
+                  RANK() OVER (ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC)
               FROM votes AS v
               LEFT OUTER JOIN supergroups_ref AS s_ref
               ON s_ref.group_id = v.group_id
@@ -157,7 +155,6 @@ class VotesLeaderboard(Leaderboard):
               HAVING 
                   (s.banned_until IS NULL OR s.banned_until < now()) 
                   AND COUNT(vote) >= %s 
-              ORDER BY average DESC, amount DESC
               """
         return database.query_r(query, self.MIN_REVIEWS)
 

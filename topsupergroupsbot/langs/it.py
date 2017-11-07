@@ -164,13 +164,13 @@ weekly_groups_digest = (
         "posizione la scorsa settimana: {}\n"
         "posizione questa settimana: {}\n\n"
         
-        "-- PER MEDIA VOTI --"
+        "-- PER MEDIA VOTI --\n"
         "media e numero di voti la scorsa settimana: {}{}|({})\n"
         "media e numero di voti questa settimana: {}{}|({})\n"
         "posizione la scorsa settimana: {}\n"
         "posizione questa settimana: {}\n\n"
         
-        "-- PER UTENTI ATTIVI --"
+        "-- PER UTENTI ATTIVI --\n"
         "utenti attivi la scorsa settimana: {}\n"
         "utenti attivi questa settimana: {}\n"
         "differenza: {}  in percentuale: {}\n"

@@ -82,7 +82,7 @@ class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
     MIN_REVIEWS = 1
     CACHE_SECONDS = 60*3
-    INDEX_LANG = 7
+    INDEX_LANG = 8
 
     def build_page(self):
         query = """
@@ -93,18 +93,18 @@ class VotesLeaderboard(Leaderboard):
             COUNT(vote) AS amount, 
             ROUND(AVG(vote), 1)::float AS average,
             s.nsfw, 
-            extract(epoch from s.joined_the_bot at time zone 'utc') AS dt
+            extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+            RANK() OVER (ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC)
         FROM votes AS v
         LEFT OUTER JOIN supergroups_ref AS s_ref
-        ON s_ref.group_id = v.group_id
+        USING (group_id)
         LEFT OUTER JOIN supergroups AS s
-        ON s.group_id = v.group_id
+        USING (group_id)
         GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND s.lang = %s
             AND COUNT(vote) >= %s 
-        ORDER BY average DESC, amount DESC
         """
 
         extract = self.get_list_from_cache()
@@ -118,15 +118,12 @@ class VotesLeaderboard(Leaderboard):
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
-        text += "\n\n" 
-        first_number_of_page = pages.first_number_of_page()
-        offset = first_number_of_page - 1
+        text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[5] is True else ""
             new = emojis.NEW if (group[6]+self.NEW_INTERVAL > time.time()) else ""
-            offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(
-                    offset, 
+                    group[7],
                     nsfw, 
                     group[2], 
                     html.escape(group[1]), 
@@ -147,6 +144,7 @@ class VotesLeaderboard(Leaderboard):
                   ROUND(AVG(vote), 1)::float AS average,
                   s.nsfw, 
                   extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                  RANK() OVER (PARTITION BY s.lang ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC),
                   s.lang
               FROM votes AS v
               LEFT OUTER JOIN supergroups_ref AS s_ref
@@ -157,7 +155,6 @@ class VotesLeaderboard(Leaderboard):
               HAVING 
                   (s.banned_until IS NULL OR s.banned_until < now()) 
                   AND COUNT(vote) >= %s 
-              ORDER BY average DESC, amount DESC
               """
         return database.query_r(query, self.MIN_REVIEWS)
 
@@ -165,27 +162,27 @@ class VotesLeaderboard(Leaderboard):
 class MessagesLeaderboard(Leaderboard):
     CODE = 'ml'
     CACHE_SECONDS = 60*3
-    INDEX_LANG = 6
+    INDEX_LANG = 7
 
     def build_page(self):
         query = """
-        SELECT 
-            m.group_id, 
-            COUNT (m.group_id) AS leaderboard,
-            s_ref.title, 
-            s_ref.username,
-            s.nsfw, 
-            extract(epoch from s.joined_the_bot at time zone 'utc') AS dt
-        FROM messages AS m
-        LEFT OUTER JOIN supergroups_ref AS s_ref
-        ON s_ref.group_id = m.group_id
-        LEFT OUTER JOIN supergroups AS s
-        ON s.group_id = m.group_id
-        WHERE m.message_date > date_trunc('week', now())
-            AND (s.banned_until IS NULL OR s.banned_until < now()) 
-            AND s.lang = %s
-        GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until 
-        ORDER BY leaderboard DESC
+            SELECT 
+                m.group_id, 
+                COUNT (m.group_id) AS leaderboard,
+                s_ref.title, 
+                s_ref.username,
+                s.nsfw, 
+                extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                RANK() OVER (ORDER BY COUNT(m.group_id) DESC)
+            FROM messages AS m
+            LEFT OUTER JOIN supergroups_ref AS s_ref
+            ON s_ref.group_id = m.group_id
+            LEFT OUTER JOIN supergroups AS s
+            ON s.group_id = m.group_id
+            WHERE m.message_date > date_trunc('week', now())
+                AND (s.banned_until IS NULL OR s.banned_until < now()) 
+                AND s.lang = %s
+            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until 
         """
 
         extract = self.get_list_from_cache()
@@ -200,14 +197,11 @@ class MessagesLeaderboard(Leaderboard):
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
         text += "\n\n"
-        first_number_of_page = pages.first_number_of_page()
-        offset = first_number_of_page - 1
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[4] is True else ""
             new = emojis.NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
-            offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
-                    offset, 
+                    group[6],
                     nsfw, 
                     group[3], 
                     html.escape(group[2]), 
@@ -225,6 +219,7 @@ class MessagesLeaderboard(Leaderboard):
                 s_ref.username,
                 s.nsfw, 
                 extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                RANK() OVER (PARTITION BY s.lang ORDER BY COUNT(m.group_id) DESC),
                 s.lang
             FROM messages AS m
             LEFT OUTER JOIN supergroups_ref AS s_ref
@@ -253,7 +248,8 @@ class MembersLeaderboard(Leaderboard):
             supergroups_ref.title, 
             supergroups_ref.username, 
             extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
-            supergroups.nsfw
+            supergroups.nsfw,
+            RANK() OVER(ORDER BY members.amount DESC)
         FROM
         -- Window function to get only de last_date:
             (SELECT last_members.group_id,last_members.amount
@@ -268,7 +264,6 @@ class MembersLeaderboard(Leaderboard):
         ON supergroups.group_id = supergroups_ref.group_id
         WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
             AND lang = %s
-        ORDER BY members.amount DESC
         """
 
         extract = self.get_list_from_cache()
@@ -283,14 +278,11 @@ class MembersLeaderboard(Leaderboard):
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
         text += "\n\n"
-        first_number_of_page = pages.first_number_of_page()
-        offset = first_number_of_page - 1   
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[6] is True else ""
             new = emojis.NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
-            offset += 1 # for before IT numeration
             text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
-                offset, 
+                group[7],
                 nsfw, 
                 group[4], 
                 html.escape(group[3]), 
@@ -306,7 +298,8 @@ class MembersLeaderboard(Leaderboard):
                 supergroups_ref.title, 
                 supergroups_ref.username, 
                 extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
-                supergroups.nsfw
+                supergroups.nsfw,
+                RANK() OVER (PARTITION BY supergroups.lang ORDER BY members.amount DESC)
             FROM
             -- Window function to get only de last_date:
                 (SELECT last_members.group_id,last_members.amount
@@ -320,7 +313,6 @@ class MembersLeaderboard(Leaderboard):
             LEFT JOIN supergroups_ref 
             ON supergroups.group_id = supergroups_ref.group_id
             WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
-            ORDER BY members.amount DESC
             """
         return database.query_r(query)
 
@@ -331,15 +323,19 @@ class GroupLeaderboard(Leaderboard):
 
     def build_page(self, group_id):
         query = """
-            SELECT m.user_id, COUNT(m.user_id) AS leaderboard,
-                u_ref.name, u_ref.last_name, u_ref.username
+            SELECT 
+                m.user_id, 
+                COUNT(m.msg_id) AS leaderboard,
+                u_ref.name, 
+                u_ref.last_name, 
+                u_ref.username,
+                RANK() OVER (ORDER BY COUNT(m.msg_id) DESC)
             FROM messages AS m
             LEFT OUTER JOIN users_ref AS u_ref
-            ON u_ref.user_id = m.user_id
+            USING (user_id)
             WHERE m.group_id = %s
                 AND m.message_date > date_trunc('week', now())
             GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
-            ORDER BY leaderboard DESC
             """
 
         extract = database.query_r(query, group_id)

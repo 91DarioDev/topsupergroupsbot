@@ -311,7 +311,6 @@ def weekly_groups_digest(bot, job):
             USING (user_id)
             WHERE group_id = %s AND m.message_date > (now() - interval %s)
             GROUP BY user_id, name
-            ORDER BY num_msgs DESC
             LIMIT %s
             """
         top_users_of_the_group = database.query_r(query_top_users, group_id, near_interval, 10)

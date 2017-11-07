@@ -175,7 +175,7 @@ weekly_groups_digest = (
         "utenti attivi questa settimana: {}\n"
         "differenza: {}  in percentuale: {}\n"
         "posizione la scorsa settimana: {}\n"
-        "posizione questa settimanan: {}\n\n"
+        "posizione questa settimana: {}\n\n"
         
         "TOP UTENTI DELLA SETTIMANA:\n"
         )

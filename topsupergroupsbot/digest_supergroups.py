@@ -53,22 +53,29 @@ def weekly_groups_digest(bot, job):
     ############
 
     query = """
-    SELECT 
-        group_id, 
-        COUNT(msg_id) AS msgs
-    FROM messages
-    WHERE message_date > now() - interval %s
-    GROUP BY group_id
+        SELECT 
+            group_id,
+            COUNT(msg_id) AS msgs, 
+            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
+        FROM messages 
+        LEFT OUTER JOIN supergroups as s 
+        USING (group_id)
+        WHERE message_date > now() - interval %s
+        GROUP BY s.lang, group_id;
+
     """
     msgs_this_week = database.query_r(query, near_interval)
 
     query = """
-    SELECT 
-        group_id, 
-        COUNT(msg_id) AS msgs
-    FROM messages
-    WHERE message_date BETWEEN now() - interval %s AND now() - interval %s
-    GROUP BY group_id
+        SELECT 
+            group_id, 
+            COUNT(msg_id) AS msgs,
+            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
+        FROM messages
+        LEFT OUTER JOIN supergroups as s 
+        USING (group_id)
+        WHERE message_date BETWEEN now() - interval %s AND now() - interval %s
+        GROUP BY s.lang, group_id
     """
     msgs_last_week = database.query_r(query, far_interval, near_interval)
     

@@ -158,22 +158,28 @@ def weekly_groups_digest(bot, job):
     ##################
 
     query = """
-        SELECT 
+         SELECT
             group_id,
-            COUNT(user_id) OVER (PARTITION BY group_id)
-        FROM messages
+            COUNT(DISTINCT user_id), 
+            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
+        FROM messages 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE message_date > (now() - interval %s)
-        GROUP BY group_id, user_id
+        GROUP BY group_id, s.lang
         """
     this_week_active_users = database.query_r(query, near_interval)
 
     query = """
         SELECT 
             group_id,
-            COUNT(user_id) OVER (PARTITION BY group_id)
+            COUNT(DISTINCT user_id), 
+            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
         FROM messages
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE message_date BETWEEN (now() - interval %s) AND (now() - interval %s)
-        GROUP BY group_id, user_id
+        GROUP BY group_id, s.lang
         """
     last_week_active_users = database.query_r(query, far_interval, near_interval)
 

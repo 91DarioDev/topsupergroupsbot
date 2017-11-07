@@ -137,7 +137,6 @@ def weekly_groups_digest(bot, job):
             COUNT(vote) AS amount, 
             ROUND(AVG(vote), 1) AS average
         FROM votes
-        WHERE vote_date > (now() - interval %s)
         GROUP BY group_id
     """
     this_week_votes_avg = database.query_r(query, near_interval)

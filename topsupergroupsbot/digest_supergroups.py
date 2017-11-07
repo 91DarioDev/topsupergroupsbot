@@ -53,22 +53,29 @@ def weekly_groups_digest(bot, job):
     ############
 
     query = """
-    SELECT 
-        group_id, 
-        COUNT(msg_id) AS msgs
-    FROM messages
-    WHERE message_date > now() - interval %s
-    GROUP BY group_id
+        SELECT 
+            group_id,
+            COUNT(msg_id) AS msgs, 
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
+        FROM messages 
+        LEFT OUTER JOIN supergroups as s 
+        USING (group_id)
+        WHERE message_date > now() - interval %s
+        GROUP BY s.lang, group_id;
+
     """
     msgs_this_week = database.query_r(query, near_interval)
 
     query = """
-    SELECT 
-        group_id, 
-        COUNT(msg_id) AS msgs
-    FROM messages
-    WHERE message_date BETWEEN now() - interval %s AND now() - interval %s
-    GROUP BY group_id
+        SELECT 
+            group_id, 
+            COUNT(msg_id) AS msgs,
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
+        FROM messages
+        LEFT OUTER JOIN supergroups as s 
+        USING (group_id)
+        WHERE message_date BETWEEN now() - interval %s AND now() - interval %s
+        GROUP BY s.lang, group_id
     """
     msgs_last_week = database.query_r(query, far_interval, near_interval)
     
@@ -77,28 +84,32 @@ def weekly_groups_digest(bot, job):
     ############
 
     query = """
-        SELECT 
-            last_members.group_id, 
-            last_members.amount
+         SELECT
+            last_members.group_id,
+            last_members.amount, 
+            RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
         FROM
             (
-            SELECT 
-                *, 
+            SELECT
+                *,
                 ROW_NUMBER() OVER (
                     PARTITION BY group_id
                     ORDER BY updated_date DESC
-                    ) AS row 
+                    ) AS row
             FROM members
-            ) AS last_members
+        ) AS last_members 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE last_members.row=1
-        """
+    """
     members_this_week = database.query_r(query)
 
 
     query = """
         SELECT 
             last_members.group_id, 
-            last_members.amount
+            last_members.amount,
+            RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
         FROM
             (
             SELECT 
@@ -109,7 +120,9 @@ def weekly_groups_digest(bot, job):
                     ) AS row 
             FROM members
             WHERE updated_date <= now() - interval %s
-            ) AS last_members
+        ) AS last_members 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE last_members.row=1
         """
     members_last_week = database.query_r(query, near_interval)
@@ -119,48 +132,59 @@ def weekly_groups_digest(bot, job):
     ####################
 
     query = """
-        SELECT 
+        SELECT
             group_id,
-            COUNT(vote) AS amount, 
-            ROUND(AVG(vote), 1) AS average
-        FROM votes
-        WHERE vote_date > (now() - interval %s)
-        GROUP BY group_id
+            COUNT(vote) AS amount,
+            ROUND(AVG(vote), 1) AS average, 
+            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC)
+        FROM votes 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
+        GROUP BY group_id, s.lang;
     """
     this_week_votes_avg = database.query_r(query, near_interval)
 
     query = """
         SELECT 
             group_id,
-            COUNT(vote) AS amount, 
-            ROUND(AVG(vote), 1) AS average
+            COUNT(vote) AS amount,
+            ROUND(AVG(vote), 1) AS average, 
+            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC)
         FROM votes
-        WHERE vote_date BETWEEN (now() - interval %s) AND (now() - interval %s)
-        GROUP BY group_id
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
+        WHERE vote_date <= now() - interval %s
+        GROUP BY group_id, s.lang;
     """
-    last_week_votes_avg = database.query_r(query, far_interval, near_interval)
+    last_week_votes_avg = database.query_r(query, near_interval)
 
     ##################
     # ACTIVE USERS
     ##################
 
     query = """
-        SELECT 
+         SELECT
             group_id,
-            COUNT(user_id) OVER (PARTITION BY group_id)
-        FROM messages
+            COUNT(DISTINCT user_id), 
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
+        FROM messages 
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE message_date > (now() - interval %s)
-        GROUP BY group_id, user_id
+        GROUP BY group_id, s.lang
         """
     this_week_active_users = database.query_r(query, near_interval)
 
     query = """
         SELECT 
             group_id,
-            COUNT(user_id) OVER (PARTITION BY group_id)
+            COUNT(DISTINCT user_id), 
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
         FROM messages
+        LEFT OUTER JOIN supergroups AS s 
+        USING (group_id)
         WHERE message_date BETWEEN (now() - interval %s) AND (now() - interval %s)
-        GROUP BY group_id, user_id
+        GROUP BY group_id, s.lang
         """
     last_week_active_users = database.query_r(query, far_interval, near_interval)
 
@@ -172,72 +196,105 @@ def weekly_groups_digest(bot, job):
 
         msgs_new = 0
         msgs_old = 0
+        msgs_pos_old = 0
+        msgs_pos_new = 0
 
         members_new = 0
         members_old = 0
+        members_pos_old = 0
+        members_pos_new = 0
 
         sum_v_new = 0
         avg_v_new = 0
         sum_v_old = 0
         avg_v_old = 0
+        avg_pos_old = 0
+        avg_pos_new = 0
 
         act_users_new = 0
         act_users_old = 0
+        act_users_pos_old = 0
+        act_users_pos_new = 0
 
         for i in msgs_this_week:
             if i[0] == group_id:
                 msgs_new = i[1]
+                msgs_pos_new = i[2]
                 break
 
         for i in msgs_last_week:
             if i[0] == group_id:
                 msgs_old = i[1]
+                msgs_pos_old = i[2]
                 break
 
         for i in members_this_week:
             if i[0] == group_id:
                 members_new = i[1]
+                members_pos_new = i[2]
                 break
 
         for i in members_last_week:
             if i[0] == group_id:
                 members_old = i[1]
+                members_pos_old = i[2]
                 break
 
         for i in this_week_votes_avg:
             if i[0] == group_id:
                 sum_v_new = i[1]
                 avg_v_new = i[2]
+                avg_pos_new = i[3]
                 break
 
         for i in last_week_votes_avg:
             if i[0] == group_id:
                 sum_v_old = i[1]
                 avg_v_old = i[2]
+                avg_pos_old = i[3]
                 break
 
         for i in this_week_active_users:
             if i[0] == group_id:
                 act_users_new = i[1]
+                act_users_pos_new = i[2]
                 break
 
         for i in last_week_active_users:
             if i[0] == group_id:
                 act_users_old = i[1]
+                act_users_pos_old = i[2]
                 break
 
         diff_msg, percent_msg = diff_percent(msgs_new, msgs_old, lang)
         diff_members, percent_members = diff_percent(members_new, members_old, lang) 
         diff_act, percent_act = diff_percent(act_users_new, act_users_old, lang)
+
         text = get_lang.get_string(lang, "weekly_groups_digest").format(
-                    utils.sep_l(msgs_old, lang), utils.sep_l(msgs_new, lang), 
-                    diff_msg, percent_msg,
-                    utils.sep_l(members_old, lang), utils.sep_l(members_new, lang), 
-                    diff_members, percent_members, 
-                    utils.sep_l(avg_v_old, lang), emojis.STAR, utils.sep_l(sum_v_old, lang),
-                    utils.sep_l(avg_v_new, lang), emojis.STAR, utils.sep_l(sum_v_new, lang),
-                    utils.sep_l(act_users_old, lang), utils.sep_l(act_users_new, lang),
-                    diff_act, percent_act)
+            # by messages
+            utils.sep_l(msgs_old, lang),
+            utils.sep_l(msgs_new, lang),
+            diff_msg, percent_msg,
+            utils.sep_l(msgs_pos_old, lang),
+            utils.sep_l(msgs_pos_new, lang),
+            # by members
+            utils.sep_l(members_old, lang),
+            utils.sep_l(members_new, lang),
+            diff_members, percent_members,
+            utils.sep_l(members_pos_old, lang),
+            utils.sep_l(members_pos_new, lang),
+            # by votes average
+            utils.sep_l(avg_v_old, lang), emojis.STAR, utils.sep_l(sum_v_old, lang),
+            utils.sep_l(avg_v_new, lang), emojis.STAR, utils.sep_l(sum_v_new, lang),
+            utils.sep_l(avg_pos_old, lang),
+            utils.sep_l(avg_pos_new, lang),
+            # by active users
+            utils.sep_l(act_users_old, lang),
+            utils.sep_l(act_users_new, lang),
+            diff_act, percent_act,
+            utils.sep_l(act_users_pos_old, lang),
+            utils.sep_l(act_users_pos_new, lang)
+        )
 
         ##############
         # TOP n USERS
@@ -247,7 +304,8 @@ def weekly_groups_digest(bot, job):
             SELECT 
                 user_id,
                 COUNT(msg_id) AS num_msgs, 
-                name 
+                name, 
+                RANK() OVER (ORDER BY COUNT(msg_id) DESC)
             FROM messages AS m
             LEFT OUTER JOIN users_ref AS u_ref
             USING (user_id)
@@ -257,11 +315,9 @@ def weekly_groups_digest(bot, job):
             LIMIT %s
             """
         top_users_of_the_group = database.query_r(query_top_users, group_id, near_interval, 10)
-        count = 0
         for user in top_users_of_the_group:
-            count += 1
             text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
-                    count,
+                    user[3],
                     user[0],
                     html.escape(user[2]),
                     utils.sep_l(user[1], lang)

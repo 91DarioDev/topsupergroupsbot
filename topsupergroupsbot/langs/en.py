@@ -168,8 +168,8 @@ weekly_groups_digest = (
         "-- BY VOTES AVERAGE --\n"
         "average and number of votes last week: {}{}|({})\n"
         "average and number of votes this week: {}{}|({})\n"
-        "posizione la scorsa settimana: {}\n"
-        "posizione questa settimana: {}\n\n"
+        "position last week: {}\n"
+        "position this week: {}\n\n"
         
         "-- BY ACTIVE USERS --\n"
         "active users last week: {}\n"

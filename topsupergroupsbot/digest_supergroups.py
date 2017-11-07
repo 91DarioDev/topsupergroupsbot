@@ -56,7 +56,7 @@ def weekly_groups_digest(bot, job):
         SELECT 
             group_id,
             COUNT(msg_id) AS msgs, 
-            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
         FROM messages 
         LEFT OUTER JOIN supergroups as s 
         USING (group_id)
@@ -70,7 +70,7 @@ def weekly_groups_digest(bot, job):
         SELECT 
             group_id, 
             COUNT(msg_id) AS msgs,
-            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
         FROM messages
         LEFT OUTER JOIN supergroups as s 
         USING (group_id)
@@ -87,7 +87,7 @@ def weekly_groups_digest(bot, job):
          SELECT
             last_members.group_id,
             last_members.amount, 
-            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
         FROM
             (
             SELECT
@@ -109,7 +109,7 @@ def weekly_groups_digest(bot, job):
         SELECT 
             last_members.group_id, 
             last_members.amount,
-            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
         FROM
             (
             SELECT 
@@ -166,7 +166,7 @@ def weekly_groups_digest(bot, job):
          SELECT
             group_id,
             COUNT(DISTINCT user_id), 
-            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
         FROM messages 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
@@ -179,7 +179,7 @@ def weekly_groups_digest(bot, job):
         SELECT 
             group_id,
             COUNT(DISTINCT user_id), 
-            DENSE_RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(DISTINCT user_id) DESC)
         FROM messages
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)

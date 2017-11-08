@@ -38,6 +38,7 @@ _The groups you can see in the following screenshots are real groups and they ar
 ```
 /settings - set group settings
 /groupleaderboard - get a message containing leaderboard of users that wrotemore messages in the group during the current week (UTC)
+/grouprank - Check the rank of the group
 ```
 
 

@@ -142,7 +142,7 @@ def weekly_groups_digest(bot, job):
         USING (group_id)
         GROUP BY group_id, s.lang;
     """
-    this_week_votes_avg = database.query_r(query, near_interval)
+    this_week_votes_avg = database.query_r(query)
 
     query = """
         SELECT 

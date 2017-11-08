@@ -35,6 +35,7 @@ from topsupergroupsbot import digest_private
 from topsupergroupsbot import commands_private
 from topsupergroupsbot import digest_supergroups
 from topsupergroupsbot import cache_users_stats
+from topsupergroupsbot import cache_groups_rank
 
 
 license = (

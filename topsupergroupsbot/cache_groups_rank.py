@@ -107,7 +107,7 @@ def caching_ranks(bot, job):
         FROM votes 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        GROUP BY group_id, s.lang
+        GROUP BY group_id, s.lang, s.banned_until
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND COUNT(vote) >= %s 

@@ -206,3 +206,16 @@ latest_update = "Aggiornato"
 seconds_ago = "{} secondi fa"
 about_minutes_ago = "circa {} minuti fa"
 about_hours_ago = "circa {} ore fa"
+
+group_rank = {
+    "title": "<b>RANK DEL GRUPPO:</b>",
+    "by_messages": "<b>Classifica ordinata per numero di messaggi inviati questa settimana</b> (regione: <code>{}</code>):",
+    "by_members": "<b>Classifica ordinata per numero di membri</b> (region: <code>{}</code>):",
+    "by_votes": "<b>Classifica ordinata per media voti</b> (region: <code>{}</code>):",
+    "position": "- Posizione: {}",
+    "updated": "<i>{}: {}</i>",
+    "None": "Sfortunatamente questo gruppo non è in un nessuna classifica",
+    "messages": "- messaggi: {}",
+    "members": "- membri: {}",
+    "votes": "- voti media|numero: {}|({})"
+}

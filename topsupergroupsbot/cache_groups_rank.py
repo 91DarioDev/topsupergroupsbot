@@ -120,7 +120,7 @@ def caching_ranks(bot, job):
     # encoding
     encoded_dct = {k: json.dumps(v).encode('UTF-8') for k,v in dct.items()}
     database.REDIS.hmset(CACHE_KEY, encoded_dct)
-    database.REDIS.expire(CACHE_KEY, CACHE_SECONDS*2)
+    database.REDIS.expire(CACHE_KEY, CACHE_SECONDS*4)
 
 
 def get_group_cached_rank(group_id):

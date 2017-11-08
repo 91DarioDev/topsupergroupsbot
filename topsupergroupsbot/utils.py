@@ -266,7 +266,11 @@ def split_list_grouping_by_column(lst, index):
 def round_seconds(seconds, lang):
     if seconds < 60:
         return get_lang.get_string(lang, "seconds_ago").format(seconds)
-    else:
+    elif 60 <= seconds < 60*60:
         unit = seconds/60
         r_unit = round(unit)
         return get_lang.get_string(lang, "about_minutes_ago").format(r_unit)
+    else:
+        unit = seconds/(60*60)
+        r_unit = round(unit)
+        return get_lang.get_string(lang, "about_hours_ago").format(r_unit)

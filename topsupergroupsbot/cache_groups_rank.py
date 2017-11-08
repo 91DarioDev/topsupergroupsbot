@@ -19,6 +19,8 @@ import json
 
 from topsupergroupsbot import database
 
+from telegram.ext.dispatcher import run_async
+
 CACHE_SECONDS = 60*3
 
 CACHE_KEY = 'cached_groups_rank'
@@ -41,6 +43,7 @@ def filling_dict(dct_name, group_id, by, position, region, cached_at, value):
     return dct_name
 
 
+@run_async
 def caching_ranks(bot, job):
     #############
     # MESSAGES

@@ -20,6 +20,8 @@ import json
 from topsupergroupsbot import database as db
 from collections import OrderedDict
 
+from telegram.ext.dispatcher import run_async
+
 CACHE_SECONDS = 60*3
 LATEST_UPDATE_KEY = 'latest_update'
 REDIS_KEY = 'cached_users'
@@ -36,6 +38,8 @@ def group_extract(lst):
     final = list(d.items())
     return final
 
+
+@run_async
 def cache_users_stats(bot, job):
     at_seconds = time.time()
     lst = get_all_users_stats()

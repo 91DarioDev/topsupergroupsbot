@@ -205,6 +205,8 @@ latest_update = "Updated"
 seconds_ago = "{} seconds ago"
 about_minutes_ago = "about {} minutes ago"
 
+
+
 group_rank = {
     "title": "<b>GROUP RANK:</b>",
     "by_messages": "<b>Leaderboard ordered by messages sent during the current week</b> (region: <code>{}</code>):",

@@ -35,13 +35,29 @@ def members_log(bot, job):
 
 def get_groups_to_log(bot, job):
     query = """
-    SELECT s.group_id 
-    FROM supergroups AS s
-    LEFT OUTER JOIN members AS m
-    USING (group_id)
-        WHERE s.bot_inside = TRUE
-        AND m.updated_date < (now() - interval %s) OR m.updated_date IS NULL
-    ORDER BY m.updated_date ASC NULLS FIRST
+        WITH m_table AS (
+             SELECT
+                last_members.group_id,
+                last_members.updated_date
+             FROM
+                (
+                SELECT
+                    *,
+                    ROW_NUMBER() OVER (PARTITION BY group_id ORDER BY updated_date DESC) AS row
+                FROM members
+                ) AS last_members 
+            WHERE last_members.row=1
+        )
+        SELECT 
+            s.group_id,
+            m.updated_date
+        FROM supergroups AS s
+        LEFT OUTER JOIN m_table AS m
+        USING (group_id)
+        WHERE 
+            s.bot_inside = TRUE
+            AND (m.updated_date < (now() - interval %s) OR m.updated_date IS NULL)
+        ORDER BY m.updated_date ASC NULLS FIRST
     """
 
     extract = database.query_r(query, DEADLINE)
@@ -99,7 +115,7 @@ def handle_one_by_one(bot, job):
             """
             database.query_w(query, group_id)
         else:
-            rint("{} in memberslog BadRequest: group_id: {}".format(e, group_id))
+            print("{} in memberslog BadRequest: group_id: {}".format(e, group_id))
 
 
     except Exception as e:

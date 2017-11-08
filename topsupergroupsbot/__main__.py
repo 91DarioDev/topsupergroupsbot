@@ -154,6 +154,13 @@ def main():
         first=0
     )
 
+    # pre-cache ranks groups
+    j.run_repeating(
+        cache_groups_rank.caching_ranks,
+        interval=cache_groups_rank.CACHE_SECONDS,
+        first=0
+    )
+
 
     # handle errors
     dp.add_error_handler(error)

@@ -15,6 +15,7 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
+import json
 
 from topsupergroupsbot import database
 
@@ -26,10 +27,11 @@ BY_MEMBERS = 'by_members'
 BY_VOTES = 'by_votes'
 RANK = 'rank'
 CACHED_AT = 'cached_at'
+REGION = 'region'
 
 
-def filling_dict(dct_name, group_id, by, value):
-    data = {RANK: value, CACHED_AT: time.time()}
+def filling_dict(dct_name, group_id, by, value, region):
+    data = {RANK: value, CACHED_AT: time.time(), REGION: region}
     try:
         dct_name[group_id][by] = data
     except KeyError:
@@ -47,7 +49,8 @@ def caching_ranks():
         SELECT 
             group_id,
             COUNT(msg_id) AS msgs, 
-            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY COUNT(msg_id) DESC),
+            s.lang
         FROM messages 
         LEFT OUTER JOIN supergroups as s 
         USING (group_id)
@@ -66,7 +69,8 @@ def caching_ranks():
          SELECT
             last_members.group_id,
             last_members.amount, 
-            RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC),
+            s.lang
         FROM
             (
             SELECT
@@ -92,7 +96,8 @@ def caching_ranks():
             group_id,
             COUNT(vote) AS amount,
             ROUND(AVG(vote), 1) AS average, 
-            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC)
+            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC),
+            s.lang
         FROM votes 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
@@ -102,16 +107,44 @@ def caching_ranks():
 
     dct = {}
     for group in msgs_this_week:
-        dct = filling_dict(dct, group[0], BY_MESSAGES, group[2])
+        dct = filling_dict(dct, group[0], BY_MESSAGES, group[2], group[3])
 
     for group in members_this_week:
-        dct = filling_dict(dct, group[0], BY_MEMBERS, group[2])
+        dct = filling_dict(dct, group[0], BY_MEMBERS, group[2], group[3])
 
     for group in this_week_votes_avg:
-        dct = filling_dict(dct, group[0], BY_VOTES, group[3])
+        dct = filling_dict(dct, group[0], BY_VOTES, group[3], group[4])
 
-    print(dct)
+    # encoding
+    encoded_dct = {k: json.dumps(v).encode('UTF-8') for k,v in dct.items()}
+    database.REDIS.hmset(CACHE_KEY, encoded_dct)
+    database.REDIS.expire(CACHE_KEY, CACHE_SECONDS*2)
 
 
-
-caching_ranks()
+def get_group_cached_rank(group_id):
+    """
+    returns:None or a dictionary like:
+    {
+        'by_messages':
+            {
+                'rank': 1,
+                'cached_at': 1510106982.4582865,
+                'region':
+                'it'
+            },
+        'by_members':
+            {
+                'rank': 1,
+                'cached_at': 1510106982.4582865,
+                'region': 'it'
+            },
+        'by_votes':
+            {
+                'rank': 1,
+                'cached_at': 1510106982.4582865,
+                'region': 'it'
+            }
+    }
+    """
+    rank = database.REDIS.hmget(CACHE_KEY, group_id)[0]
+    return json.loads(rank.decode('UTF-8')) if rank is not None else None

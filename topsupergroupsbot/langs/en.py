@@ -205,16 +205,14 @@ latest_update = "Updated"
 seconds_ago = "{} seconds ago"
 about_minutes_ago = "about {} minutes ago"
 
-group_rank = (
-    "<b>GROUP RANK:</b>\n\n"
-    "<b>Leaderboard ordered by messages sent during the current week</b> (region: <code>{}</code>):\n"
-    "- Position: {}\n"
-    "<i>{}: {}</i>\n\n"
-    "<b>Leaderboard ordered by amount of members</b> (region: <code>{}</code>):\n"
-    "- Position: {}\n"
-    "<i>{}: {}</i>\n\n"
-    "<b>Leaderboard ordered by votes average</b> (region: <code>{}</code>):\n"
-    "- Position: {}\n"
-    "<i>{}: {}</i>"
-)
+group_rank = {
+    "title": "<b>GROUP RANK:</b>",
+    "by_messages": "<b>Leaderboard ordered by messages sent during the current week</b> (region: <code>{}</code>):",
+    "by_members": "<b>Leaderboard ordered by amount of members</b> (region: <code>{}</code>):",
+    "by_votes": "<b>Leaderboard ordered by votes average</b> (region: <code>{}</code>):",
+    "position": "- Position: {}",
+    "updated": "<i>{}: {}</i>",
+    "None": "Unfortunately this group isn't in any leaderboard"
+
+}
 

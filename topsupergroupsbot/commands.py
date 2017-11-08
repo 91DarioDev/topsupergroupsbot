@@ -313,29 +313,60 @@ def group_rank(bot, update):
     rank = cache_groups_rank.get_group_cached_rank(update.message.chat.id)
     query = "SELECT lang FROM supergroups WHERE group_id = %s"
     lang = database.query_r(query, update.message.chat.id, one=True)[0]
+    strings = get_lang.get_string(lang, "group_rank")
 
+    if rank is None:
+        update.message.reply_text(strings['None'])
+        return
+
+    text = strings['title']
     # by messages
-    rank_msgs = rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.RANK]
-    rank_msgs_region = rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.REGION]
-    rank_msgs_at = rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.CACHED_AT]
+    try:
+        text += "\n\n"
+        text += strings['by_messages'].format(rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.REGION])
+        text += "\n"
+        text += strings['position'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.RANK], lang)
+        )
+        text += "\n"
+        text += strings['updated'].format(
+            utils.get_lang.get_string(lang, "latest_update"), 
+            utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.CACHED_AT]), lang)
+        )
+    except KeyError:
+        pass
 
     # by members
-    rank_mbrs = rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.RANK]
-    rank_mbrs_region = rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.REGION]
-    rank_mbrs_at = rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.CACHED_AT]
+    try:
+        text += "\n\n"
+        text += strings['by_members'].format(rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.REGION])
+        text += "\n"
+        text += strings['position'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.RANK], lang)
+        )
+        text += "\n"
+        text += strings['updated'].format(
+            utils.get_lang.get_string(lang, "latest_update"), 
+            utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.CACHED_AT]), lang)
+        )
+    except KeyError:
+        pass
 
     # by votes average
-    rank_votes = rank[cache_groups_rank.BY_VOTES][cache_groups_rank.RANK]
-    rank_votes_region = rank[cache_groups_rank.BY_VOTES][cache_groups_rank.REGION]
-    rank_votes_at = rank[cache_groups_rank.BY_VOTES][cache_groups_rank.CACHED_AT]
-    text = get_lang.get_string(lang, "group_rank").format(
-        rank_msgs_region, utils.sep_l(rank_msgs, lang),
-        utils.get_lang.get_string(lang, "latest_update"), utils.round_seconds(int(time.time() - rank_msgs_at), lang),
+    try:
+        text += "\n\n"
+        text += strings['by_votes'].format(rank[cache_groups_rank.BY_VOTES][cache_groups_rank.REGION])
+        text += "\n"
+        text += strings['position'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_VOTES][cache_groups_rank.RANK], lang)
+        )
+        text += "\n"
+        text += strings['updated'].format(
+            utils.get_lang.get_string(lang, "latest_update"),
+            utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_VOTES][cache_groups_rank.CACHED_AT]), lang)
+        )
+    except KeyError:
+        pass
 
-        rank_mbrs_region, utils.sep_l(rank_mbrs, lang),
-        utils.get_lang.get_string(lang, "latest_update"), utils.round_seconds(int(time.time() - rank_mbrs_at), lang),
-
-        rank_votes_region, utils.sep_l(rank_votes, lang),
-        utils.get_lang.get_string(lang, "latest_update"), utils.round_seconds(int(time.time() - rank_votes_at), lang),
-    )
     update.message.reply_text(text=text, parse_mode='HTML')
+

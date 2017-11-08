@@ -28,6 +28,7 @@ from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
 from topsupergroupsbot import emojis
 from topsupergroupsbot import cache_users_stats
+from topsupergroupsbot import cache_groups_rank
 
 @utils.private_only
 def start(bot, update, args):
@@ -305,3 +306,80 @@ def start_help_buttons(bot, update):
     text = get_lang.get_string(lang, "hello")
     reply_markup = keyboards.default_regular_buttons_kb(lang)
     update.message.reply_text(text=text, reply_markup=reply_markup)
+
+
+@utils.admin_command_only
+def group_rank(bot, update):
+    rank = cache_groups_rank.get_group_cached_rank(update.message.chat.id)
+    query = "SELECT lang FROM supergroups WHERE group_id = %s"
+    lang = database.query_r(query, update.message.chat.id, one=True)[0]
+    strings = get_lang.get_string(lang, "group_rank")
+
+    if rank is None:
+        update.message.reply_text(strings['None'])
+        return
+
+    text = strings['title']
+    # by messages
+    try:
+        text += "\n\n"
+        text += strings['by_messages'].format(rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.REGION])
+        text += "\n"
+        text += strings['position'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.RANK], lang)
+        )
+        text += "\n"
+        text += strings['messages'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.VALUE], lang)
+        )
+        text += "\n"
+        text += strings['updated'].format(
+            utils.get_lang.get_string(lang, "latest_update"), 
+            utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.CACHED_AT]), lang)
+        )
+    except KeyError:
+        pass
+
+    # by members
+    try:
+        text += "\n\n"
+        text += strings['by_members'].format(rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.REGION])
+        text += "\n"
+        text += strings['position'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.RANK], lang)
+        )
+        text += "\n"
+        text += strings['members'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.VALUE], lang)
+        )
+        text += "\n"
+        text += strings['updated'].format(
+            utils.get_lang.get_string(lang, "latest_update"), 
+            utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.CACHED_AT]), lang)
+        )
+    except KeyError:
+        pass
+
+    # by votes average
+    try:
+        text += "\n\n"
+        text += strings['by_votes'].format(rank[cache_groups_rank.BY_VOTES][cache_groups_rank.REGION])
+        text += "\n"
+        text += strings['position'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_VOTES][cache_groups_rank.RANK], lang)
+        )
+        text += "\n"
+        text += strings['votes'].format(
+            rank[cache_groups_rank.BY_VOTES][cache_groups_rank.VALUE][0],
+            utils.sep_l(rank[cache_groups_rank.BY_VOTES][cache_groups_rank.VALUE][1], lang)
+        )
+        text += "\n"
+        text += strings['updated'].format(
+            utils.get_lang.get_string(lang, "latest_update"),
+            utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_VOTES][cache_groups_rank.CACHED_AT]), lang)
+        )
+    except KeyError:
+        pass
+
+    update.message.reply_text(text=text, parse_mode='HTML')
+

@@ -35,6 +35,7 @@ from topsupergroupsbot import digest_private
 from topsupergroupsbot import commands_private
 from topsupergroupsbot import digest_supergroups
 from topsupergroupsbot import cache_users_stats
+from topsupergroupsbot import cache_groups_rank
 
 
 license = (
@@ -98,6 +99,7 @@ def main():
     dp.add_handler(CommandHandler('start', commands.start, pass_args=True))
     dp.add_handler(CommandHandler('help', commands.help))
     dp.add_handler(CommandHandler('groupleaderboard', commands.groupleaderboard))
+    dp.add_handler(CommandHandler('grouprank', commands.group_rank))
     dp.add_handler(CommandHandler('leaderboard', commands.leaderboard))
     dp.add_handler(CommandHandler('leadervote', leaderboards.leadervote))
     dp.add_handler(CommandHandler('leadermessage', leaderboards.leadermessage))
@@ -150,6 +152,13 @@ def main():
     j.run_repeating(
         cache_users_stats.cache_users_stats,
         interval=cache_users_stats.CACHE_SECONDS,
+        first=0
+    )
+
+    # pre-cache ranks groups
+    j.run_repeating(
+        cache_groups_rank.caching_ranks,
+        interval=cache_groups_rank.CACHE_SECONDS,
         first=0
     )
 

@@ -60,7 +60,6 @@ def get_groups_to_log(bot, job):
     """
 
     extract = database.query_r(query, DEADLINE)
-    print(extract)
     return extract
 
 

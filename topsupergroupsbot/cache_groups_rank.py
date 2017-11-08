@@ -59,8 +59,10 @@ def caching_ranks(bot, job):
         FROM messages 
         LEFT OUTER JOIN supergroups as s 
         USING (group_id)
-        WHERE message_date > date_trunc('week', now())
-        GROUP BY s.lang, group_id;
+        WHERE 
+            message_date > date_trunc('week', now())
+            AND (s.banned_until IS NULL OR s.banned_until < now()) 
+        GROUP BY s.lang, group_id
     
     """
     msgs_this_week = database.query_r(query)
@@ -89,7 +91,9 @@ def caching_ranks(bot, job):
         ) AS last_members 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        WHERE last_members.row=1
+        WHERE 
+            last_members.row=1
+            AND (s.banned_until IS NULL OR s.banned_until < now())
     """
     members_this_week = database.query_r(query)
 

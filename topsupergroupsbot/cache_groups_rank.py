@@ -18,6 +18,7 @@ import time
 import json
 
 from topsupergroupsbot import database
+from topsupergroupsbot import leaderboards
 
 from telegram.ext.dispatcher import run_async
 
@@ -106,9 +107,12 @@ def caching_ranks(bot, job):
         FROM votes 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        GROUP BY group_id, s.lang;
+        GROUP BY group_id, s.lang
+        HAVING 
+            (s.banned_until IS NULL OR s.banned_until < now()) 
+            AND COUNT(vote) >= %s 
     """
-    this_week_votes_avg = database.query_r(query)
+    this_week_votes_avg = database.query_r(query, leaderboards.VotesLeaderboard.MIN_REVIEWS)
 
     dct = {}
     for group in msgs_this_week:

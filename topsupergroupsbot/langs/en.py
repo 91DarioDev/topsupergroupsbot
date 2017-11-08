@@ -204,8 +204,7 @@ updating_buttons = "I update buttons"
 latest_update = "Updated"
 seconds_ago = "{} seconds ago"
 about_minutes_ago = "about {} minutes ago"
-
-
+about_hours_ago = "about {} hours ago"
 
 group_rank = {
     "title": "<b>GROUP RANK:</b>",
@@ -219,4 +218,5 @@ group_rank = {
     "members": "- members: {}",
     "votes": "- votes average|number: {}|({})"
 }
+
 

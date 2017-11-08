@@ -204,3 +204,17 @@ updating_buttons = "I update buttons"
 latest_update = "Updated"
 seconds_ago = "{} seconds ago"
 about_minutes_ago = "about {} minutes ago"
+
+group_rank = (
+    "<b>GROUP RANK:</b>\n\n"
+    "<b>Leaderboard ordered by messages sent during the current week</b> (region: <code>{}</code>):\n"
+    "- Position: {}\n"
+    "<i>{}: {}</i>\n\n"
+    "<b>Leaderboard ordered by amount of members</b> (region: <code>{}</code>):\n"
+    "- Position: {}\n"
+    "<i>{}: {}</i>\n\n"
+    "<b>Leaderboard ordered by votes average</b> (region: <code>{}</code>):\n"
+    "- Position: {}\n"
+    "<i>{}: {}</i>"
+)
+

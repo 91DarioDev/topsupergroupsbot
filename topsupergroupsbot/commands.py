@@ -28,6 +28,7 @@ from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
 from topsupergroupsbot import emojis
 from topsupergroupsbot import cache_users_stats
+from topsupergroupsbot import cache_groups_rank
 
 @utils.private_only
 def start(bot, update, args):
@@ -305,3 +306,36 @@ def start_help_buttons(bot, update):
     text = get_lang.get_string(lang, "hello")
     reply_markup = keyboards.default_regular_buttons_kb(lang)
     update.message.reply_text(text=text, reply_markup=reply_markup)
+
+
+@utils.admin_command_only
+def group_rank(bot, update):
+    rank = cache_groups_rank.get_group_cached_rank(update.message.chat.id)
+    query = "SELECT lang FROM supergroups WHERE group_id = %s"
+    lang = database.query_r(query, update.message.chat.id, one=True)[0]
+
+    # by messages
+    rank_msgs = rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.RANK]
+    rank_msgs_region = rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.REGION]
+    rank_msgs_at = rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.CACHED_AT]
+
+    # by members
+    rank_mbrs = rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.RANK]
+    rank_mbrs_region = rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.REGION]
+    rank_mbrs_at = rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.CACHED_AT]
+
+    # by votes average
+    rank_votes = rank[cache_groups_rank.BY_VOTES][cache_groups_rank.RANK]
+    rank_votes_region = rank[cache_groups_rank.BY_VOTES][cache_groups_rank.REGION]
+    rank_votes_at = rank[cache_groups_rank.BY_VOTES][cache_groups_rank.CACHED_AT]
+    text = get_lang.get_string(lang, "group_rank").format(
+        rank_msgs_region, utils.sep_l(rank_msgs, lang),
+        utils.get_lang.get_string(lang, "latest_update"), utils.round_seconds(int(time.time() - rank_msgs_at), lang),
+
+        rank_mbrs_region, utils.sep_l(rank_mbrs, lang),
+        utils.get_lang.get_string(lang, "latest_update"), utils.round_seconds(int(time.time() - rank_mbrs_at), lang),
+
+        rank_votes_region, utils.sep_l(rank_votes, lang),
+        utils.get_lang.get_string(lang, "latest_update"), utils.round_seconds(int(time.time() - rank_votes_at), lang),
+    )
+    update.message.reply_text(text=text, parse_mode='HTML')

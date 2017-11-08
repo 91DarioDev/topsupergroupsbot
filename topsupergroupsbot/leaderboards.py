@@ -80,7 +80,7 @@ class Leaderboard:
             
 class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
-    MIN_REVIEWS = 1
+    MIN_REVIEWS = 10
     CACHE_SECONDS = 60*3
     INDEX_LANG = 8
 

@@ -49,8 +49,7 @@ def get_groups_to_log(bot, job):
             WHERE last_members.row=1
         )
         SELECT 
-            s.group_id,
-            m.updated_date
+            s.group_id
         FROM supergroups AS s
         LEFT OUTER JOIN m_table AS m
         USING (group_id)

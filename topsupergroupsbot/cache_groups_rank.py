@@ -28,10 +28,11 @@ BY_VOTES = 'by_votes'
 RANK = 'rank'
 CACHED_AT = 'cached_at'
 REGION = 'region'
+VALUE = 'value'
 
 
-def filling_dict(dct_name, group_id, by, value, region):
-    data = {RANK: value, CACHED_AT: time.time(), REGION: region}
+def filling_dict(dct_name, group_id, by, position, region, cached_at, value):
+    data = {RANK: position, CACHED_AT: cached_at, REGION: region, VALUE: value}
     try:
         dct_name[group_id][by] = data
     except KeyError:
@@ -70,7 +71,8 @@ def caching_ranks(bot, job):
             last_members.group_id,
             last_members.amount, 
             RANK() OVER(PARTITION BY s.lang ORDER BY last_members.amount DESC),
-            s.lang
+            s.lang,
+            extract(epoch from last_members.updated_date at time zone 'utc')
         FROM
             (
             SELECT
@@ -95,7 +97,7 @@ def caching_ranks(bot, job):
         SELECT
             group_id,
             COUNT(vote) AS amount,
-            ROUND(AVG(vote), 1) AS average, 
+            ROUND(AVG(vote), 1)::float AS average, 
             RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC),
             s.lang
         FROM votes 
@@ -107,13 +109,13 @@ def caching_ranks(bot, job):
 
     dct = {}
     for group in msgs_this_week:
-        dct = filling_dict(dct, group[0], BY_MESSAGES, group[2], group[3])
+        dct = filling_dict(dct, group[0], BY_MESSAGES, group[2], group[3], time.time(), group[1])
 
     for group in members_this_week:
-        dct = filling_dict(dct, group[0], BY_MEMBERS, group[2], group[3])
+        dct = filling_dict(dct, group[0], BY_MEMBERS, group[2], group[3], group[4], group[1])
 
     for group in this_week_votes_avg:
-        dct = filling_dict(dct, group[0], BY_VOTES, group[3], group[4])
+        dct = filling_dict(dct, group[0], BY_VOTES, group[3], group[4], time.time(), [group[2], group[1]])
 
     # encoding
     encoded_dct = {k: json.dumps(v).encode('UTF-8') for k,v in dct.items()}

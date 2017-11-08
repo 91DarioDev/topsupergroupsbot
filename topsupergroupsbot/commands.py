@@ -329,6 +329,10 @@ def group_rank(bot, update):
             utils.sep_l(rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.RANK], lang)
         )
         text += "\n"
+        text += strings['messages'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.VALUE], lang)
+        )
+        text += "\n"
         text += strings['updated'].format(
             utils.get_lang.get_string(lang, "latest_update"), 
             utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_MESSAGES][cache_groups_rank.CACHED_AT]), lang)
@@ -345,6 +349,10 @@ def group_rank(bot, update):
             utils.sep_l(rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.RANK], lang)
         )
         text += "\n"
+        text += strings['members'].format(
+            utils.sep_l(rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.VALUE], lang)
+        )
+        text += "\n"
         text += strings['updated'].format(
             utils.get_lang.get_string(lang, "latest_update"), 
             utils.round_seconds(int(time.time() - rank[cache_groups_rank.BY_MEMBERS][cache_groups_rank.CACHED_AT]), lang)
@@ -359,6 +367,11 @@ def group_rank(bot, update):
         text += "\n"
         text += strings['position'].format(
             utils.sep_l(rank[cache_groups_rank.BY_VOTES][cache_groups_rank.RANK], lang)
+        )
+        text += "\n"
+        text += strings['votes'].format(
+            rank[cache_groups_rank.BY_VOTES][cache_groups_rank.VALUE][0],
+            utils.sep_l(rank[cache_groups_rank.BY_VOTES][cache_groups_rank.VALUE][1], lang)
         )
         text += "\n"
         text += strings['updated'].format(

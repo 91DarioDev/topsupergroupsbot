@@ -212,7 +212,9 @@ group_rank = {
     "by_votes": "<b>Leaderboard ordered by votes average</b> (region: <code>{}</code>):",
     "position": "- Position: {}",
     "updated": "<i>{}: {}</i>",
-    "None": "Unfortunately this group isn't in any leaderboard"
-
+    "None": "Unfortunately this group isn't in any leaderboard",
+    "messages": "- messages: {}",
+    "members": "- members: {}",
+    "votes": "- votes average|number: {}|({})"
 }
 

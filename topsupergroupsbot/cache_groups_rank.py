@@ -40,7 +40,7 @@ def filling_dict(dct_name, group_id, by, value, region):
     return dct_name
 
 
-def caching_ranks():
+def caching_ranks(bot, job):
     #############
     # MESSAGES
     ############

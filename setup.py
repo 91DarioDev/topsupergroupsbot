@@ -23,7 +23,7 @@ setuptools.setup(
     name="topsupergroupsbot",
     version="1",
 
-    license="GPL-3",
+    license="AGPL-3.0",
 
     author="Dario 91DarioDev",
     author_email="dariomsn@hotmail.it",

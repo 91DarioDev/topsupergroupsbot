@@ -161,7 +161,22 @@ def main():
         first=0
     )
 
-
+    # update cache if the week is over for cached leaderboards related to the week
+    j.run_daily(
+        leaderboards.scheduling_messages_leaderboard_cache,
+        time=datetime.time(0, 0, 0),
+        days=(0,)
+    )
+    j.run_daily(
+        cache_users_stats.cache_users_stats,
+        time=datetime.time(0, 0, 0),
+        days=(0,)
+    )
+    j.run_daily(
+        cache_groups_rank.caching_ranks,
+        time=datetime.time(0, 0, 0),
+        days=(0,)
+    )
     # handle errors
     dp.add_error_handler(error)
 

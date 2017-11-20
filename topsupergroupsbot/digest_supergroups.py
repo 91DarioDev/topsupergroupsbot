@@ -149,7 +149,7 @@ def weekly_groups_digest(bot, job):
         FROM votes 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        GROUP BY group_id, s.lang
+        GROUP BY group_id, s.lang, s.banned_until
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND COUNT(vote) >= %s 
@@ -166,7 +166,7 @@ def weekly_groups_digest(bot, job):
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
         WHERE vote_date <= now() - interval %s
-        GROUP BY group_id, s.lang
+        GROUP BY group_id, s.lang, s.banned_until
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND COUNT(vote) >= %s 

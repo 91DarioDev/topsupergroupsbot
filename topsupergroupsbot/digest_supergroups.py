@@ -21,6 +21,7 @@ from topsupergroupsbot import get_lang
 from topsupergroupsbot import keyboards
 from topsupergroupsbot import utils
 from topsupergroupsbot import emojis
+from topsupergroupsbot import leaderboards
 
 from telegram.error import (TelegramError, 
                             Unauthorized, 
@@ -60,7 +61,9 @@ def weekly_groups_digest(bot, job):
         FROM messages 
         LEFT OUTER JOIN supergroups as s 
         USING (group_id)
-        WHERE message_date > now() - interval %s
+        WHERE 
+            message_date > now() - interval %s
+            AND (s.banned_until IS NULL OR s.banned_until < now()) 
         GROUP BY s.lang, group_id;
 
     """
@@ -74,7 +77,9 @@ def weekly_groups_digest(bot, job):
         FROM messages
         LEFT OUTER JOIN supergroups as s 
         USING (group_id)
-        WHERE message_date BETWEEN now() - interval %s AND now() - interval %s
+        WHERE 
+            message_date BETWEEN now() - interval %s AND now() - interval %s
+            AND (s.banned_until IS NULL OR s.banned_until < now()) 
         GROUP BY s.lang, group_id
     """
     msgs_last_week = database.query_r(query, far_interval, near_interval)
@@ -100,7 +105,9 @@ def weekly_groups_digest(bot, job):
         ) AS last_members 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        WHERE last_members.row=1
+        WHERE 
+            last_members.row=1
+            AND (s.banned_until IS NULL OR s.banned_until < now())
     """
     members_this_week = database.query_r(query)
 
@@ -123,7 +130,9 @@ def weekly_groups_digest(bot, job):
         ) AS last_members 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        WHERE last_members.row=1
+        WHERE 
+            last_members.row=1
+            AND (s.banned_until IS NULL OR s.banned_until < now())
         """
     members_last_week = database.query_r(query, near_interval)
 
@@ -140,9 +149,12 @@ def weekly_groups_digest(bot, job):
         FROM votes 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        GROUP BY group_id, s.lang;
+        GROUP BY group_id, s.lang
+        HAVING 
+            (s.banned_until IS NULL OR s.banned_until < now()) 
+            AND COUNT(vote) >= %s 
     """
-    this_week_votes_avg = database.query_r(query)
+    this_week_votes_avg = database.query_r(query, leaderboards.VotesLeaderboard.MIN_REVIEWS)
 
     query = """
         SELECT 
@@ -154,9 +166,12 @@ def weekly_groups_digest(bot, job):
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
         WHERE vote_date <= now() - interval %s
-        GROUP BY group_id, s.lang;
+        GROUP BY group_id, s.lang
+        HAVING 
+            (s.banned_until IS NULL OR s.banned_until < now()) 
+            AND COUNT(vote) >= %s 
     """
-    last_week_votes_avg = database.query_r(query, near_interval)
+    last_week_votes_avg = database.query_r(query, near_interval, leaderboards.VotesLeaderboard.MIN_REVIEWS)
 
     ##################
     # ACTIVE USERS
@@ -170,7 +185,9 @@ def weekly_groups_digest(bot, job):
         FROM messages 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        WHERE message_date > (now() - interval %s)
+        WHERE 
+            message_date > (now() - interval %s)
+            AND (s.banned_until IS NULL OR s.banned_until < now()) 
         GROUP BY group_id, s.lang
         """
     this_week_active_users = database.query_r(query, near_interval)
@@ -183,7 +200,9 @@ def weekly_groups_digest(bot, job):
         FROM messages
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        WHERE message_date BETWEEN (now() - interval %s) AND (now() - interval %s)
+        WHERE 
+            message_date BETWEEN (now() - interval %s) AND (now() - interval %s)
+            AND (s.banned_until IS NULL OR s.banned_until < now()) 
         GROUP BY group_id, s.lang
         """
     last_week_active_users = database.query_r(query, far_interval, near_interval)

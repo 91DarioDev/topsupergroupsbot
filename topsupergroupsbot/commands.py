@@ -49,11 +49,9 @@ def start_no_params(bot, update):
     guessed_lang = utils.guessed_user_lang(bot, update)
     query = "UPDATE users SET lang = %s WHERE user_id = %s"
     database.query_w(query, guessed_lang, update.message.from_user.id)
-    group_working_link = "https://t.me/{}?start=groups_working".format(constants.GET_ME.username)
-    text = get_lang.get_string(guessed_lang, "help_message").format(
-            group_working_link,
-            source_code="https://github.com/91DarioDev/topsupergroupsbot")
-    update.message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
+    text = get_lang.get_string(guessed_lang, "help_message")
+    reply_markup = keyboards.help_kb(guessed_lang)
+    update.message.reply_text(text=text, parse_mode="HTML", reply_markup=reply_markup)
 
 
 def settings(bot, update):

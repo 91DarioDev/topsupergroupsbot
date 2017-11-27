@@ -278,11 +278,9 @@ def leaderboard(bot, update):
 def help(bot, update):
     start_help_buttons(bot, update)
     lang = utils.get_db_lang(update.message.from_user.id)
-    group_working_link = "https://t.me/{}?start=groups_working".format(constants.GET_ME.username)
-    text = get_lang.get_string(lang, "help_message").format(
-            group_working_link,
-            source_code="https://github.com/91DarioDev/topsupergroupsbot")
-    update.message.reply_text(text=text, parse_mode="HTML", disable_web_page_preview=True)
+    text = get_lang.get_string(lang, "help_message")
+    reply_markup = keyboards.help_kb(lang)
+    update.message.reply_text(text=text, parse_mode="HTML", reply_markup=reply_markup)
 
 
 @utils.private_only

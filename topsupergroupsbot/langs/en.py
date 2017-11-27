@@ -95,17 +95,17 @@ by_members = "By members"
 by_messages = "By messages"
 by_votes = "By votes"
 
-help_message = (
-        "This bot does statistics and leaderboards about public supergrous and their users"
+
+help_commands = (
         "here are the commands you can use:\n\n"
         "/leaderboard - <i>check out supergroups leaderboards</i>\n"
         "/vote - <i>vote a group</i>\n"
         "/aboutyou - <i>get stats about you</i>\n"
         "/settings - <i>change your settings</i>\n"
-        "/feedback - <i>send a feedback</i>\n\n"
-        "If you are an admin of a group you may be interesting in "
-        "<a href=\"{}\">how to use it in groups</a>\n\n"
-        "<a href=\"{source_code}\">source code</a> (for developers)")
+        "/feedback - <i>send a feedback</i>"
+)
+
+help_message = "This bot does statistics and leaderboards about public supergrous and their users"
 
 insert_param_vote = (
         "To vote a group send the username (no matter the presence of the '@')"
@@ -221,4 +221,7 @@ group_rank = {
     "votes": "- votes average|number: {}|({})"
 }
 
-
+feedback = "feedback"
+source_code = "source code"
+commands = "commands"
+how_to_use_in_groups = "usage in groups"

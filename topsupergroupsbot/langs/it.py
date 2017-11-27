@@ -94,17 +94,16 @@ by_members = "Per membri"
 by_messages = "Per messaggi"
 by_votes = "Per voti"
 
-help_message = (
-        "Questo bot fa statistiche e classifiche di gruppi pubblici e dei loro utenti.\n"
+help_message = "Questo bot fa statistiche e classifiche di gruppi pubblici e dei loro utenti."
+
+help_commands = (
         "Questi sono i comandi che puoi usare:\n\n"
         "/leaderboard - <i>guarda classifiche dei gruppi</i>\n"
         "/vote - <i>vota un gruppo</i>\n"
         "/aboutyou - <i>ottieni statistiche su di te</i>\n"
         "/settings - <i>cambia le tue impostazioni</i>\n"
-        "/feedback - <i>invia un feedback</i>\n\n"
-        "Se sei un admin di un gruppo potresti essere interessato in "
-        "<a href=\"{}\">come usare il bot nei gruppi</a>\n\n"
-        "<a href=\"{source_code}\">codice sorgente</a> (per sviluppatori)")
+        "/feedback - <i>invia un feedback</i>"
+)
 
 insert_param_vote = (
         "Per votare un gruppo invia il suo username (non importa se c'è o no '@')"
@@ -221,3 +220,8 @@ group_rank = {
     "members": "- membri: {}",
     "votes": "- voti media|numero: {}|({})"
 }
+
+feedback = "feedback"
+source_code = "codice sorgente"
+commands = "comandi"
+how_to_use_in_groups = "uso nei gruppi"

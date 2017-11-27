@@ -24,6 +24,7 @@ from topsupergroupsbot import emojis
 from topsupergroupsbot import votelink
 from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang
+from topsupergroupsbot import constants as c
 
 from telegram import ParseMode
 from telegram.error import (TelegramError,
@@ -111,6 +112,62 @@ def callback_query(bot, update):
 
     elif query.data == "feedback_reply":
         feedback_reply(bot, query)
+
+    elif query.data == "help_commands":
+        help_commands(bot, query)
+
+    elif query.data == "back_main_private_help":
+        back_main_private_help(bot, query)
+
+    elif query.data == "help_how_to_use_in_groups":
+        help_how_to_use_in_groups(bot, query)
+
+    elif query.data == "help_feedback":
+        help_feedback(bot, query)
+
+
+def help_feedback(bot, query):
+    lang = utils.get_db_lang(query.from_user.id)
+    text = c.FEEDBACK_INV_CHAR + get_lang.get_string(lang, "feedback_message")
+    reply_markup = keyboards.back_main_private_help_kb(lang)
+    query.answer()
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
+
+
+def help_how_to_use_in_groups(bot, query):
+    lang = utils.get_db_lang(query.from_user.id)
+    text = get_lang.get_string(lang, "groups_working")
+    reply_markup = keyboards.back_main_private_help_kb(lang)
+    query.answer()
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
+
+
+def back_main_private_help(bot, query):
+    lang = utils.get_db_lang(query.from_user.id)
+    text = get_lang.get_string(lang, "help_message")
+    reply_markup = keyboards.help_kb(lang)
+    query.answer()
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
+
+
+def help_commands(bot, query):
+    lang = utils.get_db_lang(query.from_user.id)
+    text = get_lang.get_string(lang, "help_commands")
+    reply_markup = keyboards.back_main_private_help_kb(lang)
+    query.answer()
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
 
 
 @utils.creator_button_only

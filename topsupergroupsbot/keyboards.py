@@ -282,16 +282,26 @@ def help_kb(lang):
     )
     feedback = InlineKeyboardButton(
         text=get_lang.get_string(lang, "feedback"),
-        callback_data="feedback"
+        callback_data="help_feedback"
     )
     commands = InlineKeyboardButton(
         text=get_lang.get_string(lang, "commands"),
-        callback_data="supported_commands"
+        callback_data="help_commands"
     )
     group_usage = InlineKeyboardButton(
         text=get_lang.get_string(lang, "how_to_use_in_groups"),
-        callback_data="how_to_use_in_groups"
+        callback_data="help_how_to_use_in_groups"
     )
     buttons_list = [[commands, group_usage], [feedback, source_code]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
+def back_main_private_help_kb(lang):
+    back = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data="back_main_private_help"
+    )
+    buttons_list = [[back]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

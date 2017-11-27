@@ -18,7 +18,8 @@ buttons_strings = {
     "leaderboard": "classifica",
     "about_you": "su di te",
     "region": "regione",
-    "settings": "impostazioni"
+    "settings": "impostazioni",
+    "info_and_help": "info & aiuto"
 }
 
 hello = "Ciao!"

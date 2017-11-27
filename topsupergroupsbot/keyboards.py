@@ -270,6 +270,7 @@ def default_regular_buttons_kb(lang):
     about_you = c.BUTTON_START + get_lang.get_string_buttons(lang, "about_you") + c.BUTTON_END
     region = c.BUTTON_START + get_lang.get_string_buttons(lang, "region") + c.BUTTON_END
     settings = c.BUTTON_START + get_lang.get_string_buttons(lang, "settings") + c.BUTTON_END
-    keyboard_buttons = [[leaderboards, about_you],[region, settings]]
+    info_and_help = c.BUTTON_START + get_lang.get_string_buttons(lang, "info_and_help") + c.BUTTON_END
+    keyboard_buttons = [[leaderboards, about_you],[region, settings], [info_and_help]]
     keyboard = ReplyKeyboardMarkup(keyboard_buttons, resize_keyboard=True)
     return keyboard

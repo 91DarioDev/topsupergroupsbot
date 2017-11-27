@@ -18,7 +18,8 @@ buttons_strings = {
     "leaderboard": "leaderboard",
     "about_you": "about you",
     "region": "region",
-    "settings": "settings"
+    "settings": "settings",
+    "info_and_help": "info & help"
 }
 
 

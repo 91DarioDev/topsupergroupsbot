@@ -270,6 +270,38 @@ def default_regular_buttons_kb(lang):
     about_you = c.BUTTON_START + get_lang.get_string_buttons(lang, "about_you") + c.BUTTON_END
     region = c.BUTTON_START + get_lang.get_string_buttons(lang, "region") + c.BUTTON_END
     settings = c.BUTTON_START + get_lang.get_string_buttons(lang, "settings") + c.BUTTON_END
-    keyboard_buttons = [[leaderboards, about_you],[region, settings]]
-    keyboard = ReplyKeyboardMarkup(keyboard_buttons, resize_keyboard=True)
+    info_and_help = c.BUTTON_START + get_lang.get_string_buttons(lang, "info_and_help") + c.BUTTON_END
+    keyboard_buttons = [[leaderboards, about_you],[region, settings], [info_and_help]]
+    return ReplyKeyboardMarkup(keyboard_buttons, resize_keyboard=True)
+
+
+def help_kb(lang):
+    source_code = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "source_code"),
+        url="https://github.com/91DarioDev/topsupergroupsbot"
+    )
+    feedback = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "feedback"),
+        callback_data="help_feedback"
+    )
+    commands = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "commands"),
+        callback_data="help_commands"
+    )
+    group_usage = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "how_to_use_in_groups"),
+        callback_data="help_how_to_use_in_groups"
+    )
+    buttons_list = [[commands, group_usage], [feedback, source_code]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
+def back_main_private_help_kb(lang):
+    back = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data="back_main_private_help"
+    )
+    buttons_list = [[back]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

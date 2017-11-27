@@ -50,6 +50,8 @@ class RegularButtons:
             commands.region(self.bot, self.update)
         elif self.key == 'settings':
             commands.settings(self.bot, self.update)
+        elif self.key == 'info_and_help':
+            commands.help(self.bot, self.update)
 
     def unrecognized_button(self):
         user_id = self.update.message.from_user.id

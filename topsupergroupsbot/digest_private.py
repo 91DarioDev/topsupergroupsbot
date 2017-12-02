@@ -127,7 +127,7 @@ def schedule_own_private_digest(bot, job, data):
                     username, 
                     utils.sep_l(pos_g, lang)
                     )
-
+        text += "\n#weekly_private_digest"
         # text completed can be scheduled
         job.job_queue.run_once(send_one_by_one, start_in, context=[user_id, text, reply_markup])
 

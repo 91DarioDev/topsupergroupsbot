@@ -341,6 +341,7 @@ def weekly_groups_digest(bot, job):
                     utils.sep_l(user[1], lang)
                     )
 
+        text += "\n#weekly_group_digest"
         reply_markup = keyboards.disable_group_weekly_digest_kb(lang)
         # schedule send
         job.job_queue.run_once(

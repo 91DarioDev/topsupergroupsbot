@@ -32,8 +32,8 @@ def group_extract(lst):
     d = OrderedDict()
 
     for k, *v in lst:
-        k = k, *v[:4]
-        d.setdefault(k, []).append(v[4:])
+        k = k, *v[:5]
+        d.setdefault(k, []).append(v[5:])
 
     final = list(d.items())
     return final
@@ -45,45 +45,72 @@ def weekly_own_private(bot, job):
 
     query = """
     WITH tleft AS (
-    SELECT  main.user_id, u.lang, main.num_msgs, main.num_grps, main.rnk 
-    FROM (
-    SELECT
-        user_id,
-        num_grps,
-        num_msgs,
-        RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
-    FROM (
-        SELECT
-            user_id,
-            COUNT(distinct group_id) AS num_grps,
-            COUNT(*)                 AS num_msgs
-        FROM messages
-        WHERE message_date > now() - interval %s
-        GROUP BY user_id
-        ) AS sub
-    ) AS main
-    LEFT OUTER JOIN users AS u
-    USING (user_id)
-    WHERE u.weekly_own_digest = TRUE
-    AND bot_blocked = FALSE
+        SELECT  
+            main.user_id, 
+            u.lang, 
+            main.num_msgs, 
+            main.num_grps, 
+            main.rnk,
+            u_ref.name 
+        FROM (
+            SELECT
+                user_id,
+                num_grps,
+                num_msgs,
+                RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
+            FROM (
+                SELECT
+                    user_id,
+                    COUNT(distinct group_id) AS num_grps,
+                    COUNT(*)                 AS num_msgs
+                FROM messages
+                WHERE message_date > now() - interval %s
+                GROUP BY user_id
+            ) AS sub
+        ) AS main
+        LEFT OUTER JOIN users AS u
+        USING (user_id)
+        LEFT OUTER JOIN users_ref AS u_ref
+        USING (user_id)
+        WHERE u.weekly_own_digest = TRUE
+        AND bot_blocked = FALSE
     )
     , tright AS (
-    SELECT main.user_id, main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos
-    FROM (
-        SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
-            RANK() OVER (
-                PARTITION BY group_id
-                ORDER BY COUNT(group_id) DESC
+        SELECT 
+            main.user_id, 
+            main.group_id, 
+            s_ref.title, 
+            s_ref.username, 
+            main.m_per_group, 
+            main.pos
+        FROM (
+            SELECT 
+                user_id, 
+                group_id, 
+                COUNT(user_id) AS m_per_group,
+                RANK() OVER (
+                    PARTITION BY group_id
+                    ORDER BY COUNT(group_id) DESC
                 ) AS pos 
-        FROM messages
-        WHERE message_date > now() - interval %s
-        GROUP BY group_id, user_id
-    ) AS main 
-    LEFT OUTER JOIN supergroups_ref AS s_ref
-    USING (group_id)
-    ORDER BY m_per_group DESC
+            FROM messages
+            WHERE message_date > now() - interval %s
+            GROUP BY group_id, user_id
+        ) AS main 
+        LEFT OUTER JOIN supergroups_ref AS s_ref
+        USING (group_id)
+        ORDER BY m_per_group DESC
     )
-    SELECT l.user_id, l.lang, l.num_msgs, l.num_grps, l.rnk, r.title, r.username, r.m_per_group, r.pos
+    SELECT 
+        l.user_id, 
+        l.lang, 
+        l.num_msgs, 
+        l.num_grps, 
+        l.rnk, 
+        l.name,
+        r.title, 
+        r.username, 
+        r.m_per_group, 
+        r.pos
     FROM tleft AS l
     INNER JOIN tright AS r
     USING (user_id)
@@ -109,8 +136,10 @@ def schedule_own_private_digest(bot, job, data):
         tot_msg = user[2]
         tot_grps = user[3]
         tot_pos = user[4]
+        first_name = user[5]
 
-        text = get_lang.get_string(lang, "digest_of_the_week_global").format(
+        text = get_lang.get_string(lang, "hello_name").format(name=first_name)+"!\n"
+        text += get_lang.get_string(lang, "digest_of_the_week_global").format(
                 utils.sep_l(tot_msg, lang), 
                 utils.sep_l(tot_grps, lang), 
                 utils.sep_l(tot_pos, lang)
@@ -127,7 +156,7 @@ def schedule_own_private_digest(bot, job, data):
                     username, 
                     utils.sep_l(pos_g, lang)
                     )
-
+        text += "\n#weekly_private_digest"
         # text completed can be scheduled
         job.job_queue.run_once(send_one_by_one, start_in, context=[user_id, text, reply_markup])
 

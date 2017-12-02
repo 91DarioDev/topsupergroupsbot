@@ -76,6 +76,7 @@ private_your_own_digest_button = "Su di te"
 private_groups_digest_button = "Sui gruppi"
 private_digest = "Puoi ricevere un resoconto alla fine di ogni settimana. Abilita o disabilita quando vuoi"
 weekly_own_digest = "Vuoi ricevere statistiche su di te ogni volta che una settimana finisce?"
+hello_name = "Ciao {name}"
 digest_of_the_week_global = (
         "Un'altra settimana è passata!\nDurante la scorsa settimana hai inviato in totale {} messaggi "
         "in {} gruppi. Posizione: {}\n")

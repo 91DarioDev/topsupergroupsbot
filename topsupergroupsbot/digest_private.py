@@ -32,8 +32,8 @@ def group_extract(lst):
     d = OrderedDict()
 
     for k, *v in lst:
-        k = k, *v[:4]
-        d.setdefault(k, []).append(v[4:])
+        k = k, *v[:5]
+        d.setdefault(k, []).append(v[5:])
 
     final = list(d.items())
     return final
@@ -50,7 +50,8 @@ def weekly_own_private(bot, job):
             u.lang, 
             main.num_msgs, 
             main.num_grps, 
-            main.rnk 
+            main.rnk,
+            u_ref.name 
         FROM (
             SELECT
                 user_id,
@@ -68,6 +69,8 @@ def weekly_own_private(bot, job):
             ) AS sub
         ) AS main
         LEFT OUTER JOIN users AS u
+        USING (user_id)
+        LEFT OUTER JOIN users_ref AS u_ref
         USING (user_id)
         WHERE u.weekly_own_digest = TRUE
         AND bot_blocked = FALSE
@@ -103,6 +106,7 @@ def weekly_own_private(bot, job):
         l.num_msgs, 
         l.num_grps, 
         l.rnk, 
+        l.name,
         r.title, 
         r.username, 
         r.m_per_group, 
@@ -132,8 +136,10 @@ def schedule_own_private_digest(bot, job, data):
         tot_msg = user[2]
         tot_grps = user[3]
         tot_pos = user[4]
+        first_name = user[5]
 
-        text = get_lang.get_string(lang, "digest_of_the_week_global").format(
+        text = get_lang.get_string(lang, "hello_name").format(name=first_name)+"!\n"
+        text += get_lang.get_string(lang, "digest_of_the_week_global").format(
                 utils.sep_l(tot_msg, lang), 
                 utils.sep_l(tot_grps, lang), 
                 utils.sep_l(tot_pos, lang)

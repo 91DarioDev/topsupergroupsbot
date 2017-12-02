@@ -78,6 +78,7 @@ private_your_own_digest_button = "About you"
 private_groups_digest_button = "About groups"
 private_digest = "You can receive a digest at the end of every week. Disable or enable them anytime you want"
 weekly_own_digest = "Do you want to get anytime a week is over statistic about you during the past week?"
+hello_name = "Hello {name}"
 digest_of_the_week_global = ("Another week is over!\nDuring the last week you globally sent {} messages "
                              "in {} groups. Position: {}\n")
 

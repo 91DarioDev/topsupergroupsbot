@@ -45,45 +45,68 @@ def weekly_own_private(bot, job):
 
     query = """
     WITH tleft AS (
-    SELECT  main.user_id, u.lang, main.num_msgs, main.num_grps, main.rnk 
-    FROM (
-    SELECT
-        user_id,
-        num_grps,
-        num_msgs,
-        RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
-    FROM (
-        SELECT
-            user_id,
-            COUNT(distinct group_id) AS num_grps,
-            COUNT(*)                 AS num_msgs
-        FROM messages
-        WHERE message_date > now() - interval %s
-        GROUP BY user_id
-        ) AS sub
-    ) AS main
-    LEFT OUTER JOIN users AS u
-    USING (user_id)
-    WHERE u.weekly_own_digest = TRUE
-    AND bot_blocked = FALSE
+        SELECT  
+            main.user_id, 
+            u.lang, 
+            main.num_msgs, 
+            main.num_grps, 
+            main.rnk 
+        FROM (
+            SELECT
+                user_id,
+                num_grps,
+                num_msgs,
+                RANK() OVER(ORDER BY num_msgs DESC, num_grps DESC, user_id DESC) rnk
+            FROM (
+                SELECT
+                    user_id,
+                    COUNT(distinct group_id) AS num_grps,
+                    COUNT(*)                 AS num_msgs
+                FROM messages
+                WHERE message_date > now() - interval %s
+                GROUP BY user_id
+            ) AS sub
+        ) AS main
+        LEFT OUTER JOIN users AS u
+        USING (user_id)
+        WHERE u.weekly_own_digest = TRUE
+        AND bot_blocked = FALSE
     )
     , tright AS (
-    SELECT main.user_id, main.group_id, s_ref.title, s_ref.username, main.m_per_group, main.pos
-    FROM (
-        SELECT user_id, group_id, COUNT(user_id) AS m_per_group,
-            RANK() OVER (
-                PARTITION BY group_id
-                ORDER BY COUNT(group_id) DESC
+        SELECT 
+            main.user_id, 
+            main.group_id, 
+            s_ref.title, 
+            s_ref.username, 
+            main.m_per_group, 
+            main.pos
+        FROM (
+            SELECT 
+                user_id, 
+                group_id, 
+                COUNT(user_id) AS m_per_group,
+                RANK() OVER (
+                    PARTITION BY group_id
+                    ORDER BY COUNT(group_id) DESC
                 ) AS pos 
-        FROM messages
-        WHERE message_date > now() - interval %s
-        GROUP BY group_id, user_id
-    ) AS main 
-    LEFT OUTER JOIN supergroups_ref AS s_ref
-    USING (group_id)
-    ORDER BY m_per_group DESC
+            FROM messages
+            WHERE message_date > now() - interval %s
+            GROUP BY group_id, user_id
+        ) AS main 
+        LEFT OUTER JOIN supergroups_ref AS s_ref
+        USING (group_id)
+        ORDER BY m_per_group DESC
     )
-    SELECT l.user_id, l.lang, l.num_msgs, l.num_grps, l.rnk, r.title, r.username, r.m_per_group, r.pos
+    SELECT 
+        l.user_id, 
+        l.lang, 
+        l.num_msgs, 
+        l.num_grps, 
+        l.rnk, 
+        r.title, 
+        r.username, 
+        r.m_per_group, 
+        r.pos
     FROM tleft AS l
     INNER JOIN tright AS r
     USING (user_id)

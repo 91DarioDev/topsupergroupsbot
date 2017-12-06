@@ -83,11 +83,17 @@ class Pages:
         chosen_page = self.chosen_page
         texted_pages = []
 
+        if only_admins:  # otherwise it's a group members leaderboard 
+            filter_category = None
+        else:
+            filter_category = [InlineKeyboardButton(text='filter_category', callback_data='fc:'+base.format(page=chosen_page))]
+            
         for page in pages:
             callback_data = base.format(page=page)
             current_page = "current_page_admin" if only_admins is True else "current_page" 
             # this is necessary not to get list out of range
             # because later it checks pages[1]
+
             if len(pages) <= 1:
                 # keyboard is not needed if one page
                 break
@@ -114,5 +120,11 @@ class Pages:
                     text=str(page), 
                     callback_data=callback_data))
 
-        keyboard = InlineKeyboardMarkup(keyboards.build_menu(texted_pages, n_cols=8))
+        keyboard = InlineKeyboardMarkup(
+            keyboards.build_menu(
+                texted_pages, 
+                n_cols=8, 
+                footer_buttons=filter_category 
+            )
+        )
         return keyboard

@@ -342,7 +342,7 @@ class GroupLeaderboard(Leaderboard):
 
         pages = Pages(extract, self.page)
 
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        reply_markup = pages.build_buttons(base=self.buttons_callback_base(), only_admins=True)
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard")
         text += "\n\n"

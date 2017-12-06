@@ -125,6 +125,22 @@ def callback_query(bot, update):
     elif query.data == "help_feedback":
         help_feedback(bot, query)
 
+    elif query.data == "category":
+        set_group_category(bot, query)
+
+
+@utils.creator_button_only
+def set_group_category(bot, query):
+    query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
+    lang = database.query_r(query_db, query.message.chat.id, one=True)[0]
+    text = get_lang.get_string(lang, "choose_group_category") 
+    query.answer()
+    reply_markup = keyboards.group_categories_kb(lang)
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)      
+
 
 def help_feedback(bot, query):
     lang = utils.get_db_lang(query.from_user.id)

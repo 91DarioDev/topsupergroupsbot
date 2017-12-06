@@ -29,6 +29,7 @@ from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import emojis
 from topsupergroupsbot import constants as c
+from topsupergroupsbot import categories
 
 
 # INLINE KEYBOARDS
@@ -58,7 +59,11 @@ def main_group_settings_kb(lang):
     digest = InlineKeyboardButton(
             text=get_lang.get_string(lang, "group_digest_button"),
             callback_data="digest_group")
-    buttons_list = [[button_lang], [button_adult], [vote_link], [digest]]
+    category = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "category"),
+        callback_data="category"
+    )
+    buttons_list = [[button_lang], [button_adult], [vote_link], [digest], [category]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
@@ -303,5 +308,26 @@ def back_main_private_help_kb(lang):
         callback_data="back_main_private_help"
     )
     buttons_list = [[back]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
+def group_categories_kb(lang):
+    buttons_list = []
+    strings = get_lang.get_string(lang, "categories")
+    for i in sorted(categories.CODES.items(), key=lambda x: x[1]):
+        buttons_list.append(InlineKeyboardButton(
+            text=strings[i[1]],
+            callback_data="set_group_category"+str(i[0]))
+        )
+    footer = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data="main_group_settings_creator")
+    footer_buttons = [footer]
+    buttons_list = build_menu(
+        buttons_list,
+        n_cols=2,
+        footer_buttons=footer_buttons
+    )
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

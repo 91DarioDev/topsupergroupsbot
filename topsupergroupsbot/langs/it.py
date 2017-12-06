@@ -226,3 +226,23 @@ feedback = "feedback"
 source_code = "codice sorgente"
 commands = "comandi"
 how_to_use_in_groups = "uso nei gruppi"
+
+
+category = "Categoria"
+choose_group_category = "Scegli la categoria che si addice meglio a questo gruppo"
+
+categories = {
+    'news': 'news',
+    'science_and_education': 'scienza&educazione',
+    'religion': 'religione',
+    'entertainment': 'divertimento',
+    'family_and_home': 'famiglia&casa',
+    'sport': 'sport',
+    'art_and_culture': 'arte&cultura',
+    'politicts': 'politica',
+    'information_technology': 'informatica&tecnologia',
+    'game_and_apps': 'giochi&app',
+    'love': 'love',
+    'tourism': 'turismo',
+    'economics': 'economia'
+}

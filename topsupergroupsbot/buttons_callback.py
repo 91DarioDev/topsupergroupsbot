@@ -128,11 +128,28 @@ def callback_query(bot, update):
     elif query.data == "category":
         set_group_category(bot, query)
 
+    elif query.data.startswith("set_group_category:"):
+        change_group_category(bot, query)
+
+
+@utils.creator_button_only
+def change_group_category(bot, query):
+    query_db = "SELECT lang, category FROM supergroups WHERE group_id = %s"
+    lang = database.query_r(query_db, query.message.chat.id, one=True)[0]
+    category = query.data.split(":")[1]
+    query.answer()
+    reply_markup = keyboards.group_categories_kb(lang, category)
+    try:
+        query_db = "UPDATE supergroups SET category = %s WHERE group_id = %s"
+        database.query_w(query_db, category, query.message.chat.id)
+        query.message.edit_reply_markup(reply_markup=reply_markup)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e) 
 
 @utils.creator_button_only
 def set_group_category(bot, query):
     query_db = "SELECT lang, category FROM supergroups WHERE group_id = %s"
-    extract = database.query_r(query_db, query.message.chat.id, one=True)[0]
+    extract = database.query_r(query_db, query.message.chat.id, one=True)
     if extract is None:
         lang = None
         current_category = None

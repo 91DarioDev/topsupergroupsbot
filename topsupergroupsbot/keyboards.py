@@ -317,8 +317,8 @@ def group_categories_kb(lang, current_category):
     strings = get_lang.get_string(lang, "categories")
     for i in sorted(categories.CODES.items(), key=lambda x: x[1]):
         buttons_list.append(InlineKeyboardButton(
-            text=emojis.CURRENT_CHOICE+strings[i[1]] if strings[i[1]] == current_category else strings[i[1]],
-            callback_data="set_group_category"+str(i[0]))
+            text=emojis.CURRENT_CHOICE+strings[i[1]] if i[0] == current_category else strings[i[1]],
+            callback_data="set_group_category:"+str(i[0]))
         )
     footer = InlineKeyboardButton(
         text=get_lang.get_string(lang, "back"),

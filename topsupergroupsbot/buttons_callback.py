@@ -131,11 +131,16 @@ def callback_query(bot, update):
 
 @utils.creator_button_only
 def set_group_category(bot, query):
-    query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
-    lang = database.query_r(query_db, query.message.chat.id, one=True)[0]
+    query_db = "SELECT lang, category FROM supergroups WHERE group_id = %s"
+    extract = database.query_r(query_db, query.message.chat.id, one=True)[0]
+    if extract is None:
+        lang = None
+        current_category = None
+    else:
+        lang, current_category = extract
     text = get_lang.get_string(lang, "choose_group_category") 
     query.answer()
-    reply_markup = keyboards.group_categories_kb(lang)
+    reply_markup = keyboards.group_categories_kb(lang, current_category)
     try:
         query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
     except TelegramError as e:

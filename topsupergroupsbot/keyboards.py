@@ -314,10 +314,11 @@ def back_main_private_help_kb(lang):
 
 def group_categories_kb(lang):
     buttons_list = []
+    group_category = None
     strings = get_lang.get_string(lang, "categories")
     for i in sorted(categories.CODES.items(), key=lambda x: x[1]):
         buttons_list.append(InlineKeyboardButton(
-            text=strings[i[1]],
+            text=emojis.CURRENT_CHOICE+strings[i[1]] if strings[i[1]] == group_category else strings[i[1]],
             callback_data="set_group_category"+str(i[0]))
         )
     footer = InlineKeyboardButton(

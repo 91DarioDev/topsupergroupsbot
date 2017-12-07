@@ -34,7 +34,12 @@ from topsupergroupsbot import categories
 
 
 def filter_category_button(lang, base, chosen_page):
-    return [InlineKeyboardButton(text='filter_category', callback_data='fc:'+base.format(page=chosen_page))]
+    return [
+        InlineKeyboardButton(
+            text=get_lang.get_string(lang, 'filter_by_category'), 
+            callback_data='fc:'+base.format(page=chosen_page)
+        )
+    ]
 
 
 # INLINE KEYBOARDS

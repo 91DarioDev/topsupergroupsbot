@@ -245,3 +245,4 @@ categories = {
     'tourism': 'tourism',
     'economics': 'economics'
 }
+filter_by_category = 'filter category'

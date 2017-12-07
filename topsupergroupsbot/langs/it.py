@@ -246,3 +246,4 @@ categories = {
     'tourism': 'turismo',
     'economics': 'economia'
 }
+filter_by_category = 'filtra categoria'

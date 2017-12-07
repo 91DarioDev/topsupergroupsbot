@@ -32,6 +32,11 @@ from topsupergroupsbot import constants as c
 from topsupergroupsbot import categories
 
 
+
+def filter_category_button(lang, base, chosen_page):
+    return [InlineKeyboardButton(text='filter_category', callback_data='fc:'+base.format(page=chosen_page))]
+
+
 # INLINE KEYBOARDS
 
 def build_menu(buttons: list,

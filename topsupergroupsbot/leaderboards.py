@@ -25,6 +25,7 @@ from topsupergroupsbot import constants
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
 from topsupergroupsbot import emojis
+from topsupergroupsbot import keyboards
 from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
@@ -114,7 +115,8 @@ class VotesLeaderboard(Leaderboard):
 
         pages = Pages(extract, self.page)
 
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        callback_base = self.buttons_callback_base()
+        reply_markup = pages.build_buttons(base=callback_base, footer_buttons=keyboards.filter_category_button(self.region, callback_base, pages.chosen_page))
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
@@ -192,7 +194,8 @@ class MessagesLeaderboard(Leaderboard):
 
         pages = Pages(extract, self.page)
         
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        callback_base = self.buttons_callback_base()
+        reply_markup = pages.build_buttons(base=callback_base, footer_buttons=keyboards.filter_category_button(self.region, callback_base, pages.chosen_page))
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
@@ -273,7 +276,8 @@ class MembersLeaderboard(Leaderboard):
             
         pages = Pages(extract, self.page)
 
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        callback_base = self.buttons_callback_base()
+        reply_markup = pages.build_buttons(base=callback_base, footer_buttons=keyboards.filter_category_button(self.region, callback_base, pages.chosen_page))
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)

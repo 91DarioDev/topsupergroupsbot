@@ -78,15 +78,12 @@ class Pages:
         offset = self.first_number_of_page() - 1
         return self.lst[offset:offset+self.elements_per_page]
 
-    def build_buttons(self, base, only_admins=False):
+    def build_buttons(self, base, only_admins=False, footer_buttons=None):
         pages = self.displayed_pages()
         chosen_page = self.chosen_page
         texted_pages = []
+        
 
-        if only_admins:  # otherwise it's a group members leaderboard 
-            filter_category = None
-        else:
-            filter_category = [InlineKeyboardButton(text='filter_category', callback_data='fc:'+base.format(page=chosen_page))]
             
         for page in pages:
             callback_data = base.format(page=page)
@@ -124,7 +121,7 @@ class Pages:
             keyboards.build_menu(
                 texted_pages, 
                 n_cols=8, 
-                footer_buttons=filter_category 
+                footer_buttons=footer_buttons
             )
         )
         return keyboard

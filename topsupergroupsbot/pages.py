@@ -21,7 +21,7 @@ from telegram import InlineKeyboardButton
 from telegram import InlineKeyboardMarkup
 
 class Pages:
-    def __init__(self, lst, chosen_page=1, elements_per_page=1):
+    def __init__(self, lst, chosen_page=1, elements_per_page=10):
         self.elements_per_page = elements_per_page
         self.lst = lst
         self.number_of_pages = self.get_number_of_pages()

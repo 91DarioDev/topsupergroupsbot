@@ -246,3 +246,4 @@ categories = {
     'economics': 'economics'
 }
 filter_by_category = 'filter category'
+choose_category_to_filter = "choose one of the following categories to filter the leaderboard"

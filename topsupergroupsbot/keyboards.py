@@ -341,3 +341,19 @@ def group_categories_kb(lang, current_category):
     )
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
+
+
+def filter_by_category_leaderboard_kb(lang, base):
+    buttons_list = []
+    strings = get_lang.get_string(lang, "categories")
+    for i in sorted(categories.CODES.items(), key=lambda x: x[1]):
+        buttons_list.append(InlineKeyboardButton(
+            text=strings[i[1]],
+            callback_data=base+str(i[0]))
+        )
+    buttons_list = build_menu(
+        buttons_list,
+        n_cols=2
+    )
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard

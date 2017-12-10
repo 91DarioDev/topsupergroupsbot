@@ -26,6 +26,7 @@ from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
 from topsupergroupsbot import emojis
 from topsupergroupsbot import keyboards
+from topsupergroupsbot import categories
 from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
@@ -127,6 +128,8 @@ class VotesLeaderboard(Leaderboard):
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
+        if self.category != "":
+            text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[5] is True else ""
@@ -212,6 +215,8 @@ class MessagesLeaderboard(Leaderboard):
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
+        if self.category != "":
+            text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[4] is True else ""
@@ -299,6 +304,8 @@ class MembersLeaderboard(Leaderboard):
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
+        if self.category != "":
+            text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[6] is True else ""

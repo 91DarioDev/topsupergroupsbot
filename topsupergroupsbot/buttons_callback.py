@@ -140,11 +140,12 @@ def filter_by_category(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
     text = get_lang.get_string(lang, "choose_category_to_filter")
     params = query.data.split(":")
+    back_callback = ":".join(params[1:])
     params[2] = '1'  # change page to first page
     params = params[1:]  # first removed
     base = ":".join(params)
     query.answer()
-    reply_markup = keyboards.filter_by_category_leaderboard_kb(lang, base)
+    reply_markup = keyboards.filter_by_category_leaderboard_kb(lang, base, back_callback)
     try:
         query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:

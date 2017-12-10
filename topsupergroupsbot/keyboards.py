@@ -343,7 +343,7 @@ def group_categories_kb(lang, current_category):
     return keyboard
 
 
-def filter_by_category_leaderboard_kb(lang, base):
+def filter_by_category_leaderboard_kb(lang, base, back_callback):
     buttons_list = []
     strings = get_lang.get_string(lang, "categories")
     for i in sorted(categories.CODES.items(), key=lambda x: x[1]):
@@ -351,9 +351,14 @@ def filter_by_category_leaderboard_kb(lang, base):
             text=strings[i[1]],
             callback_data=base+str(i[0]))
         )
+    footer = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data=back_callback)
+    footer_buttons = [footer]
     buttons_list = build_menu(
         buttons_list,
-        n_cols=2
+        n_cols=2,
+        footer_buttons=footer_buttons
     )
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

@@ -87,6 +87,7 @@ class VotesLeaderboard(Leaderboard):
     MIN_REVIEWS = 10
     CACHE_SECONDS = 60*3
     INDEX_LANG = 8
+    INDEX_CATEGORY = 9
 
     def build_page(self):
         query = """
@@ -119,7 +120,7 @@ class VotesLeaderboard(Leaderboard):
             self.cache_the_list(extract)
 
         if self.category != "":
-            extract = [i for i in extract if i[9] == self.category]
+            extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
 
         pages = Pages(extract, self.page)
 
@@ -176,6 +177,7 @@ class MessagesLeaderboard(Leaderboard):
     CODE = 'ml'
     CACHE_SECONDS = 60*3
     INDEX_LANG = 7
+    INDEX_CATEGORY = 8
 
     def build_page(self):
         query = """
@@ -206,7 +208,7 @@ class MessagesLeaderboard(Leaderboard):
             self.cache_the_list(extract)
 
         if self.category != "":
-            extract = [i for i in extract if i[8] == self.category]
+            extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
 
         pages = Pages(extract, self.page)
         
@@ -260,6 +262,7 @@ class MembersLeaderboard(Leaderboard):
     CODE = 'mml'
     CACHE_SECONDS = 60*10
     INDEX_LANG = 2
+    INDEX_CATEGORY = 8
 
     def build_page(self):
         # Thank https://stackoverflow.com/a/46496407/8372336 to make clear this query
@@ -295,7 +298,7 @@ class MembersLeaderboard(Leaderboard):
             self.cache_the_list(extract)
         
         if self.category != "":
-            extract = [i for i in extract if i[8] == self.category]    
+            extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]    
         
         pages = Pages(extract, self.page)
 

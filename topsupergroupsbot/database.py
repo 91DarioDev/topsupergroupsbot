@@ -114,7 +114,8 @@ def create_db():
         banned_until TIMESTAMP DEFAULT NULL, 
         ban_reason TEXT DEFAULT NULL, 
         bot_inside BOOLEAN DEFAULT TRUE, 
-        last_date timestamp DEFAULT NULL
+        last_date timestamp DEFAULT NULL,
+        category TEXT DEFAULT NULL
     )"""
     query_w(query)
 

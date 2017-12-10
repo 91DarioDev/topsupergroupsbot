@@ -78,16 +78,19 @@ class Pages:
         offset = self.first_number_of_page() - 1
         return self.lst[offset:offset+self.elements_per_page]
 
-    def build_buttons(self, base, only_admins=False):
+    def build_buttons(self, base, only_admins=False, footer_buttons=None):
         pages = self.displayed_pages()
         chosen_page = self.chosen_page
         texted_pages = []
+        
 
+            
         for page in pages:
             callback_data = base.format(page=page)
             current_page = "current_page_admin" if only_admins is True else "current_page" 
             # this is necessary not to get list out of range
             # because later it checks pages[1]
+
             if len(pages) <= 1:
                 # keyboard is not needed if one page
                 break
@@ -114,5 +117,11 @@ class Pages:
                     text=str(page), 
                     callback_data=callback_data))
 
-        keyboard = InlineKeyboardMarkup(keyboards.build_menu(texted_pages, n_cols=8))
+        keyboard = InlineKeyboardMarkup(
+            keyboards.build_menu(
+                texted_pages, 
+                n_cols=8, 
+                footer_buttons=footer_buttons
+            )
+        )
         return keyboard

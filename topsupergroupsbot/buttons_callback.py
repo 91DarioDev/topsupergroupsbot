@@ -125,6 +125,64 @@ def callback_query(bot, update):
     elif query.data == "help_feedback":
         help_feedback(bot, query)
 
+    elif query.data == "category":
+        set_group_category(bot, query)
+
+    elif query.data.startswith("set_group_category:"):
+        change_group_category(bot, query)
+
+    elif query.data.startswith("fc:"):
+        filter_by_category(bot, query)
+
+
+def filter_by_category(bot, query):
+    lang = utils.get_db_lang(query.from_user.id)
+    text = get_lang.get_string(lang, "choose_category_to_filter")
+    params = query.data.split(":")
+    back_callback = ":".join(params[1:])
+    params[2] = '1'  # change page to first page
+    params = params[1:]  # first removed
+    base = ":".join(params)
+    query.answer()
+    reply_markup = keyboards.filter_by_category_leaderboard_kb(lang, base, back_callback)
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e) 
+
+
+
+@utils.creator_button_only
+def change_group_category(bot, query):
+    query_db = "SELECT lang, category FROM supergroups WHERE group_id = %s"
+    lang = database.query_r(query_db, query.message.chat.id, one=True)[0]
+    category = query.data.split(":")[1]
+    query.answer()
+    reply_markup = keyboards.group_categories_kb(lang, category)
+    try:
+        query_db = "UPDATE supergroups SET category = %s WHERE group_id = %s"
+        database.query_w(query_db, category, query.message.chat.id)
+        query.message.edit_reply_markup(reply_markup=reply_markup)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e) 
+
+@utils.creator_button_only
+def set_group_category(bot, query):
+    query_db = "SELECT lang, category FROM supergroups WHERE group_id = %s"
+    extract = database.query_r(query_db, query.message.chat.id, one=True)
+    if extract is None:
+        lang = None
+        current_category = None
+    else:
+        lang, current_category = extract
+    text = get_lang.get_string(lang, "choose_group_category") 
+    query.answer()
+    reply_markup = keyboards.group_categories_kb(lang, current_category)
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)      
+
 
 def help_feedback(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
@@ -364,6 +422,7 @@ def lbpage(bot, query):
     page = params[1]
     lb_type = params[2]
     region = params[3]
+    category = params[4]
 
     if lb_type == leaderboards.Leaderboard.GROUP:
         lbpage_igl(bot, query, params)
@@ -372,7 +431,7 @@ def lbpage(bot, query):
         leaderboards.Leaderboard.MESSAGES,
         leaderboards.Leaderboard.MEMBERS
     ]:
-        lbpage_private(bot, query, lb_type, page, region)
+        lbpage_private(bot, query, lb_type, page, region, category)
     query.answer()
 
 
@@ -393,14 +452,14 @@ def lbpage_igl(bot, query, params):
         if str(e) != "Message is not modified": print(e)
 
 
-def lbpage_private(bot, query, lb_type, page, region):
+def lbpage_private(bot, query, lb_type, page, region, category):
     lang = utils.get_db_lang(query.from_user.id)
     if lb_type == leaderboards.Leaderboard.VOTES:
-        leaderboard = leaderboards.VotesLeaderboard(lang, region, int(page))
+        leaderboard = leaderboards.VotesLeaderboard(lang, region, int(page), category)
     elif lb_type == leaderboards.Leaderboard.MESSAGES:
-        leaderboard = leaderboards.MessagesLeaderboard(lang, region, int(page))
+        leaderboard = leaderboards.MessagesLeaderboard(lang, region, int(page), category)
     elif lb_type == leaderboards.Leaderboard.MEMBERS:
-        leaderboard = leaderboards.MembersLeaderboard(lang, region, int(page))
+        leaderboard = leaderboards.MembersLeaderboard(lang, region, int(page), category)
     result = leaderboard.build_page()
     try:
         query.edit_message_text(
@@ -527,12 +586,16 @@ def redirect_ledearboard(bot, query):
     splitted = query.data.split(":")
     lb_type = splitted[1]
     region = splitted[2]
+    try:
+        category = splitted[3]
+    except IndexError:
+        category = None
     if lb_type in [
         leaderboards.Leaderboard.VOTES,
         leaderboards.Leaderboard.MESSAGES,
         leaderboards.Leaderboard.MEMBERS
     ]:
-        lbpage_private(bot, query, lb_type, 1, region)
+        lbpage_private(bot, query, lb_type, 1, region, category)
     query.answer()
 
 

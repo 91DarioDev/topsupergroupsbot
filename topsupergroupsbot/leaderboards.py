@@ -25,6 +25,8 @@ from topsupergroupsbot import constants
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import supported_langs
 from topsupergroupsbot import emojis
+from topsupergroupsbot import keyboards
+from topsupergroupsbot import categories
 from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
@@ -39,16 +41,18 @@ class Leaderboard:
 
     NEW_INTERVAL = 60*60*24*7
 
-    def __init__(self, lang=None, region="", page=1):
+    def __init__(self, lang=None, region="", page=1, category=None):
         self.lang = lang
         self.region = region
         self.page = page
+        self.category = "" if category is None else category
 
     def buttons_callback_base(self):
-        return "lbpage:{page}:{lb_type}:{region}".format(
+        return "lbpage:{page}:{lb_type}:{region}:{category}".format(
                 page='{page}',
                 lb_type=self.CODE, 
-                region=self.region)
+                region=self.region,
+                category=self.category)
 
     def cache_key_base(self):
         return 'cached_lb:{}:{}'.format(
@@ -83,6 +87,7 @@ class VotesLeaderboard(Leaderboard):
     MIN_REVIEWS = 10
     CACHE_SECONDS = 60*3
     INDEX_LANG = 8
+    INDEX_CATEGORY = 9
 
     def build_page(self):
         query = """
@@ -94,13 +99,15 @@ class VotesLeaderboard(Leaderboard):
             ROUND(AVG(vote), 1)::float AS average,
             s.nsfw, 
             extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
-            RANK() OVER (ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC)
+            RANK() OVER (ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC),
+            s.lang,
+            s.category
         FROM votes AS v
         LEFT OUTER JOIN supergroups_ref AS s_ref
         USING (group_id)
         LEFT OUTER JOIN supergroups AS s
         USING (group_id)
-        GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
+        GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND s.lang = %s
@@ -112,12 +119,18 @@ class VotesLeaderboard(Leaderboard):
             extract = database.query_r(query, self.region, self.MIN_REVIEWS)
             self.cache_the_list(extract)
 
+        if self.category != "":
+            extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
+
         pages = Pages(extract, self.page)
 
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        callback_base = self.buttons_callback_base()
+        reply_markup = pages.build_buttons(base=callback_base, footer_buttons=keyboards.filter_category_button(self.lang, callback_base, pages.chosen_page))
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
+        if self.category != "":
+            text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[5] is True else ""
@@ -145,13 +158,14 @@ class VotesLeaderboard(Leaderboard):
                   s.nsfw, 
                   extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
                   RANK() OVER (PARTITION BY s.lang ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC),
-                  s.lang
+                  s.lang,
+                  s.category
               FROM votes AS v
               LEFT OUTER JOIN supergroups_ref AS s_ref
               ON s_ref.group_id = v.group_id
               LEFT OUTER JOIN supergroups AS s
               ON s.group_id = v.group_id
-              GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
+              GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
               HAVING 
                   (s.banned_until IS NULL OR s.banned_until < now()) 
                   AND COUNT(vote) >= %s 
@@ -163,6 +177,7 @@ class MessagesLeaderboard(Leaderboard):
     CODE = 'ml'
     CACHE_SECONDS = 60*3
     INDEX_LANG = 7
+    INDEX_CATEGORY = 8
 
     def build_page(self):
         query = """
@@ -173,7 +188,9 @@ class MessagesLeaderboard(Leaderboard):
                 s_ref.username,
                 s.nsfw, 
                 extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
-                RANK() OVER (ORDER BY COUNT(m.group_id) DESC)
+                RANK() OVER (ORDER BY COUNT(m.group_id) DESC),
+                s.lang,
+                s.category
             FROM messages AS m
             LEFT OUTER JOIN supergroups_ref AS s_ref
             ON s_ref.group_id = m.group_id
@@ -182,7 +199,7 @@ class MessagesLeaderboard(Leaderboard):
             WHERE m.message_date > date_trunc('week', now())
                 AND (s.banned_until IS NULL OR s.banned_until < now()) 
                 AND s.lang = %s
-            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until 
+            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
         """
 
         extract = self.get_list_from_cache()
@@ -190,12 +207,18 @@ class MessagesLeaderboard(Leaderboard):
             extract = database.query_r(query, self.region)
             self.cache_the_list(extract)
 
+        if self.category != "":
+            extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
+
         pages = Pages(extract, self.page)
         
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        callback_base = self.buttons_callback_base()
+        reply_markup = pages.build_buttons(base=callback_base, footer_buttons=keyboards.filter_category_button(self.lang, callback_base, pages.chosen_page))
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
+        if self.category != "":
+            text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[4] is True else ""
@@ -220,7 +243,8 @@ class MessagesLeaderboard(Leaderboard):
                 s.nsfw, 
                 extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
                 RANK() OVER (PARTITION BY s.lang ORDER BY COUNT(m.group_id) DESC),
-                s.lang
+                s.lang,
+                s.category
             FROM messages AS m
             LEFT OUTER JOIN supergroups_ref AS s_ref
             ON s_ref.group_id = m.group_id
@@ -228,7 +252,7 @@ class MessagesLeaderboard(Leaderboard):
             ON s.group_id = m.group_id
             WHERE m.message_date > date_trunc('week', now())
                 AND (s.banned_until IS NULL OR s.banned_until < now()) 
-            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang
+            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
             ORDER BY leaderboard DESC
             """
         return database.query_r(query)
@@ -238,6 +262,7 @@ class MembersLeaderboard(Leaderboard):
     CODE = 'mml'
     CACHE_SECONDS = 60*10
     INDEX_LANG = 2
+    INDEX_CATEGORY = 8
 
     def build_page(self):
         # Thank https://stackoverflow.com/a/46496407/8372336 to make clear this query
@@ -249,7 +274,8 @@ class MembersLeaderboard(Leaderboard):
             supergroups_ref.username, 
             extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
             supergroups.nsfw,
-            RANK() OVER(ORDER BY members.amount DESC)
+            RANK() OVER(ORDER BY members.amount DESC),
+            supergroups.category
         FROM
         -- Window function to get only de last_date:
             (SELECT last_members.group_id,last_members.amount
@@ -270,13 +296,19 @@ class MembersLeaderboard(Leaderboard):
         if extract is None:
             extract = database.query_r(query, self.region)
             self.cache_the_list(extract)
-            
+        
+        if self.category != "":
+            extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]    
+        
         pages = Pages(extract, self.page)
 
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        callback_base = self.buttons_callback_base()
+        reply_markup = pages.build_buttons(base=callback_base, footer_buttons=keyboards.filter_category_button(self.lang, callback_base, pages.chosen_page))
 
         emoji_region = supported_langs.COUNTRY_FLAG[self.region]
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
+        if self.category != "":
+            text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[6] is True else ""
@@ -299,7 +331,8 @@ class MembersLeaderboard(Leaderboard):
                 supergroups_ref.username, 
                 extract(epoch from supergroups.joined_the_bot at time zone 'utc') AS dt,
                 supergroups.nsfw,
-                RANK() OVER (PARTITION BY supergroups.lang ORDER BY members.amount DESC)
+                RANK() OVER (PARTITION BY supergroups.lang ORDER BY members.amount DESC),
+                supergroups.category
             FROM
             -- Window function to get only de last_date:
                 (SELECT last_members.group_id,last_members.amount
@@ -342,7 +375,7 @@ class GroupLeaderboard(Leaderboard):
 
         pages = Pages(extract, self.page)
 
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base())
+        reply_markup = pages.build_buttons(base=self.buttons_callback_base(), only_admins=True)
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard")
         text += "\n\n"

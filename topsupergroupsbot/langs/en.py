@@ -226,3 +226,25 @@ feedback = "feedback"
 source_code = "source code"
 commands = "commands"
 how_to_use_in_groups = "usage in groups"
+
+
+category = "Category"
+choose_group_category = "Choose the category that better fits this group"
+categories = {
+    'news': 'news',
+    'science_and_education': 'science&education',
+    'religion': 'religion',
+    'entertainment': 'entertainment',
+    'family_and_home': 'family&home',
+    'sport': 'sport',
+    'art_and_culture': 'art&culture',
+    'politicts': 'politicts',
+    'information_technology': 'IT&tech',
+    'game_and_apps': 'games&apps',
+    'love': 'love',
+    'tourism': 'tourism',
+    'economics': 'economics'
+}
+filter_by_category = 'filter category'
+choose_category_to_filter = "choose one of the following categories to filter the leaderboard"
+remove_filter = "remove filter"

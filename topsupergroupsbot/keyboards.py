@@ -29,6 +29,25 @@ from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import emojis
 from topsupergroupsbot import constants as c
+from topsupergroupsbot import categories
+
+
+
+def filter_category_button(lang, base, chosen_page):
+    category = base.split(":")[4]
+    if category != "":
+        return [
+            InlineKeyboardButton(
+                text=get_lang.get_string(lang, 'remove_filter'), 
+                callback_data=":".join(base.split(":")[:4]).format(page=1)+":"
+            )
+        ]
+    return [
+        InlineKeyboardButton(
+            text=get_lang.get_string(lang, 'filter_by_category'), 
+            callback_data='fc:'+base.format(page=chosen_page)
+        )
+    ]
 
 
 # INLINE KEYBOARDS
@@ -58,7 +77,11 @@ def main_group_settings_kb(lang):
     digest = InlineKeyboardButton(
             text=get_lang.get_string(lang, "group_digest_button"),
             callback_data="digest_group")
-    buttons_list = [[button_lang], [button_adult], [vote_link], [digest]]
+    category = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "category"),
+        callback_data="category"
+    )
+    buttons_list = [[button_lang], [button_adult], [vote_link], [digest], [category]]
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
@@ -303,5 +326,47 @@ def back_main_private_help_kb(lang):
         callback_data="back_main_private_help"
     )
     buttons_list = [[back]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
+def group_categories_kb(lang, current_category):
+    buttons_list = []
+    strings = get_lang.get_string(lang, "categories")
+    for i in sorted(categories.CODES.items(), key=lambda x: x[1]):
+        buttons_list.append(InlineKeyboardButton(
+            text=emojis.CURRENT_CHOICE+strings[i[1]] if i[0] == current_category else strings[i[1]],
+            callback_data="set_group_category:"+str(i[0]))
+        )
+    footer = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data="main_group_settings_creator")
+    footer_buttons = [footer]
+    buttons_list = build_menu(
+        buttons_list,
+        n_cols=2,
+        footer_buttons=footer_buttons
+    )
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
+def filter_by_category_leaderboard_kb(lang, base, back_callback):
+    buttons_list = []
+    strings = get_lang.get_string(lang, "categories")
+    for i in sorted(categories.CODES.items(), key=lambda x: x[1]):
+        buttons_list.append(InlineKeyboardButton(
+            text=strings[i[1]],
+            callback_data=base+str(i[0]))
+        )
+    footer = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data=back_callback)
+    footer_buttons = [footer]
+    buttons_list = build_menu(
+        buttons_list,
+        n_cols=2,
+        footer_buttons=footer_buttons
+    )
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard

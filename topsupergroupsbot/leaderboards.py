@@ -119,7 +119,7 @@ class VotesLeaderboard(Leaderboard):
             self.cache_the_list(extract)
 
         if self.category != "":
-            extract = [i for i in extract if i[8] == self.category]
+            extract = [i for i in extract if i[9] == self.category]
 
         pages = Pages(extract, self.page)
 

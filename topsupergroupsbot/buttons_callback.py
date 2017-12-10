@@ -37,7 +37,6 @@ from telegram.error import (TelegramError,
 
 def callback_query(bot, update):
     query = update.callback_query
-    print(query.data)
 
     if query.data.startswith("set_group_lang_"):
         choose_lang(bot, query)

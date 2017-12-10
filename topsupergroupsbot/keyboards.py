@@ -34,6 +34,14 @@ from topsupergroupsbot import categories
 
 
 def filter_category_button(lang, base, chosen_page):
+    category = base.split(":")[4]
+    if category != "":
+        return [
+            InlineKeyboardButton(
+                text=get_lang.get_string(lang, 'remove_filter'), 
+                callback_data=":".join(base.split(":")[:4]).format(page=1)+":"
+            )
+        ]
     return [
         InlineKeyboardButton(
             text=get_lang.get_string(lang, 'filter_by_category'), 

@@ -20,6 +20,7 @@ import html
 from topsupergroupsbot import database
 from topsupergroupsbot import utils
 from topsupergroupsbot import get_lang
+from topsupergroupsbot import categories
 
 from telegram.error import (TelegramError, 
                             Unauthorized, 
@@ -181,7 +182,8 @@ def infoid_from_db(tgid):
             banned_until,
             ban_reason, 
             bot_inside,
-            last_date
+            last_date,
+            category
         FROM supergroups
         WHERE group_id = %s
         """
@@ -197,6 +199,7 @@ def infoid_from_db(tgid):
         text += "ban_reason: {}\n".format(extract[5])
         text += "bot_inside: {}\n".format(extract[6])
         text += "last_date: {}\n".format(extract[7])
+        text += "category: {}\n".format(categories.CODES[extract[8]])
     return text
 
 

@@ -265,6 +265,7 @@ def ban_group(bot, update, args):
     bot.leaveChat(group_id)
     query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
     database.query_w(query, group_id)
+    update.message.reply_text("Done!")
 
 
 @utils.bot_owner_only

@@ -40,9 +40,12 @@ def start(bot, update, args):
     first_arg = args[0]
     if first_arg.startswith("vote"):
         votelink.send_vote_by_link(bot, update, first_arg)
+    elif first_arg == "aboutyou":
+        aboutyou(bot, update)
     elif first_arg == "groups_working":
         send_groups_working(bot, update)
         return
+
 
 
 def start_no_params(bot, update):

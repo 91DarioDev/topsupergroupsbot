@@ -229,7 +229,7 @@ how_to_use_in_groups = "usage in groups"
 
 
 category = "Category"
-choose_group_category = "Choose the category that better fits this group"
+choose_group_category = "Choose the category that better fits this group. Do not lie or we'll ban the group."
 categories = {
     'news': 'news',
     'science_and_education': 'science&education',

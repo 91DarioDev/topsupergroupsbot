@@ -229,7 +229,7 @@ how_to_use_in_groups = "uso nei gruppi"
 
 
 category = "Categoria"
-choose_group_category = "Scegli la categoria che si addice meglio a questo gruppo"
+choose_group_category = "Scegli la categoria che si addice meglio a questo gruppo. Non mentire o banneremo il gruppo."
 
 categories = {
     'news': 'news',

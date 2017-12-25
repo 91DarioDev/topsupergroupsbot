@@ -49,9 +49,7 @@ def start(bot, update, args):
 
 
 def start_no_params(bot, update):
-    guessed_lang = utils.guessed_user_lang(bot, update)
-    query = "UPDATE users SET lang = %s WHERE user_id = %s"
-    database.query_w(query, guessed_lang, update.message.from_user.id)
+    lang = utils.get_db_lang(update.message.from_user.id)
     text = get_lang.get_string(guessed_lang, "help_message")
     reply_markup = keyboards.help_kb(guessed_lang)
     update.message.reply_text(text=text, parse_mode="HTML", reply_markup=reply_markup)

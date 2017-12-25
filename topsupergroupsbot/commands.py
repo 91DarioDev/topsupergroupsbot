@@ -50,8 +50,8 @@ def start(bot, update, args):
 
 def start_no_params(bot, update):
     lang = utils.get_db_lang(update.message.from_user.id)
-    text = get_lang.get_string(guessed_lang, "help_message")
-    reply_markup = keyboards.help_kb(guessed_lang)
+    text = get_lang.get_string(lang, "help_message")
+    reply_markup = keyboards.help_kb(lang)
     update.message.reply_text(text=text, parse_mode="HTML", reply_markup=reply_markup)
 
 

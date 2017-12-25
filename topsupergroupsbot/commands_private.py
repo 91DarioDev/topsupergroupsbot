@@ -266,8 +266,8 @@ def ban_group(bot, update, args):
     try:
         bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')
         bot.leaveChat(group_id)
-    except TelegramError as e:
-        update.message.reply_text(e)
+    except Unauthorized as e:
+        update.message.reply_text(e.message)
 
     query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
     database.query_w(query, group_id)

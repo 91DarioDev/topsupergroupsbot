@@ -259,10 +259,16 @@ def ban_group(bot, update, args):
     text = get_lang.get_string(lang, "banned_until_leave").format(
             utils.formatted_datetime_l(banned_until.replace(microsecond=0), lang), 
             shown_reason)
-    text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(creator.user.id, 
-                                                            html.escape(creator.user.first_name))
-    bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')
-    bot.leaveChat(group_id)
+    text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(
+        creator.user.id, 
+        html.escape(creator.user.first_name)
+    )
+    try:
+        bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')
+        bot.leaveChat(group_id)
+    except TelegramError as e:
+        update.message.reply_text(e)
+
     query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
     database.query_w(query, group_id)
     update.message.reply_text("Done!")

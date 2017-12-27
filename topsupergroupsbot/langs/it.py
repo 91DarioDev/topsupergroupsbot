@@ -249,3 +249,5 @@ categories = {
 filter_by_category = 'filtra categoria'
 choose_category_to_filter = "scegli una delle seguenti categorie per filtrare la classifica"
 remove_filter = "rimuovi filtro"
+
+change_vote = "modifica voto"

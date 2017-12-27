@@ -134,6 +134,20 @@ def callback_query(bot, update):
     elif query.data.startswith("fc:"):
         filter_by_category(bot, query)
 
+    elif query.data.startswith("change_vote:"):
+        change_vote(bot, query)
+
+
+def change_vote(bot, query):
+    query.answer()
+    lang = utils.get_db_lang(query.from_user.id)
+    group_id = query.data.split(":")[1]
+    reply_markup = keyboards.vote_group_kb(group_id, lang)
+    try:
+        query.message.edit_reply_markup(reply_markup=reply_markup)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e) 
+
 
 def filter_by_category(bot, query):
     lang = utils.get_db_lang(query.from_user.id)

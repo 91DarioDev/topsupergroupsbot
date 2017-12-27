@@ -135,6 +135,15 @@ def vote_group_kb(group_id, lang):
     return keyboard
 
 
+def change_vote_kb(group_id, lang):
+    button_back = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "change_vote"),
+            callback_data="change_vote:{}".format(group_id))
+    buttons_list = [[button_back]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
 def weekly_group_digest_kb(lang, value):
     yes = get_lang.get_string(lang, "yes")
     no = get_lang.get_string(lang, "no")

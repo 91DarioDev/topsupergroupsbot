@@ -424,7 +424,7 @@ def current_page(bot, query):
 
 @utils.admin_button_only
 def current_page_admin(bot, query):
-    group_id = query.chat.id
+    group_id = query.message.chat.id
     query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
     extract = database.query_r(query_db, group_id, one=True)
     lang = extract[0] if extract is not None else None

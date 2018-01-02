@@ -1,5 +1,5 @@
 # TopSupergroupsBot - A telegram bot for telegram public groups leaderboards
-# Copyright (C) 2017  Dario <dariomsn@hotmail.it> (github.com/91DarioDev)
+# Copyright (C) 2017-2018  Dario <dariomsn@hotmail.it> (github.com/91DarioDev)
 #
 # TopSupergroupsBot is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -126,7 +126,7 @@ def settings_group(bot, update):
     lang = database.query_r(query_db, update.message.chat.id, one=True)[0]
     text = get_lang.get_string(lang, "choose_group_lang")
     reply_markup = keyboards.main_group_settings_kb(lang)
-    update.message.reply_text(text=text, reply_markup=reply_markup)
+    update.message.reply_text(text=text, reply_markup=reply_markup, quote=False)
 
 
 @utils.admin_command_only
@@ -382,5 +382,4 @@ def group_rank(bot, update):
     except KeyError:
         pass
 
-    update.message.reply_text(text=text, parse_mode='HTML')
-
+    update.message.reply_text(text=text, parse_mode='HTML', quote=False)

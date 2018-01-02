@@ -1,5 +1,5 @@
 # TopSupergroupsBot - A telegram bot for telegram public groups leaderboards
-# Copyright (C) 2017  Dario <dariomsn@hotmail.it> (github.com/91DarioDev)
+# Copyright (C) 2017-2018  Dario <dariomsn@hotmail.it> (github.com/91DarioDev)
 #
 # TopSupergroupsBot is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -30,6 +30,7 @@ from topsupergroupsbot import categories
 from topsupergroupsbot.pages import Pages
 
 from telegram import ParseMode
+from telegram.error import BadRequest
 from telegram.ext.dispatcher import run_async
 
 
@@ -401,11 +402,23 @@ def groupleaderboard(bot, update):
 
     leaderboard = GroupLeaderboard(lang=lang, page=1)
     result = leaderboard.build_page(group_id)
-    update.message.reply_text(
-            text=result[0],
-            reply_markup=result[1],
-            parse_mode=ParseMode.HTML,
-            disable_notification=True)
+    try:
+        update.message.reply_text(
+                text=result[0],
+                reply_markup=result[1],
+                parse_mode=ParseMode.HTML,
+                disable_notification=True)
+    except BadRequest as e:
+        if str(e) == "Reply message not found":
+            update.message.reply_text(
+                text=result[0],
+                reply_markup=result[1],
+                parse_mode=ParseMode.HTML,
+                disable_notification=True,
+                quote=False)
+        else:
+            raise
+
 
 
 @utils.private_only

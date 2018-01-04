@@ -394,13 +394,15 @@ class GroupLeaderboard(Leaderboard):
 
 
 @utils.admin_command_only
-def groupleaderboard(bot, update):
+def groupleaderboard(bot, update, args):
     group_id = update.message.chat.id
     query = "SELECT lang FROM supergroups WHERE group_id = %s"
     extract = database.query_r(query, group_id, one=True)
     lang = extract[0]
-
-    leaderboard = GroupLeaderboard(lang=lang, page=1)
+    page = 1
+    if len(args) == 1:
+        page = args[0]
+    leaderboard = GroupLeaderboard(lang=lang, page=page)
     result = leaderboard.build_page(group_id)
     try:
         update.message.reply_text(
@@ -422,11 +424,14 @@ def groupleaderboard(bot, update):
 
 
 @utils.private_only
-def leadervote(bot, update):
+def leadervote(bot, update, args):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
+    page = 1
+    if len(args) == 1:
+        page = args[0]
     leaderboard = VotesLeaderboard(lang, region, 1)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -437,11 +442,14 @@ def leadervote(bot, update):
 
 
 @utils.private_only
-def leadermessage(bot, update):
+def leadermessage(bot, update, args):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
+    page = 1
+    if len(args) == 1:
+        page = args[0]
     leaderboard = MessagesLeaderboard(lang, region, 1)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -453,11 +461,14 @@ def leadermessage(bot, update):
 
 
 @utils.private_only
-def leadermember(bot, update):
+def leadermember(bot, update, args):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
+    page = 1
+    if len(args) == 1:
+        page = args[0]
     leaderboard = MembersLeaderboard(lang, region, 1)
     result = leaderboard.build_page()
     update.message.reply_text(

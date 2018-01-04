@@ -251,3 +251,5 @@ choose_category_to_filter = "scegli una delle seguenti categorie per filtrare la
 remove_filter = "rimuovi filtro"
 
 change_vote = "modifica voto"
+
+advanced_commands = "comandi avanzati"

@@ -379,3 +379,27 @@ def filter_by_category_leaderboard_kb(lang, base, back_callback):
     )
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
+
+
+def advanced_commands_kb(lang):
+    advanced_commands = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "advanced_commands"),
+        callback_data="advanced_commands"
+    )
+    back = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data="back_main_private_help"
+    )
+    buttons_list = [[advanced_commands], [back]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard
+
+
+def back_commands_kb(lang):
+    back = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "back"),
+        callback_data="back_commands"
+    )
+    buttons_list = [[back]]
+    keyboard = InlineKeyboardMarkup(buttons_list)
+    return keyboard

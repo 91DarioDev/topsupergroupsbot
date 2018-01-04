@@ -250,3 +250,7 @@ choose_category_to_filter = "choose one of the following categories to filter th
 remove_filter = "remove filter"
 
 change_vote = "change vote"
+
+advanced_commands = "advanced commands"
+
+advanced_commands_text = "This are the advanced commands"

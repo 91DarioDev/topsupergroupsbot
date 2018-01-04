@@ -401,7 +401,10 @@ def groupleaderboard(bot, update, args):
     lang = extract[0]
     page = 1
     if len(args) == 1:
-        page = int(args[0])
+        try:
+            page = int(args[0])
+        except ValueError:
+            pass
     leaderboard = GroupLeaderboard(lang=lang, page=page)
     result = leaderboard.build_page(group_id)
     try:
@@ -431,7 +434,14 @@ def leadervote(bot, update, args):
     region = extract[1]
     page = 1
     if len(args) == 1:
-        page = int(args[0])
+        try:
+            page = int(args[0])
+            if page <= 0:
+                # send alert
+                return
+        except ValueError:
+            # send alert
+            return
     leaderboard = VotesLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -449,7 +459,10 @@ def leadermessage(bot, update, args):
     region = extract[1]
     page = 1
     if len(args) == 1:
-        page = int(args[0])
+        try:
+            page = int(args[0])
+        except ValueError:
+            pass
     leaderboard = MessagesLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -462,14 +475,16 @@ def leadermessage(bot, update, args):
 
 @utils.private_only
 def leadermember(bot, update, args):
-    print(args)
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
     page = 1
     if len(args) == 1:
-        page = int(args[0])
+        try:
+            page = int(args[0])
+        except ValueError:
+            pass
     leaderboard = MembersLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(

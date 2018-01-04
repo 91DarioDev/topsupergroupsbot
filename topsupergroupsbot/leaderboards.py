@@ -432,7 +432,7 @@ def leadervote(bot, update, args):
     page = 1
     if len(args) == 1:
         page = int(args[0])
-    leaderboard = VotesLeaderboard(lang, region, 1)
+    leaderboard = VotesLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],
@@ -450,7 +450,7 @@ def leadermessage(bot, update, args):
     page = 1
     if len(args) == 1:
         page = int(args[0])
-    leaderboard = MessagesLeaderboard(lang, region, 1)
+    leaderboard = MessagesLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],
@@ -470,7 +470,7 @@ def leadermember(bot, update, args):
     page = 1
     if len(args) == 1:
         page = int(args[0])
-    leaderboard = MembersLeaderboard(lang, region, 1)
+    leaderboard = MembersLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],

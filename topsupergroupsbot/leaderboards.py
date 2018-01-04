@@ -401,7 +401,7 @@ def groupleaderboard(bot, update, args):
     lang = extract[0]
     page = 1
     if len(args) == 1:
-        page = args[0]
+        page = int(args[0])
     leaderboard = GroupLeaderboard(lang=lang, page=page)
     result = leaderboard.build_page(group_id)
     try:
@@ -431,7 +431,7 @@ def leadervote(bot, update, args):
     region = extract[1]
     page = 1
     if len(args) == 1:
-        page = args[0]
+        page = int(args[0])
     leaderboard = VotesLeaderboard(lang, region, 1)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -449,7 +449,7 @@ def leadermessage(bot, update, args):
     region = extract[1]
     page = 1
     if len(args) == 1:
-        page = args[0]
+        page = int(args[0])
     leaderboard = MessagesLeaderboard(lang, region, 1)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -462,13 +462,14 @@ def leadermessage(bot, update, args):
 
 @utils.private_only
 def leadermember(bot, update, args):
+    print(args)
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
     page = 1
     if len(args) == 1:
-        page = args[0]
+        page = int(args[0])
     leaderboard = MembersLeaderboard(lang, region, 1)
     result = leaderboard.build_page()
     update.message.reply_text(

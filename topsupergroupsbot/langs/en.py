@@ -143,7 +143,7 @@ groups_working = (
         "<b>SUPPORTED COMMANDS IN GROUPS</b>:\n"
         "/settings - <i>set group settings</i>\n"
         "/groupleaderboard - <i>get a message containing leaderboard of users that wrote"
-        "more messages in the group during the current week (UTC)</i>\n"
+        "more messages in the group during the current week (UTC). optional param: [number of page]</i>\n"
         "/grouprank - <i>Check the rank of the group</i>"
 )
 

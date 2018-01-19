@@ -141,7 +141,7 @@ groups_working = (
         "<b>COMANDI SUPPPORTATI NEI GRUPPI</b>:\n"
         "/settings - <i>impostazioni gruppo</i>\n"
         "/groupleaderboard - <i>ottieni la classifica degli utenti che hanno scritto "
-        "più messagi nel gruppo durante la settimana corrente (UTC)</i>\n"
+        "più messagi nel gruppo durante la settimana corrente (UTC). parametri opzionali: [numero della pagina]</i>\n"
         "/grouprank - <i>ricevi le posizioni del gruppo</i>"
 )
 

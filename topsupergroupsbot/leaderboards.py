@@ -467,7 +467,29 @@ def filter_private_leaderboards_params(bot, update, args, lang):
 
         # check if category is specified
         if arg.startswith("c="):
-            pass
+            try:
+                category_number = int(arg.replace("c=", ""))
+            except ValueError:
+                update.message.reply_text(
+                    text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                    parse_mode='HTML'
+                )
+                return None
+            if category_number <= 0: # page should be positive
+                update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+                )
+                return None
+            dct = sorted(categories.CODES.items(), key=lambda x: x[1])
+            try:
+                category = dct[category_number - 1][0]
+            except IndexError:
+                update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+                )
+                return None                
 
     return page, category
 
@@ -486,7 +508,7 @@ def leadervote(bot, update, args):
         page, category = result
 
 
-    leaderboard = VotesLeaderboard(lang, region, page)
+    leaderboard = VotesLeaderboard(lang, region, page, category)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],
@@ -502,7 +524,7 @@ def leadermessage(bot, update, args):
     lang = extract[0]
     region = extract[1]
 
-    result = filter_private_leaderboards_params(bot, update, args, lang)
+    result = filter_private_leaderboards_params(bot, update, args, lang, category)
     if result is None:
         return
     else:
@@ -525,7 +547,7 @@ def leadermember(bot, update, args):
     lang = extract[0]
     region = extract[1]
 
-    result = filter_private_leaderboards_params(bot, update, args, lang)
+    result = filter_private_leaderboards_params(bot, update, args, lang, category)
     if result is None:
         return
     else:

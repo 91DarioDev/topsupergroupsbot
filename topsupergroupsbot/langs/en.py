@@ -255,9 +255,10 @@ advanced_commands = "Advanced commands"
 
 advanced_commands_text = (
     "<b>Advanced commands:</b>\n\n"
-    "/leadervote - <i>leaderboard ordered by votes (params: [p=(page number)] [c=(category number)])</i>\n"
-    "/leadermember - <i>leaderboard ordered by members (params: [p=(page number)] [c=(category number)]</i>\n"
-    "/leadermessage - <i>leaderboard ordered by messages (params: [p=(page number)] [c=(category number)]</i>"
+    "/leadervote - <i>leaderboard ordered by votes (optional params: [p=(page number)] [c=(category number)])</i>\n"
+    "/leadermember - <i>leaderboard ordered by members (optional params: [p=(page number)] [c=(category number)]</i>\n"
+    "/leadermessage - <i>leaderboard ordered by messages (optional params: [p=(page number)] [c=(category number)]</i>\n\n"
+    "The category number can be taken counting categories buttons starting from left to right"
 )
 
 groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"

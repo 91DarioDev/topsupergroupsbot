@@ -256,9 +256,10 @@ advanced_commands = "comandi avanzati"
 
 advanced_commands_text = (
     "<b>comandi avanzati:</b>\n\n"
-    "/leadervote - <i>classifica per voti (params: [p=(numero pagina)] [c=(numero categoria)])</i>\n"
-    "/leadermember - <i>classifica per membri (params: [p=(numero pagina)] [c=(numero categoria)]</i>\n"
-    "/leadermessage - <i>classifica per messaggi (params: [p=(numero pagina)] [c=(numero categoria)]</i>"
+    "/leadervote - <i>classifica per voti (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)])</i>\n"
+    "/leadermember - <i>classifica per membri (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n"
+    "/leadermessage - <i>classifica per messaggi (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n\n"
+    "Il numero della categoria può essere ricavato contando i bottoni delle categorie da sinistra vestro destra"
 )
 
 

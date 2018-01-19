@@ -85,10 +85,6 @@ digest_of_the_week_detail = "— {} messaggi in @{}. Posizione: {}\n"
 
 generic_leaderboard = (
         "Scegli uno dei seguenti criteri per ordinare la classifica.\n" 
-        "Queste sono delle scorciatoie per la prossima volta se vuoi fare prima:\n\n"
-        "/leadermember - <i>ordinata per numero di membri</i>\n"
-        "/leadermessage - <i>ordinata per numero di messaggi inviati in questa settimana</i>\n"
-        "/leadervote - <i>ordinata per media voti</i>\n\n"
         "La tua regione: {}. Premi /region per vedere gruppi di altre regioni.")
 
 by_members = "Per membri"
@@ -145,7 +141,7 @@ groups_working = (
         "<b>COMANDI SUPPPORTATI NEI GRUPPI</b>:\n"
         "/settings - <i>impostazioni gruppo</i>\n"
         "/groupleaderboard - <i>ottieni la classifica degli utenti che hanno scritto "
-        "più messagi nel gruppo durante la settimana corrente (UTC)</i>\n"
+        "più messagi nel gruppo durante la settimana corrente (UTC). parametri opzionali: [numero della pagina]</i>\n"
         "/grouprank - <i>ricevi le posizioni del gruppo</i>"
 )
 
@@ -251,3 +247,18 @@ choose_category_to_filter = "scegli una delle seguenti categorie per filtrare la
 remove_filter = "rimuovi filtro"
 
 change_vote = "modifica voto"
+
+advanced_commands = "comandi avanzati"
+
+advanced_commands_text = (
+    "<b>comandi avanzati:</b>\n\n"
+    "/leadervote - <i>classifica per voti (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)])</i>\n"
+    "/leadermember - <i>classifica per membri (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n"
+    "/leadermessage - <i>classifica per messaggi (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n\n"
+    "Il numero della categoria può essere ricavato contando i bottoni delle categorie da sinistra vestro destra"
+)
+
+
+groupleaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo:\n\n<code>{} [numero della pagina(opzionale)]</code>"
+
+avdanced_leaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo. I parametri sono opzionali:\n\n<code>{} [p=(numero pagina)] [c=(numero categoria)]</code>"

@@ -113,7 +113,7 @@ def callback_query(bot, update):
     elif query.data == "feedback_reply":
         feedback_reply(bot, query)
 
-    elif query.data == "help_commands":
+    elif query.data == "help_commands" or query.data == "back_commands":
         help_commands(bot, query)
 
     elif query.data == "back_main_private_help":
@@ -136,6 +136,21 @@ def callback_query(bot, update):
 
     elif query.data.startswith("change_vote:"):
         change_vote(bot, query)
+
+    elif query.data == "advanced_commands":
+        advanced_commands(bot, query)
+
+
+
+def advanced_commands(bot, query):
+    query.answer()
+    lang = utils.get_db_lang(query.from_user.id)
+    reply_markup = keyboards.back_commands_kb(lang)
+    text = get_lang.get_string(lang, "advanced_commands_text")
+    try:
+        query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)           
 
 
 def change_vote(bot, query):
@@ -234,7 +249,7 @@ def back_main_private_help(bot, query):
 def help_commands(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
     text = get_lang.get_string(lang, "help_commands")
-    reply_markup = keyboards.back_main_private_help_kb(lang)
+    reply_markup = keyboards.advanced_commands_kb(lang)
     query.answer()
     try:
         query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')

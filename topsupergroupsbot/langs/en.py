@@ -86,10 +86,6 @@ digest_of_the_week_detail = "— {} messages in @{}. Position: {}\n"
 
 generic_leaderboard = (
         "Choose one of the following order criterias for the leaderboard.\n" 
-        "If you want to be faster next time there are shortcuts for leaderboards:\n\n"
-        "/leadermember - <i>ordered by amount of members</i>\n"
-        "/leadermessage - <i>ordered by sent messages during the week</i>\n"
-        "/leadervote - <i>ordered by votes average</i>\n\n"
         "Your region: {}. Press /region in case you want to check groups of other regions")
 
 by_members = "By members"
@@ -147,7 +143,7 @@ groups_working = (
         "<b>SUPPORTED COMMANDS IN GROUPS</b>:\n"
         "/settings - <i>set group settings</i>\n"
         "/groupleaderboard - <i>get a message containing leaderboard of users that wrote"
-        "more messages in the group during the current week (UTC)</i>\n"
+        "more messages in the group during the current week (UTC). optional param: [number of page]</i>\n"
         "/grouprank - <i>Check the rank of the group</i>"
 )
 
@@ -250,3 +246,17 @@ choose_category_to_filter = "choose one of the following categories to filter th
 remove_filter = "remove filter"
 
 change_vote = "change vote"
+
+advanced_commands = "Advanced commands"
+
+advanced_commands_text = (
+    "<b>Advanced commands:</b>\n\n"
+    "/leadervote - <i>leaderboard ordered by votes (optional params: [p=(page number)] [c=(category number)])</i>\n"
+    "/leadermember - <i>leaderboard ordered by members (optional params: [p=(page number)] [c=(category number)]</i>\n"
+    "/leadermessage - <i>leaderboard ordered by messages (optional params: [p=(page number)] [c=(category number)]</i>\n\n"
+    "The category number can be taken counting categories buttons starting from left to right"
+)
+
+groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"
+
+avdanced_leaderboard_command_error = "<b>Error:</b>\nuse the command this way. paramters are optional:\n\n<code>{} [p=(page number)] [c=(category number)]</code>"

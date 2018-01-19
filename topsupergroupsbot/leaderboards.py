@@ -394,13 +394,29 @@ class GroupLeaderboard(Leaderboard):
 
 
 @utils.admin_command_only
-def groupleaderboard(bot, update):
+def groupleaderboard(bot, update, args):
     group_id = update.message.chat.id
     query = "SELECT lang FROM supergroups WHERE group_id = %s"
     extract = database.query_r(query, group_id, one=True)
     lang = extract[0]
+    page = 1
 
-    leaderboard = GroupLeaderboard(lang=lang, page=1)
+    if len(args) == 1:
+        try:
+            page = int(args[0])
+            if page <= 0:
+                update.message.reply_text(
+                    text=get_lang.get_string(lang, "groupleaderboard_command_error").format(update.message.text.split(" ")[0]),
+                    parse_mode='HTML'
+                )
+                return
+        except ValueError:
+            update.message.reply_text(
+                text=get_lang.get_string(lang, "groupleaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+            )
+            return
+    leaderboard = GroupLeaderboard(lang=lang, page=page)
     result = leaderboard.build_page(group_id)
     try:
         update.message.reply_text(
@@ -420,14 +436,79 @@ def groupleaderboard(bot, update):
             raise
 
 
+def filter_private_leaderboards_params(bot, update, args, lang):
+    page = 1
+    category = None
+    for arg in args:
+        # check correct use of args
+        if len(args) >= 1 and not ( arg.startswith("p=") or arg.startswith("c=") ):
+            update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+            )
+            return None
+
+        # check if page is specified
+        if arg.startswith('p='):
+            try:
+                page = int(arg.replace("p=", ""))
+            except ValueError:
+                update.message.reply_text(
+                    text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                    parse_mode='HTML'
+                )
+                return None
+            if page <= 0: # page should be positive
+                update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+                )
+                return None
+
+        # check if category is specified
+        if arg.startswith("c="):
+            try:
+                category_number = int(arg.replace("c=", ""))
+            except ValueError:
+                update.message.reply_text(
+                    text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                    parse_mode='HTML'
+                )
+                return None
+            if category_number <= 0: # category should be positive
+                update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+                )
+                return None
+            dct = sorted(categories.CODES.items(), key=lambda x: x[1])
+            try:
+                category = dct[category_number - 1][0]
+            except IndexError:
+                update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+                )
+                return None                
+
+    return page, category
+
 
 @utils.private_only
-def leadervote(bot, update):
+def leadervote(bot, update, args):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    leaderboard = VotesLeaderboard(lang, region, 1)
+
+    result = filter_private_leaderboards_params(bot, update, args, lang)
+    if result is None:
+        return
+    else:
+        page, category = result
+
+
+    leaderboard = VotesLeaderboard(lang, region, page, category)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],
@@ -437,12 +518,19 @@ def leadervote(bot, update):
 
 
 @utils.private_only
-def leadermessage(bot, update):
+def leadermessage(bot, update, args):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    leaderboard = MessagesLeaderboard(lang, region, 1)
+
+    result = filter_private_leaderboards_params(bot, update, args, lang)
+    if result is None:
+        return
+    else:
+        page, category = result
+
+    leaderboard = MessagesLeaderboard(lang, region, page, category)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],
@@ -453,12 +541,19 @@ def leadermessage(bot, update):
 
 
 @utils.private_only
-def leadermember(bot, update):
+def leadermember(bot, update, args):
     query = "SELECT lang, region FROM users WHERE user_id = %s"
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    leaderboard = MembersLeaderboard(lang, region, 1)
+
+    result = filter_private_leaderboards_params(bot, update, args, lang)
+    if result is None:
+        return
+    else:
+        page, category = result
+        
+    leaderboard = MembersLeaderboard(lang, region, page, category)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],

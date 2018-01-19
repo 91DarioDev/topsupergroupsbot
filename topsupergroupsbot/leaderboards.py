@@ -475,7 +475,7 @@ def filter_private_leaderboards_params(bot, update, args, lang):
                     parse_mode='HTML'
                 )
                 return None
-            if category_number <= 0: # page should be positive
+            if category_number <= 0: # category should be positive
                 update.message.reply_text(
                 text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
                 parse_mode='HTML'

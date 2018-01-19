@@ -130,11 +130,11 @@ def settings_group(bot, update):
 
 
 @utils.admin_command_only
-def groupleaderboard(bot, update):
+def groupleaderboard(bot, update, args):
     if update.message.chat.type == "private":
         update.message.reply_text("Only in groups")
         return
-    leaderboards.groupleaderboard(bot, update)
+    leaderboards.groupleaderboard(bot, update, args)
 
 
 def language(bot, update):

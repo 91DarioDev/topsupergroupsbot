@@ -85,10 +85,6 @@ digest_of_the_week_detail = "— {} messaggi in @{}. Posizione: {}\n"
 
 generic_leaderboard = (
         "Scegli uno dei seguenti criteri per ordinare la classifica.\n" 
-        "Queste sono delle scorciatoie per la prossima volta se vuoi fare prima:\n\n"
-        "/leadermember - <i>ordinata per numero di membri</i>\n"
-        "/leadermessage - <i>ordinata per numero di messaggi inviati in questa settimana</i>\n"
-        "/leadervote - <i>ordinata per media voti</i>\n\n"
         "La tua regione: {}. Premi /region per vedere gruppi di altre regioni.")
 
 by_members = "Per membri"

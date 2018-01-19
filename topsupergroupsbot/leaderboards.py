@@ -524,13 +524,13 @@ def leadermessage(bot, update, args):
     lang = extract[0]
     region = extract[1]
 
-    result = filter_private_leaderboards_params(bot, update, args, lang, category)
+    result = filter_private_leaderboards_params(bot, update, args, lang)
     if result is None:
         return
     else:
         page, category = result
 
-    leaderboard = MessagesLeaderboard(lang, region, page)
+    leaderboard = MessagesLeaderboard(lang, region, page, category)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],
@@ -547,13 +547,13 @@ def leadermember(bot, update, args):
     lang = extract[0]
     region = extract[1]
 
-    result = filter_private_leaderboards_params(bot, update, args, lang, category)
+    result = filter_private_leaderboards_params(bot, update, args, lang)
     if result is None:
         return
     else:
         page, category = result
         
-    leaderboard = MembersLeaderboard(lang, region, page)
+    leaderboard = MembersLeaderboard(lang, region, page, category)
     result = leaderboard.build_page()
     update.message.reply_text(
             text=result[0],

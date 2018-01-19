@@ -251,9 +251,14 @@ remove_filter = "remove filter"
 
 change_vote = "change vote"
 
-advanced_commands = "advanced commands"
+advanced_commands = "Advanced commands"
 
-advanced_commands_text = "This are the advanced commands"
+advanced_commands_text = (
+    "<b>Advanced commands:</b>\n\n"
+    "/leadervote - <i>leaderboard ordered by votes (params: [p=(page number)] [c=(category number)])</i>\n"
+    "/leadermember - <i>leaderboard ordered by members (params: [p=(page number)] [c=(category number)]</i>\n"
+    "/leadermessage - <i>leaderboard ordered by messages (params: [p=(page number)] [c=(category number)]</i>"
+)
 
 groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"
 

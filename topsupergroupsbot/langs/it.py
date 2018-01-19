@@ -254,7 +254,13 @@ change_vote = "modifica voto"
 
 advanced_commands = "comandi avanzati"
 
-advanced_commands_text = "Questi sono i comandi avanzati"
+advanced_commands_text = (
+    "<b>comandi avanzati:</b>\n\n"
+    "/leadervote - <i>classifica per voti (params: [p=(numero pagina)] [c=(numero categoria)])</i>\n"
+    "/leadermember - <i>classifica per membri (params: [p=(numero pagina)] [c=(numero categoria)]</i>\n"
+    "/leadermessage - <i>classifica per messaggi (params: [p=(numero pagina)] [c=(numero categoria)]</i>"
+)
+
 
 groupleaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo:\n\n<code>{} [numero della pagine(opzionale)]</code>"
 

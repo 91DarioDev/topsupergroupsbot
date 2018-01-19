@@ -259,6 +259,6 @@ advanced_commands_text = (
 )
 
 
-groupleaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo:\n\n<code>{} [numero della pagine(opzionale)]</code>"
+groupleaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo:\n\n<code>{} [numero della pagina(opzionale)]</code>"
 
 avdanced_leaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo. I parametri sono opzionali:\n\n<code>{} [p=(numero pagina)] [c=(numero categoria)]</code>"

@@ -400,11 +400,22 @@ def groupleaderboard(bot, update, args):
     extract = database.query_r(query, group_id, one=True)
     lang = extract[0]
     page = 1
+
     if len(args) == 1:
         try:
             page = int(args[0])
+            if page <= 0:
+                update.message.reply_text(
+                    text=get_lang.get_string(lang, "groupleaderboard_command_error").format(update.message.text.split(" ")[0]),
+                    parse_mode='HTML'
+                )
+                return
         except ValueError:
-            pass
+            update.message.reply_text(
+                text=get_lang.get_string(lang, "groupleaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+            )
+            return
     leaderboard = GroupLeaderboard(lang=lang, page=page)
     result = leaderboard.build_page(group_id)
     try:
@@ -425,6 +436,41 @@ def groupleaderboard(bot, update, args):
             raise
 
 
+def filter_private_leaderboards_params(bot, update, args, lang):
+    page = 1
+    category = None
+    for arg in args:
+        # check correct use of args
+        if len(args) >= 1 and not ( arg.startswith("p=") or arg.startswith("c=") ):
+            update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+            )
+            return None
+
+        # check if page is specified
+        if arg.startswith('p='):
+            try:
+                page = int(arg.replace("p=", ""))
+            except ValueError:
+                update.message.reply_text(
+                    text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                    parse_mode='HTML'
+                )
+                return None
+            if page <= 0: # page should be positive
+                update.message.reply_text(
+                text=get_lang.get_string(lang, "avdanced_leaderboard_command_error").format(update.message.text.split(" ")[0]),
+                parse_mode='HTML'
+                )
+                return None
+
+        # check if category is specified
+        if arg.startswith("c="):
+            pass
+
+    return page, category
+
 
 @utils.private_only
 def leadervote(bot, update, args):
@@ -432,16 +478,14 @@ def leadervote(bot, update, args):
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    page = 1
-    if len(args) == 1:
-        try:
-            page = int(args[0])
-            if page <= 0:
-                # send alert
-                return
-        except ValueError:
-            # send alert
-            return
+
+    result = filter_private_leaderboards_params(bot, update, args, lang)
+    if result is None:
+        return
+    else:
+        page, category = result
+
+
     leaderboard = VotesLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -457,12 +501,13 @@ def leadermessage(bot, update, args):
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    page = 1
-    if len(args) == 1:
-        try:
-            page = int(args[0])
-        except ValueError:
-            pass
+
+    result = filter_private_leaderboards_params(bot, update, args, lang)
+    if result is None:
+        return
+    else:
+        page, category = result
+
     leaderboard = MessagesLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(
@@ -479,12 +524,13 @@ def leadermember(bot, update, args):
     extract = database.query_r(query, update.message.from_user.id, one=True)
     lang = extract[0]
     region = extract[1]
-    page = 1
-    if len(args) == 1:
-        try:
-            page = int(args[0])
-        except ValueError:
-            pass
+
+    result = filter_private_leaderboards_params(bot, update, args, lang)
+    if result is None:
+        return
+    else:
+        page, category = result
+        
     leaderboard = MembersLeaderboard(lang, region, page)
     result = leaderboard.build_page()
     update.message.reply_text(

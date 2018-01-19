@@ -253,3 +253,9 @@ remove_filter = "rimuovi filtro"
 change_vote = "modifica voto"
 
 advanced_commands = "comandi avanzati"
+
+advanced_commands_text = "Questi sono i comandi avanzati"
+
+groupleaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo:\n\n<code>{} [numero della pagine(opzionale)]</code>"
+
+avdanced_leaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo. I parametri sono opzionali:\n\n<code>{} [p=(numero pagina)] [c=(numero categoria)]</code>"

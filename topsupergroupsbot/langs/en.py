@@ -254,3 +254,7 @@ change_vote = "change vote"
 advanced_commands = "advanced commands"
 
 advanced_commands_text = "This are the advanced commands"
+
+groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"
+
+avdanced_leaderboard_command_error = "<b>Error:</b>\nuse the command this way. paramters are optional:\n\n<code>{} [p=(page number)] [c=(category number)]</code>"

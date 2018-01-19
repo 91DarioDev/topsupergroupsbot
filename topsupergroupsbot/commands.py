@@ -30,6 +30,24 @@ from topsupergroupsbot import emojis
 from topsupergroupsbot import cache_users_stats
 from topsupergroupsbot import cache_groups_rank
 
+
+def first_start(bot, update):
+    user_id = update.message.from_user.id
+    query = """
+        SELECT 1 
+        FROM USERS 
+        WHERE user_id = %s 
+        FETCH FIRST 1 ROW ONLY
+    """
+    extract = database.query_r(query, user_id, one=True)
+    if extract is None:  # this is the first time the user starts the bot
+        # send region choose
+        guessed_lang = utils.guessed_user_lang(bot, update)
+        text = get_lang.get_string(guessed_lang, "choose_region")
+        reply_markup = keyboards.private_region_kb(guessed_lang, guessed_lang)
+        update.message.reply_text(text=text, reply_markup=reply_markup)
+
+
 @utils.private_only
 def start(bot, update, args):
     start_help_buttons(bot, update)
@@ -45,7 +63,6 @@ def start(bot, update, args):
     elif first_arg == "groups_working":
         send_groups_working(bot, update)
         return
-
 
 
 def start_no_params(bot, update):

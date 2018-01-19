@@ -89,6 +89,9 @@ def main():
 
     # handlers
 
+    # first start
+    dp.add_handler(CommandHandler('start', commands.first_start), -2) 
+
     # before processing
     dp.add_handler(MessageHandler(Filters.all, messages.before_processing), -1)
 

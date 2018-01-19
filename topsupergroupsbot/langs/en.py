@@ -31,7 +31,7 @@ choose_group_lang = (
         "Don't lie or we'll ban this group")
 
 group_settings = "Group settings:"
-messages_in_groups_position = "— {} messages in @{}. Position: {}\n"
+messages_in_groups_position = "— {} messages in @{}. Your position: {}\n"
 have_adult = "Does this group contains adult content?"
 here_group_vote_link = "This is the link to directly redirect users to vote this group"
 canceled = "Canceled"
@@ -80,9 +80,9 @@ private_digest = "You can receive a digest at the end of every week. Disable or 
 weekly_own_digest = "Do you want to get anytime a week is over statistic about you during the past week?"
 hello_name = "Hello {name}"
 digest_of_the_week_global = ("Another week is over!\nDuring the last week you globally sent {} messages "
-                             "in {} groups. Position: {}\n")
+                             "in {} groups. Your position worldwide: {}\n")
 
-digest_of_the_week_detail = "— {} messages in @{}. Position: {}\n"
+digest_of_the_week_detail = "— {} messages in @{}. Your position: {}\n"
 
 generic_leaderboard = (
         "Choose one of the following order criterias for the leaderboard.\n" 
@@ -116,7 +116,7 @@ hey_no_lang_set = (
 
 you_inactive_this_week = "This week you didn't sent messages in groups yet"
 this_week_you_sent_this = "This week you already sent:"
-you_globally_this_week = "You globally already sent {} messages in {} groups during this week. Position: {}"
+you_globally_this_week = "You globally already sent {} messages in {} groups during this week. Your position worldwide: {}"
 
 unsupported_chat = (
         "I have been programmed to take part only in public groups. "

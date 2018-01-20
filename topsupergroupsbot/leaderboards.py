@@ -395,9 +395,9 @@ class GroupLeaderboard(Leaderboard):
                     utils.sep_l(user[1], self.lang)
                 )
             else:  # it's a private chat
-                text += "{}) @{}: {}\n".format(
+                text += "{}) {}: {}\n".format(
                     offset, 
-                    html.escape(user[4] if user[4] is not None else user[2]), 
+                    html.escape("@"+str(user[4]) if user[4] is not None else user[2]), 
                     utils.sep_l(user[1], self.lang)
                 )
         return text, reply_markup

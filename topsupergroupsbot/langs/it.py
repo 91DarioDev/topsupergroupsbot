@@ -64,7 +64,7 @@ choose_region = ("Scegli la tua regione. Sarà il filtro di default per la lingu
 
 pre_leadervote = "Top supergruppi ordinati per media voti. Hanno almeno {} voti.\nRegione: {}"
 pre_leadermessage = "Top supergruppi ordinati per numero di messaggi inviati questa settimana (UTC).\nRegione: {}"
-pre_groupleaderboard = "Top utenti ordinati per numero di messaggi inviati durante questa settimana (UTC) in questo gruppo."
+pre_groupleaderboard = "Top utenti ordinati per numero di messaggi inviati durante questa settimana (UTC) in @{}."
 pre_leadermember = "Top supergruppi ordinati per numero di membri.\nRegione: {}"
 
 
@@ -270,3 +270,8 @@ error_param_group_rank_private = (
 )
 
 cant_check_this = "Mi dispiace, @{} non è nel nostro database."
+
+error_param_group_leaderboard_private = (
+    "<b>Errore:</b>\nDevi scrivere come parametro di questo comando l'username del gruppo per il quale vuoi controllare il groupleaderboard."
+    "Non importa se scrivi o no \"@\".\n\nEsempio: <code>/grouprank il_mio_gruppo</code>"
+)

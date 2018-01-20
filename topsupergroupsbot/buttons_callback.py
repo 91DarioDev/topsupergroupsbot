@@ -448,13 +448,17 @@ def current_page_admin(bot, query):
 
 def lbpage(bot, query):
     params = query.data.split(":")
-    page = params[1]
     lb_type = params[2]
-    region = params[3]
-    category = params[4]
+    if lb_type == leaderboards.Leaderboard.GROUP:
+        page = params[1]
+        group_id_buttons = params[3]
+    else:
+        page = params[1]
+        region = params[3]
+        category = params[4]
 
     if lb_type == leaderboards.Leaderboard.GROUP:
-        lbpage_igl(bot, query, params)
+        lbpage_igl(bot, query, page, group_id_buttons)
     elif lb_type in [
         leaderboards.Leaderboard.VOTES,
         leaderboards.Leaderboard.MESSAGES,
@@ -464,15 +468,35 @@ def lbpage(bot, query):
     query.answer()
 
 
+def lbpage_igl(bot, query, page, group_id_buttons):
+    if query.message.chat.type != 'private':
+        lbpage_igl_group(bot, query, page, group_id_buttons)
+    else:
+        lbpage_igl_private(bot, query, page, group_id_buttons)
+
+
+def lbpage_igl_private(bot, query, page, group_id_buttons):
+    lang = utils.get_db_lang(query.from_user.id)
+    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=int(page), group_id=group_id_buttons)
+    query_db = "SELECT username FROM supergroups_ref WHERE group_id = %s LIMIT 1"
+    extract = database.query_r(query_db, group_id_buttons, one=True)
+    result = leaderboard.build_page(group_username=extract[0], only_admins=False)
+    try:
+        query.edit_message_text(
+            text=result[0], reply_markup=result[1],
+            parse_mode=ParseMode.HTML, disable_notification=True)
+    except TelegramError as e:
+        if str(e) != "Message is not modified": print(e)
+
+
 @utils.admin_button_only
-def lbpage_igl(bot, query, params):
+def lbpage_igl_group(bot, query, page, group_id_buttons):
     group_id = query.message.chat.id
     query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
     extract = database.query_r(query_db, group_id, one=True)
     lang = extract[0]
-    page = params[1]
-    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=int(page))
-    result = leaderboard.build_page(group_id)
+    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=int(page), group_id=group_id_buttons)
+    result = leaderboard.build_page(group_username=query.message.chat.username)
     try:
         query.edit_message_text(
             text=result[0], reply_markup=result[1],

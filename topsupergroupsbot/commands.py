@@ -128,7 +128,10 @@ def groupleaderboard_private(bot, update, args):
                 update.message.reply_text(text=get_lang.get_string(lang, "error_param_group_leaderboard_private"), parse_mode='HTML')
         else:
             group_username = arg
+            if group_username.startswith("@"):
+                group_username = group_username.replace("@", "")
 
+                
     query = "SELECT group_id FROM supergroups_ref WHERE LOWER(username) = LOWER(%s)"
     extract = database.query_r(query, group_username)
 
@@ -143,8 +146,8 @@ def groupleaderboard_private(bot, update, args):
         return
 
     group_id = extract[0][0]
-    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=page)
-    result = leaderboard.build_page(group_id)
+    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=page, group_id=group_id)
+    result = leaderboard.build_page(group_username=group_username, only_admins=False)
 
     update.message.reply_text(
         text=result[0],

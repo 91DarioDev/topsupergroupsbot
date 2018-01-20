@@ -42,13 +42,16 @@ class Leaderboard:
 
     NEW_INTERVAL = 60*60*24*7
 
-    def __init__(self, lang=None, region="", page=1, category=None):
+    def __init__(self, lang=None, region="", page=1, category=None, group_id=None):
         self.lang = lang
         self.region = region
         self.page = page
         self.category = "" if category is None else category
+        self.group_id = group_id
 
     def buttons_callback_base(self):
+        if self.CODE == GroupLeaderboard.CODE:
+            return "lbpage:{page}:{lb_type}:{group_id}".format(page='{page}', lb_type=self.CODE, group_id=self.group_id)
         return "lbpage:{page}:{lb_type}:{region}:{category}".format(
                 page='{page}',
                 lb_type=self.CODE, 
@@ -355,7 +358,7 @@ class GroupLeaderboard(Leaderboard):
     CODE = 'igl'
     CACHE_SECONDS = 60*3
 
-    def build_page(self, group_id):
+    def build_page(self, group_username, only_admins=True):
         query = """
             SELECT 
                 m.user_id, 
@@ -372,13 +375,13 @@ class GroupLeaderboard(Leaderboard):
             GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
             """
 
-        extract = database.query_r(query, group_id)
+        extract = database.query_r(query, self.group_id)
 
         pages = Pages(extract, self.page)
 
-        reply_markup = pages.build_buttons(base=self.buttons_callback_base(), only_admins=True)
+        reply_markup = pages.build_buttons(base=self.buttons_callback_base(), only_admins=only_admins)
 
-        text = get_lang.get_string(self.lang, "pre_groupleaderboard")
+        text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(group_username)
         text += "\n\n"
         first_number_of_page = pages.first_number_of_page()
         offset = first_number_of_page - 1
@@ -416,8 +419,8 @@ def groupleaderboard(bot, update, args):
                 parse_mode='HTML'
             )
             return
-    leaderboard = GroupLeaderboard(lang=lang, page=page)
-    result = leaderboard.build_page(group_id)
+    leaderboard = GroupLeaderboard(lang=lang, page=page, group_id=group_id)
+    result = leaderboard.build_page(group_username=update.message.chat.username)
     try:
         update.message.reply_text(
                 text=result[0],

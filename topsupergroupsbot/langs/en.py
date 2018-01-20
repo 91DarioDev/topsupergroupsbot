@@ -66,7 +66,7 @@ choose_region = (
 
 pre_leadervote = "Top supergroups ordered by average of votes. Having at least {} votes.\nRegion: {}"
 pre_leadermessage = "Top supergroups ordered by amount of sent messages during this week (UTC).\nRegion: {}"
-pre_groupleaderboard = "Top users ordered by more messages sent during this week (UTC) in this group."
+pre_groupleaderboard = "Top users ordered by more messages sent during this week (UTC) in @{}."
 pre_leadermember = "Top supergroups ordered by amount of members.\nRegion: {}"
 
 
@@ -269,4 +269,7 @@ error_param_group_rank_private = (
 
 cant_check_this = "Sorry, @{} is not in our database."
 
-error_param_group_leaderboard_private = "test"
+error_param_group_leaderboard_private = (
+    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the groupleaderboard."
+    "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/groupleaderboard my_favorite_group</code>"
+)

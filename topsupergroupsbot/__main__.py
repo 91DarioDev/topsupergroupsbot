@@ -100,6 +100,7 @@ def main():
     dp.add_handler(CommandHandler('vote', commands.vote, pass_args=True))
     dp.add_handler(CommandHandler('start', commands.start, pass_args=True))
     dp.add_handler(CommandHandler('help', commands.help))
+    dp.add_handler(CommandHandler('groupleaderboard', commands.groupleaderboard_private, filters=Filters.private, pass_args=True))  # this should come before the one for groups
     dp.add_handler(CommandHandler('groupleaderboard', commands.groupleaderboard, pass_args=True))
     dp.add_handler(CommandHandler('grouprank', commands.group_rank_private, filters=Filters.private, pass_args=True))  # this should come before the one for groups
     dp.add_handler(CommandHandler('grouprank', commands.group_rank))

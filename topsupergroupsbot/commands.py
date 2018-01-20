@@ -106,7 +106,60 @@ def group_rank_private(bot, update, args):
 
     group_id = extract[0][0]
     update.message.reply_text(text=group_rank_text(group_id, lang), parse_mode="HTML")
-      
+
+
+def groupleaderboard_private(bot, update, args):
+    user_id = update.message.from_user.id
+    lang = utils.get_db_lang(user_id)
+    if len(args) > 2 or len(args) == 0:
+        text = get_lang.get_string(lang, "error_param_group_leaderboard_private")
+        update.message.reply_text(text, parse_mode="HTML")
+        return
+
+    if len(args) == 2 and (any([arg.startswith("p=") for arg in args])) is False:
+        
+        text = get_lang.get_string(lang, "error_param_group_leaderboard_private")
+        update.message.reply_text(text, parse_mode="HTML")
+        return
+
+    page = 1
+    for arg in args:
+        if arg.startswith('p='):
+            try:
+                page = int(arg.replace('p=', ''))
+            except ValueError:
+                update.message.reply_text(text=get_lang.get_string(lang, "error_param_group_leaderboard_private"), parse_mode='HTML')
+                return
+            if page <= 0:
+                update.message.reply_text(text=get_lang.get_string(lang, "error_param_group_leaderboard_private"), parse_mode='HTML')
+        else:
+            group_username = arg
+            if group_username.startswith("@"):
+                group_username = group_username.replace("@", "")
+
+    query = "SELECT group_id FROM supergroups_ref WHERE LOWER(username) = LOWER(%s)"
+    extract = database.query_r(query, group_username)
+
+    if len(extract) > 1:
+        print("error too many")
+        return
+
+    if len(extract) == 0:
+        # the group does not exist otherwise anything is returned and if None is NULL
+        text = get_lang.get_string(lang, "cant_check_this").format(html.escape(group_username))
+        update.message.reply_text(text=text)
+        return
+
+    group_id = extract[0][0]
+    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=page, group_id=group_id)
+    result = leaderboard.build_page(group_username=group_username, only_admins=False)
+
+    update.message.reply_text(
+        text=result[0],
+        reply_markup=result[1],
+        parse_mode='HTML',
+        disable_notification=True)
+
 
 
 @utils.private_only

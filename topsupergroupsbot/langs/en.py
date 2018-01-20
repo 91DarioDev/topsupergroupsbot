@@ -255,7 +255,8 @@ advanced_commands_text = (
     "/leadermember - <i>leaderboard ordered by members (optional params: [p=(page number)] [c=(category number)]</i>\n"
     "/leadermessage - <i>leaderboard ordered by messages (optional params: [p=(page number)] [c=(category number)]</i>\n\n"
     "The category number can be taken counting categories buttons starting from left to right\n\n"
-    "/grouprank - <i>/grouprank [username of the group]</i>"
+    "/grouprank - <i>/grouprank [username of the group]</i>\n"
+    "/leaderboard - <i>/groupleaderboard [username of the group]</i>"
 )
 
 groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"
@@ -263,13 +264,14 @@ groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<c
 avdanced_leaderboard_command_error = "<b>Error:</b>\nuse the command this way. paramters are optional:\n\n<code>{} [p=(page number)] [c=(category number)]</code>"
 
 error_param_group_rank_private = (
-    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the rank."
+    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the rank. "
     "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/grouprank my_favorite_group</code>"
 )
 
 cant_check_this = "Sorry, @{} is not in our database."
 
 error_param_group_leaderboard_private = (
-    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the groupleaderboard."
-    "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/groupleaderboard my_favorite_group</code>"
+    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the groupleaderboard. "
+    "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/groupleaderboard my_favorite_group</code>\n\n"
+    "Optionally you can jump directly to a page adding the parameter <code>p=[page number]</code>.\n\nExample: <code>/groupleaderboard my_favorite_group p=26</code>"
 )

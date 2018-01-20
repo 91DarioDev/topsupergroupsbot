@@ -256,7 +256,8 @@ advanced_commands_text = (
     "/leadermember - <i>classifica per membri (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n"
     "/leadermessage - <i>classifica per messaggi (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n\n"
     "Il numero della categoria può essere ricavato contando i bottoni delle categorie da sinistra vestro destra\n\n"
-    "/grouprank - <i>/grouprank [username del gruppo]</i>"
+    "/grouprank - <i>/grouprank [username del gruppo]</i>\n"
+    "/groupleaderboard - <i>/groupleaderboard [username del gruppo]</i>"
 )
 
 
@@ -265,13 +266,14 @@ groupleaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo:
 avdanced_leaderboard_command_error = "<b>Errore:</b>\nusa il comando in questo modo. I parametri sono opzionali:\n\n<code>{} [p=(numero pagina)] [c=(numero categoria)]</code>"
 
 error_param_group_rank_private = (
-    "<b>Errore:</b>\nDevi scrivere come parametro di questo comando l'username del gruppo per il quale vuoi controllare il rank."
+    "<b>Errore:</b>\nDevi scrivere come parametro di questo comando l'username del gruppo per il quale vuoi controllare il rank. "
     "Non importa se scrivi o no \"@\".\n\nEsempio: <code>/grouprank il_mio_gruppo</code>"
 )
 
 cant_check_this = "Mi dispiace, @{} non è nel nostro database."
 
 error_param_group_leaderboard_private = (
-    "<b>Errore:</b>\nDevi scrivere come parametro di questo comando l'username del gruppo per il quale vuoi controllare il groupleaderboard."
-    "Non importa se scrivi o no \"@\".\n\nEsempio: <code>/grouprank il_mio_gruppo</code>"
+    "<b>Errore:</b>\nDevi scrivere come parametro di questo comando l'username del gruppo per il quale vuoi controllare il groupleaderboard. "
+    "Non importa se scrivi o no \"@\".\n\nEsempio: <code>/groupleaderboard il_mio_gruppo</code>"
+    "Se vuoi puoi saltare direttamente ad una pagina aggiungendo il parametro <code>p=[numero pagina]</code>.\n\nEesempio: <code>/groupleaderboard il_mio_gruppo p=26</code>"
 )

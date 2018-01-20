@@ -116,9 +116,7 @@ def groupleaderboard_private(bot, update, args):
         update.message.reply_text(text, parse_mode="HTML")
         return
 
-    print(111)
-    print(any([arg.startswith("p=") for arg in args]))
-    if len(args) > 2:
+    if len(args) == 2 and (any([arg.startswith("p=") for arg in args])) is False:
         
         text = get_lang.get_string(lang, "error_param_group_leaderboard_private")
         update.message.reply_text(text, parse_mode="HTML")

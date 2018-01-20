@@ -386,13 +386,20 @@ class GroupLeaderboard(Leaderboard):
         first_number_of_page = pages.first_number_of_page()
         offset = first_number_of_page - 1
         for user in pages.chosen_page_items():
-            offset += 1 # for before IT numeration
-            text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
+            offset += 1  # for before IT numeration
+            if only_admins:  # it means it's in a group
+                text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
                     offset, 
                     user[0], 
                     html.escape(user[2]), 
                     utils.sep_l(user[1], self.lang)
-                    )
+                )
+            else:  # it's a private chat
+                text += "{}) @{}: {}\n".format(
+                    offset, 
+                    html.escape(user[4] if user[4] is not None else user[2]), 
+                    utils.sep_l(user[1], self.lang)
+                )
         return text, reply_markup
 
 

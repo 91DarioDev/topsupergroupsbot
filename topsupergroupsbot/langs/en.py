@@ -260,3 +260,10 @@ advanced_commands_text = (
 groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"
 
 avdanced_leaderboard_command_error = "<b>Error:</b>\nuse the command this way. paramters are optional:\n\n<code>{} [p=(page number)] [c=(category number)]</code>"
+
+error_param_group_rank_private = (
+    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the rank."
+    "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/grouprank my_favorite_group</code>"
+)
+
+cant_check_this = "Sorry, @{} is not in our database."

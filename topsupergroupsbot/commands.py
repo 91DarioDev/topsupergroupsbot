@@ -16,6 +16,7 @@
 
 
 import time
+import html
 
 from topsupergroupsbot import utils
 from topsupergroupsbot import keyboards
@@ -77,6 +78,35 @@ def settings(bot, update):
         settings_private(bot, update)
     elif update.message.chat.type in ['group', 'supergroup']:
         settings_group(bot, update)
+
+
+def group_rank_private(bot, update, args):
+    user_id = update.message.from_user.id
+    lang = utils.get_db_lang(user_id)
+    if len(args) != 1:
+        text = get_lang.get_string(lang, "error_param_group_rank_private")
+        update.message.reply_text(text, parse_mode="HTML")
+        return
+    username = args[0]
+    if username.startswith("@"):
+        username = username.replace("@", "")
+
+    query = "SELECT group_id FROM supergroups_ref WHERE LOWER(username) = LOWER(%s)"
+    extract = database.query_r(query, username)
+
+    if len(extract) > 1:
+        print("error too many")
+        return
+
+    if len(extract) == 0:
+        # the group does not exist otherwise anything is returned and if None is NULL
+        text = get_lang.get_string(lang, "cant_check_this").format(html.escape(username))
+        update.message.reply_text(text=text)
+        return
+
+    group_id = extract[0][0]
+    update.message.reply_text(text=group_rank_text(group_id, lang), parse_mode="HTML")
+      
 
 
 @utils.private_only
@@ -328,14 +358,16 @@ def start_help_buttons(bot, update):
 
 @utils.admin_command_only
 def group_rank(bot, update):
-    rank = cache_groups_rank.get_group_cached_rank(update.message.chat.id)
     query = "SELECT lang FROM supergroups WHERE group_id = %s"
     lang = database.query_r(query, update.message.chat.id, one=True)[0]
-    strings = get_lang.get_string(lang, "group_rank")
+    update.message.reply_text(text=group_rank_text(update.message.chat.id, lang), parse_mode='HTML', quote=False)
 
+
+def group_rank_text(group_id, lang):
+    strings = get_lang.get_string(lang, "group_rank")
+    rank = cache_groups_rank.get_group_cached_rank(group_id)
     if rank is None:
-        update.message.reply_text(strings['None'])
-        return
+        return strings['None']
 
     text = strings['title']
     # by messages
@@ -399,4 +431,4 @@ def group_rank(bot, update):
     except KeyError:
         pass
 
-    update.message.reply_text(text=text, parse_mode='HTML', quote=False)
+    return text

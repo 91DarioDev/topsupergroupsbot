@@ -256,7 +256,7 @@ advanced_commands_text = (
     "/leadermessage - <i>leaderboard ordered by messages (optional params: [p=(page number)] [c=(category number)]</i>\n\n"
     "The category number can be taken counting categories buttons starting from left to right\n\n"
     "/grouprank - <i>/grouprank [username of the group]</i>\n"
-    "/leaderboard - <i>/groupleaderboard [username of the group]</i>"
+    "/groupleaderboard - <i>/groupleaderboard [username of the group]</i>"
 )
 
 groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"

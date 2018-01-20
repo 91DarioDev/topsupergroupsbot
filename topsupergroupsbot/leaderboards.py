@@ -393,6 +393,7 @@ class GroupLeaderboard(Leaderboard):
                     html.escape(user[2]), 
                     utils.sep_l(user[1], self.lang)
                     )
+        print(text)
         return text, reply_markup
 
 

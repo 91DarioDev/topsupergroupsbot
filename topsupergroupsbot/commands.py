@@ -116,6 +116,14 @@ def groupleaderboard_private(bot, update, args):
         update.message.reply_text(text, parse_mode="HTML")
         return
 
+    print(111)
+    print(any([arg.startswith("p=") for arg in args]))
+    if len(args) > 2:
+        
+        text = get_lang.get_string(lang, "error_param_group_leaderboard_private")
+        update.message.reply_text(text, parse_mode="HTML")
+        return
+
     page = 1
     for arg in args:
         if arg.startswith('p='):
@@ -131,7 +139,6 @@ def groupleaderboard_private(bot, update, args):
             if group_username.startswith("@"):
                 group_username = group_username.replace("@", "")
 
-                
     query = "SELECT group_id FROM supergroups_ref WHERE LOWER(username) = LOWER(%s)"
     extract = database.query_r(query, group_username)
 

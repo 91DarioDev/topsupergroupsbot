@@ -125,7 +125,7 @@ not_specified = "Non specificato"
 
 group_digest_button = "Resoconto"
 group_weekly_digest = (
-        "Vuoi ricevere un resoconto di questo gruppo ogni volta che una settimana finsice?"
+        "Vuoi ricevere un resoconto di questo gruppo ogni volta che una settimana finisce?"
         " Puoi ripensarci in qualsiasi momento.")
 
 
@@ -255,7 +255,8 @@ advanced_commands_text = (
     "/leadervote - <i>classifica per voti (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)])</i>\n"
     "/leadermember - <i>classifica per membri (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n"
     "/leadermessage - <i>classifica per messaggi (parametri opzionali: [p=(numero pagina)] [c=(numero categoria)]</i>\n\n"
-    "Il numero della categoria può essere ricavato contando i bottoni delle categorie da sinistra vestro destra"
+    "Il numero della categoria può essere ricavato contando i bottoni delle categorie da sinistra vestro destra\n\n"
+    "/grouprank - <i>/grouprank [username del gruppo]</i>"
 )
 
 

@@ -254,7 +254,8 @@ advanced_commands_text = (
     "/leadervote - <i>leaderboard ordered by votes (optional params: [p=(page number)] [c=(category number)])</i>\n"
     "/leadermember - <i>leaderboard ordered by members (optional params: [p=(page number)] [c=(category number)]</i>\n"
     "/leadermessage - <i>leaderboard ordered by messages (optional params: [p=(page number)] [c=(category number)]</i>\n\n"
-    "The category number can be taken counting categories buttons starting from left to right"
+    "The category number can be taken counting categories buttons starting from left to right\n\n"
+    "/grouprank - <i>/grouprank [username of the group]</i>"
 )
 
 groupleaderboard_command_error = "<b>Error:</b>\nuse the command this way:\n\n<code>{} [number of page(optional)]</code>"

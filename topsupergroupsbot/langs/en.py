@@ -268,3 +268,5 @@ error_param_group_rank_private = (
 )
 
 cant_check_this = "Sorry, @{} is not in our database."
+
+error_param_group_leaderboard_private = "test"

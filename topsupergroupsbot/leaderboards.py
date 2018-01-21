@@ -33,6 +33,7 @@ from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext.dispatcher import run_async
 
+M_C = constants.MAX_CHARS_LEADERBOARD_PAGE
 
 class Leaderboard:
     GROUP = 'igl'  # inside the group
@@ -157,7 +158,7 @@ class VotesLeaderboard(Leaderboard):
                     group[7],
                     nsfw, 
                     group[2], 
-                    html.escape(group[1]), 
+                    html.escape(utils.trucate(group[1]), M_C), 
                     group[4], 
                     emojis.STAR,
                     utils.sep_l(group[3], self.lang),
@@ -254,7 +255,7 @@ class MessagesLeaderboard(Leaderboard):
                     group[6],
                     nsfw, 
                     group[3], 
-                    html.escape(group[2]), 
+                    html.escape(utils.truncate(group[2]), M_C), 
                     utils.sep_l(group[1], self.lang), 
                     new
                     )
@@ -353,7 +354,7 @@ class MembersLeaderboard(Leaderboard):
                 group[7],
                 nsfw, 
                 group[4], 
-                html.escape(group[3]), 
+                html.escape(utils.truncate(group[3]), M_C), 
                 utils.sep_l(group[1], self.lang), 
                 new)
         return text, reply_markup

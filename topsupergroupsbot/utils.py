@@ -274,3 +274,9 @@ def round_seconds(seconds, lang):
         unit = seconds/(60*60)
         r_unit = round(unit)
         return get_lang.get_string(lang, "about_hours_ago").format(r_unit)
+
+
+def truncate(text, max_chars, place_holder='...'):
+    if len(text) <= max_chars:
+        return text
+    return "{}{}".format(text[:max_chars-len(place_holder)], place_holder)

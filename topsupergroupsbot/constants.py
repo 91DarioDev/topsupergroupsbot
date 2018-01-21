@@ -26,3 +26,5 @@ BUTTON_END = "•"
 FEEDBACK_INV_CHAR = "\ufeff"
 
 GET_ME = Bot(config.BOT_TOKEN).getMe()
+
+MAX_CHARS_LEADERBOARD_PAGE = 25

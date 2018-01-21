@@ -74,6 +74,7 @@ def groupleaderboard_private_direct_link(bot, update, group_id):
     user_id = update.message.from_user.id
     lang = utils.get_db_lang(user_id)
     page = 1
+    update.effective_chat.send_action('typing')
     query_db = "SELECT username FROM supergroups_ref WHERE group_id = %s LIMIT 1"
     extract = database.query_r(query_db, group_id, one=True)
     leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=page, group_id=group_id)
@@ -158,6 +159,7 @@ def groupleaderboard_private(bot, update, args):
             if group_username.startswith("@"):
                 group_username = group_username.replace("@", "")
 
+    update.effective_chat.send_action('typing')
     query = "SELECT group_id FROM supergroups_ref WHERE LOWER(username) = LOWER(%s)"
     extract = database.query_r(query, group_username)
 

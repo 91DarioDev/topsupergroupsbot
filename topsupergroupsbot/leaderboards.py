@@ -431,6 +431,8 @@ def groupleaderboard(bot, update, args):
                 parse_mode='HTML'
             )
             return
+
+    update.effective_chat.send_action('typing')
     leaderboard = GroupLeaderboard(lang=lang, page=page, group_id=group_id)
     result = leaderboard.build_page(group_username=update.message.chat.username)
     try:

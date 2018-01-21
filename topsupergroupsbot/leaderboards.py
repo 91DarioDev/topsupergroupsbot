@@ -158,7 +158,7 @@ class VotesLeaderboard(Leaderboard):
                     group[7],
                     nsfw, 
                     group[2], 
-                    html.escape(utils.trucate(group[1]), M_C), 
+                    html.escape(utils.trucate(group[1], M_C)), 
                     group[4], 
                     emojis.STAR,
                     utils.sep_l(group[3], self.lang),
@@ -255,7 +255,7 @@ class MessagesLeaderboard(Leaderboard):
                     group[6],
                     nsfw, 
                     group[3], 
-                    html.escape(utils.truncate(group[2]), M_C), 
+                    html.escape(utils.truncate(group[2], M_C)), 
                     utils.sep_l(group[1], self.lang), 
                     new
                     )
@@ -354,7 +354,7 @@ class MembersLeaderboard(Leaderboard):
                 group[7],
                 nsfw, 
                 group[4], 
-                html.escape(utils.truncate(group[3]), M_C), 
+                html.escape(utils.truncate(group[3], M_C)), 
                 utils.sep_l(group[1], self.lang), 
                 new)
         return text, reply_markup

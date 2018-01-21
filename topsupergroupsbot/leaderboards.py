@@ -59,6 +59,8 @@ class Leaderboard:
                 category=self.category)
 
     def cache_key_base(self):
+        if self.CODE == GroupLeaderboard.CODE:
+            return 'cached_lb:{}:{}'.format(self.CODE, self.group_id)
         return 'cached_lb:{}:{}'.format(
                 self.CODE, 
                 self.region)
@@ -375,7 +377,10 @@ class GroupLeaderboard(Leaderboard):
             GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
             """
 
-        extract = database.query_r(query, self.group_id)
+        extract = self.get_list_from_cache()
+        if extract is None:
+            extract = database.query_r(query, self.group_id)
+            self.cache_the_list(extract)
 
         pages = Pages(extract, self.page)
 

@@ -33,6 +33,14 @@ from topsupergroupsbot import categories
 
 
 
+def check_groupleaderboard_in_private_button(lang, group_id):
+    button = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "check_in_private"),
+        url="https://t.me/{}?start=groupleaderboarddirectlink{}".format(c.GET_ME.username, group_id)
+    )
+    return [button]
+
+
 def filter_category_button(lang, base, chosen_page):
     category = base.split(":")[4]
     if category != "":

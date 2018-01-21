@@ -64,6 +64,27 @@ def start(bot, update, args):
     elif first_arg == "groups_working":
         send_groups_working(bot, update)
         return
+    elif first_arg.startswith("groupleaderboarddirectlink"):
+        group_id = first_arg.replace("groupleaderboarddirectlink", "")
+        groupleaderboard_private_direct_link(bot, update, group_id)
+        return
+
+
+def groupleaderboard_private_direct_link(bot, update, group_id):
+    user_id = update.message.from_user.id
+    lang = utils.get_db_lang(user_id)
+    page = 1
+    query_db = "SELECT username FROM supergroups_ref WHERE group_id = %s LIMIT 1"
+    extract = database.query_r(query_db, group_id, one=True)
+    leaderboard = leaderboards.GroupLeaderboard(lang=lang, page=page, group_id=group_id)
+    result = leaderboard.build_page(group_username=extract[0], only_admins=False)
+
+    update.message.reply_text(
+        text=result[0],
+        reply_markup=result[1],
+        parse_mode='HTML',
+        disable_notification=True
+    )
 
 
 def start_no_params(bot, update):

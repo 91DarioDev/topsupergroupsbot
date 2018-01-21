@@ -277,3 +277,5 @@ error_param_group_leaderboard_private = (
     "Non importa se scrivi o no \"@\".\n\nEsempio: <code>/groupleaderboard il_mio_gruppo</code>"
     "Se vuoi puoi saltare direttamente ad una pagina aggiungendo il parametro <code>p=[numero pagina]</code>.\n\nEesempio: <code>/groupleaderboard il_mio_gruppo p=26</code>"
 )
+
+check_in_private = "Controlla in privato"

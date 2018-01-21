@@ -275,3 +275,5 @@ error_param_group_leaderboard_private = (
     "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/groupleaderboard my_favorite_group</code>\n\n"
     "Optionally you can jump directly to a page adding the parameter <code>p=[page number]</code>.\n\nExample: <code>/groupleaderboard my_favorite_group p=26</code>"
 )
+
+check_in_private = "Check in private"

@@ -189,7 +189,21 @@ def create_db():
 
 
 def create_index():
-    pass
+
+    ###############
+    #
+    #   MESSAGES
+    #
+    ###############
+
+    query = "CREATE INDEX IF NOT EXISTS index_messages_msg_id ON messages (msg_id)"
+    query_w(query)
+    query = "CREATE INDEX IF NOT EXISTS index_messages_group_id ON messages (group_id)"
+    query_w(query)
+    query = "CREATE INDEX IF NOT EXISTS index_messages_user_id ON messages (user_id)"
+    query_w(query)
+    query = "CREATE INDEX IF NOT EXISTS index_messages_message_date ON messages (message_date)"
+    query_w(query)
 
 
 create_db()

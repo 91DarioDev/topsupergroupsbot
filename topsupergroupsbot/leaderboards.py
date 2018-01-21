@@ -33,7 +33,8 @@ from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext.dispatcher import run_async
 
-M_C = constants.MAX_CHARS_LEADERBOARD_PAGE
+M_C_G = constants.MAX_CHARS_LEADERBOARD_PAGE_GROUP
+M_C_P = constants.MAX_CHARS_LEADERBOARD_PAGE_PRIVATE
 
 class Leaderboard:
     GROUP = 'igl'  # inside the group
@@ -146,7 +147,7 @@ class VotesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n{}: {}".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )        
@@ -158,7 +159,7 @@ class VotesLeaderboard(Leaderboard):
                     group[7],
                     nsfw, 
                     group[2], 
-                    html.escape(utils.trucate(group[1], M_C)), 
+                    html.escape(utils.truncate(group[1], M_C_P)), 
                     group[4], 
                     emojis.STAR,
                     utils.sep_l(group[3], self.lang),
@@ -243,7 +244,7 @@ class MessagesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n{}: {}".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )        
@@ -255,7 +256,7 @@ class MessagesLeaderboard(Leaderboard):
                     group[6],
                     nsfw, 
                     group[3], 
-                    html.escape(utils.truncate(group[2], M_C)), 
+                    html.escape(utils.truncate(group[2], M_C_P)), 
                     utils.sep_l(group[1], self.lang), 
                     new
                     )
@@ -342,7 +343,7 @@ class MembersLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n{}: {}".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )
@@ -354,7 +355,7 @@ class MembersLeaderboard(Leaderboard):
                 group[7],
                 nsfw, 
                 group[4], 
-                html.escape(utils.truncate(group[3], M_C)), 
+                html.escape(utils.truncate(group[3], M_C_P)), 
                 utils.sep_l(group[1], self.lang), 
                 new)
         return text, reply_markup
@@ -429,7 +430,7 @@ class GroupLeaderboard(Leaderboard):
         )
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(group_username)
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n{}: {}".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )
@@ -442,7 +443,7 @@ class GroupLeaderboard(Leaderboard):
                 text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
                     user[5], 
                     user[0], 
-                    html.escape(user[2]), 
+                    html.escape(utils.truncate(user[2], M_C_G)), 
                     utils.sep_l(user[1], self.lang)
                 )
             else:  # it's a private chat

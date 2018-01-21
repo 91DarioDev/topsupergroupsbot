@@ -22,6 +22,7 @@ from topsupergroupsbot import keyboards
 from topsupergroupsbot import utils
 from topsupergroupsbot import emojis
 from topsupergroupsbot import leaderboards
+from topsupergroupsbot import constants as c
 
 from telegram.error import (TelegramError, 
                             Unauthorized, 
@@ -337,7 +338,7 @@ def weekly_groups_digest(bot, job):
             text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
                     user[3],
                     user[0],
-                    html.escape(user[2]),
+                    html.escape(utils.truncate(user[2], c.MAX_CHARS_LEADERBOARD_PAGE_GROUP)),
                     utils.sep_l(user[1], lang)
                     )
 

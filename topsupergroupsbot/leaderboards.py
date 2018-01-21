@@ -70,13 +70,16 @@ class Leaderboard:
         lst = database.REDIS.get(key)
         if lst is None:
             return None
-        lst = json.loads(lst.decode('UTF-8'))
-        return lst
+        lst_and_time = json.loads(lst.decode('UTF-8'))
+        lst = lst_and_time['list']
+        time = lst_and_time['time']
+        return lst, time
 
     @run_async
     def cache_the_list(self, lst, doubled_cache_seconds=False):
         key = self.cache_key_base()
-        dumped_lst = json.dumps(lst).encode('UTF-8')
+        lst_and_time = {'list': lst, 'time': time.time()}
+        dumped_lst = json.dumps(lst_and_time).encode('UTF-8')
         sec = self.CACHE_SECONDS if doubled_cache_seconds is False else self.CACHE_SECONDS*2
         database.REDIS.setex(key, dumped_lst, sec)
 
@@ -120,10 +123,15 @@ class VotesLeaderboard(Leaderboard):
             AND COUNT(vote) >= %s 
         """
 
-        extract = self.get_list_from_cache()
-        if extract is None:
+        lst_and_time = self.get_list_from_cache()
+        if lst_and_time is None:
             extract = database.query_r(query, self.region, self.MIN_REVIEWS)
             self.cache_the_list(extract)
+            cached_sec_ago = 1
+        else:
+            extract, cached_at = lst_and_time
+            cached_sec_ago = int(time.time() - cached_at)
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)
 
         if self.category != "":
             extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
@@ -137,6 +145,10 @@ class VotesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
+        text += "\n<i>{}: {}</i>".format(
+            utils.get_lang.get_string(self.lang, "latest_update"),
+            updated_ago_string
+        )        
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[5] is True else ""
@@ -208,10 +220,15 @@ class MessagesLeaderboard(Leaderboard):
             GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
         """
 
-        extract = self.get_list_from_cache()
-        if extract is None:
+        lst_and_time = self.get_list_from_cache()
+        if lst_and_time is None:
             extract = database.query_r(query, self.region)
             self.cache_the_list(extract)
+            cached_sec_ago = 1
+        else:
+            extract, cached_at = lst_and_time
+            cached_sec_ago = int(time.time() - cached_at)
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)    
 
         if self.category != "":
             extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
@@ -225,6 +242,10 @@ class MessagesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
+        text += "\n<i>{}: {}</i>".format(
+            utils.get_lang.get_string(self.lang, "latest_update"),
+            updated_ago_string
+        )        
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[4] is True else ""
@@ -298,10 +319,15 @@ class MembersLeaderboard(Leaderboard):
             AND lang = %s
         """
 
-        extract = self.get_list_from_cache()
-        if extract is None:
+        lst_and_time = self.get_list_from_cache()
+        if lst_and_time is None:
             extract = database.query_r(query, self.region)
             self.cache_the_list(extract)
+            cached_sec_ago = 1
+        else:
+            extract, cached_at = lst_and_time
+            cached_sec_ago = int(time.time() - cached_at)
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)            
         
         if self.category != "":
             extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]    
@@ -315,6 +341,10 @@ class MembersLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
+        text += "\n<i>{}: {}</i>".format(
+            utils.get_lang.get_string(self.lang, "latest_update"),
+            updated_ago_string
+        )
         text += "\n\n"
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[6] is True else ""
@@ -377,10 +407,16 @@ class GroupLeaderboard(Leaderboard):
             GROUP BY m.user_id, u_ref.name, u_ref.last_name, u_ref.username
             """
 
-        extract = self.get_list_from_cache()
-        if extract is None:
+        lst_and_time = self.get_list_from_cache()
+        if lst_and_time is None:
             extract = database.query_r(query, self.group_id)
             self.cache_the_list(extract)
+            cached_sec_ago = 1
+        else:
+            extract, cached_at = lst_and_time
+            cached_sec_ago = int(time.time() - cached_at)
+
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)
 
         pages = Pages(extract, self.page)
 
@@ -392,6 +428,10 @@ class GroupLeaderboard(Leaderboard):
         )
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(group_username)
+        text += "\n<i>{}: {}</i>".format(
+            utils.get_lang.get_string(self.lang, "latest_update"),
+            updated_ago_string
+        )
         text += "\n\n"
         first_number_of_page = pages.first_number_of_page()
         offset = first_number_of_page - 1

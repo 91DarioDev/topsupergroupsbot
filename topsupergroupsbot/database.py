@@ -205,6 +205,17 @@ def create_index():
     query = "CREATE INDEX IF NOT EXISTS index_messages_message_date ON messages (message_date)"
     query_w(query)
 
+    #######################
+    #
+    #   SUPERGROUPS_REF
+    #
+    #######################
+
+    query = "CREATE INDEX IF NOT EXISTS index_supergroups_ref_username ON supergroups_ref (username)"
+    query_w(query)
+
+
+
 
 create_db()
 create_index()

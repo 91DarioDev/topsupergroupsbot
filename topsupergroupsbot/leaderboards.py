@@ -147,7 +147,7 @@ class VotesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n{}: {}".format(
+        text += "\n<i>{}: {}</i>".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )        
@@ -244,7 +244,7 @@ class MessagesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n{}: {}".format(
+        text += "\n<i>{}: {}</i>".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )        
@@ -343,7 +343,7 @@ class MembersLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n{}: {}".format(
+        text += "\n<i>{}: {}</i>".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )
@@ -430,7 +430,7 @@ class GroupLeaderboard(Leaderboard):
         )
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(group_username)
-        text += "\n{}: {}".format(
+        text += "\n<i>{}: {}</i>".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )

@@ -515,12 +515,9 @@ def lbpage_private(bot, query, lb_type, page, region, category):
         leaderboard = leaderboards.MembersLeaderboard(lang, region, int(page), category)
     result = leaderboard.build_page()
     try:
-        #query.edit_message_text(
-        #    text=result[0], reply_markup=result[1],
-        #    parse_mode=ParseMode.HTML, disable_web_page_preview=True)
         query.edit_message_text(
             text=result[0], reply_markup=result[1],
-            disable_web_page_preview=True)
+            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 

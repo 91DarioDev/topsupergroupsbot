@@ -17,7 +17,7 @@
 import babel
 import datetime
 import time
-from functools import wraps
+from functools import wraps, partial
 
 from topsupergroupsbot import supported_langs
 from topsupergroupsbot import constants
@@ -75,25 +75,31 @@ def private_only(func):
     return wrapped
 
 
-def admin_command_only(func):
-    @wraps(func)
-    def wrapped(bot, update, *args, **kwargs):
-        if update.message.chat.type == "private":
-            lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_admins").format(update.message.text.split(" ")[0])
-            update.message.reply_text(text)
-            return
-        if not update.effective_chat.get_member(update.message.from_user.id).status in ["administrator", "creator"]:
-            lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_admins").format(update.message.text.split(" ")[0])
-            try:
-                chat_id = update.message.from_user.id
-                bot.send_message(chat_id=chat_id, text=text)
-            except Unauthorized:
-                pass
-            return
-        return func(bot, update, *args, **kwargs)
-    return wrapped
+def admin_command_only(possible_in_private=False):
+    def _admin_command_only(func):
+        @wraps(func)
+        def wrapped(bot, update, *args, **kwargs):
+            if update.message.chat.type == "private":
+                lang = get_db_lang(update.effective_user.id)
+                text = get_lang.get_string(lang, "this_command_only_admins").format(update.message.text.split(" ")[0])
+                if possible_in_private:
+                    text += get_lang.get_string(lang, "but_you_can_use_in_private")
+                update.message.reply_text(text)
+                return
+            if not update.effective_chat.get_member(update.message.from_user.id).status in ["administrator", "creator"]:
+                lang = get_db_lang(update.effective_user.id)
+                text = get_lang.get_string(lang, "this_command_only_admins").format(update.message.text.split(" ")[0])
+                if possible_in_private:
+                    text += get_lang.get_string(lang, "but_you_can_use_in_private")
+                try:
+                    chat_id = update.message.from_user.id
+                    bot.send_message(chat_id=chat_id, text=text)
+                except Unauthorized:
+                    pass
+                return
+            return func(bot, update, *args, **kwargs)
+        return wrapped
+    return _admin_command_only
 
 
 def creator_command_only(func):

@@ -243,7 +243,7 @@ def settings_private(bot, update):
     update.message.reply_text(text=text, reply_markup=reply_markup)
 
 
-@utils.admin_command_only
+@utils.admin_command_only()
 def settings_group(bot, update):
     query_db = "SELECT lang FROM supergroups WHERE group_id = %s"
     lang = database.query_r(query_db, update.message.chat.id, one=True)[0]
@@ -252,7 +252,7 @@ def settings_group(bot, update):
     update.message.reply_text(text=text, reply_markup=reply_markup, quote=False)
 
 
-@utils.admin_command_only
+@utils.admin_command_only(possible_in_private=True)
 def groupleaderboard(bot, update, args):
     if update.message.chat.type == "private":
         update.message.reply_text("Only in groups")
@@ -432,7 +432,7 @@ def start_help_buttons(bot, update):
     update.message.reply_text(text=text, reply_markup=reply_markup)
 
 
-@utils.admin_command_only
+@utils.admin_command_only(possible_in_private=True)
 def group_rank(bot, update):
     query = "SELECT lang FROM supergroups WHERE group_id = %s"
     lang = database.query_r(query, update.message.chat.id, one=True)[0]

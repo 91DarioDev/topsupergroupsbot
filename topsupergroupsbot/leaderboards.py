@@ -455,7 +455,7 @@ class GroupLeaderboard(Leaderboard):
         return text, reply_markup
 
 
-@utils.admin_command_only
+@utils.admin_command_only(possible_in_private=True)
 def groupleaderboard(bot, update, args):
     group_id = update.message.chat.id
     query = "SELECT lang FROM supergroups WHERE group_id = %s"

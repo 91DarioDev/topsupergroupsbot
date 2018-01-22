@@ -61,7 +61,7 @@ def private_only(func):
     def wrapped(bot, update, *args, **kwargs):
         if update.message.chat.type != "private":
             lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_private")
+            text = get_lang.get_string(lang, "this_command_only_private").format(update.message.text.split(" ")[0])
             try:
                 chat_id = update.message.from_user.id
                 bot.send_message(chat_id=chat_id, text=text)
@@ -80,12 +80,12 @@ def admin_command_only(func):
     def wrapped(bot, update, *args, **kwargs):
         if update.message.chat.type == "private":
             lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_admins")
+            text = get_lang.get_string(lang, "this_command_only_admins").format(update.message.text.split(" ")[0])
             update.message.reply_text(text)
             return
         if not update.effective_chat.get_member(update.message.from_user.id).status in ["administrator", "creator"]:
             lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_admins")
+            text = get_lang.get_string(lang, "this_command_only_admins").format(update.message.text.split(" ")[0])
             try:
                 chat_id = update.message.from_user.id
                 bot.send_message(chat_id=chat_id, text=text)
@@ -101,13 +101,13 @@ def creator_command_only(func):
     def wrapped(bot, update, *args, **kwargs):
         if update.message.chat.type == "private":
             lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_creator")
+            text = get_lang.get_string(lang, "this_command_only_creator").format(update.message.text.split(" ")[0])
             update.message.reply_text(text)
             return
         status = update.effective_chat.get_member(update.message.from_user.id).status
         if status not in ["creator"]:
             lang = get_db_lang(update.effective_user.id)
-            text = get_lang.get_string(lang, "this_command_only_creator")
+            text = get_lang.get_string(lang, "this_command_only_creator").format(update.message.text.split(" ")[0])
             try:
                 chat_id = update.message.from_user.id
                 bot.send_message(chat_id=chat_id, text=text)

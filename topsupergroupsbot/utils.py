@@ -269,17 +269,17 @@ def split_list_grouping_by_column(lst, index):
     return res
 
 
-def round_seconds(seconds, lang):
+def round_seconds(seconds, lang, short=False):
     if seconds < 60:
-        return get_lang.get_string(lang, "seconds_ago").format(seconds)
+        return get_lang.get_string(lang, "seconds_ago").format(seconds) if short is False else get_lang.get_string(lang, "seconds_ago_short").format(seconds)
     elif 60 <= seconds < 60*60:
         unit = seconds/60
         r_unit = round(unit)
-        return get_lang.get_string(lang, "about_minutes_ago").format(r_unit)
+        return get_lang.get_string(lang, "about_minutes_ago").format(r_unit) if short is False else get_lang.get_string(lang, "about_minutes_ago_short").format(r_unit)
     else:
         unit = seconds/(60*60)
         r_unit = round(unit)
-        return get_lang.get_string(lang, "about_hours_ago").format(r_unit)
+        return get_lang.get_string(lang, "about_hours_ago").format(r_unit) if short is False else get_lang.get_string(lang, "about_hours_ago").format(r_unit)
 
 
 def truncate(text, max_chars, place_holder='...'):

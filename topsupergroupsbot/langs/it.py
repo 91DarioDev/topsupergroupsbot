@@ -63,10 +63,10 @@ updated_vote = "Voto aggiornato!"
 choose_region = ("Scegli la tua regione. Sarà il filtro di default per la lingua dei gruppi quando "
                 "richiedi una classifica")
 
-pre_leadervote = "Top supergruppi ordinati per media voti. Hanno almeno {} voti.\nRegione: {}"
-pre_leadermessage = "Top supergruppi ordinati per numero di messaggi inviati questa settimana (UTC).\nRegione: {}"
-pre_groupleaderboard = "Top utenti ordinati per numero di messaggi inviati durante questa settimana (UTC) in @{}."
-pre_leadermember = "Top supergruppi ordinati per numero di membri.\nRegione: {}"
+pre_leadervote = "Ordinati per media voti. Almeno {} voti.\nRegione: {}"
+pre_leadermessage = "Ordinati per numero di messaggi inviati questa settimana(UTC).\nRegione: {}"
+pre_groupleaderboard = "Top utenti ordinati per numero di messaggi inviati durante questa settimana(UTC) in @{}."
+pre_leadermember = "Ordinati per numero di membri.\nRegione: {}"
 
 
 private_lang_button = "Lingua"
@@ -205,6 +205,10 @@ latest_update = "Aggiornato"
 seconds_ago = "{} secondi fa"
 about_minutes_ago = "circa {} minuti fa"
 about_hours_ago = "circa {} ore fa"
+seconds_ago_short = "{} sec fa"
+about_minutes_ago_short = "~{} min fa"
+about_hours_ago_short = "~{} ore fa"
+
 
 group_rank = {
     "title": "<b>RANK DEL GRUPPO:</b>",

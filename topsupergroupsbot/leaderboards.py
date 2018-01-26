@@ -134,7 +134,7 @@ class VotesLeaderboard(Leaderboard):
         else:
             extract, cached_at = lst_and_time
             cached_sec_ago = int(time.time() - cached_at)
-        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang, short=True)
 
         if self.category != "":
             extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
@@ -231,7 +231,7 @@ class MessagesLeaderboard(Leaderboard):
         else:
             extract, cached_at = lst_and_time
             cached_sec_ago = int(time.time() - cached_at)
-        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)    
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang, short=True)    
 
         if self.category != "":
             extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]
@@ -330,7 +330,7 @@ class MembersLeaderboard(Leaderboard):
         else:
             extract, cached_at = lst_and_time
             cached_sec_ago = int(time.time() - cached_at)
-        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)            
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang, short=True)            
         
         if self.category != "":
             extract = [i for i in extract if i[self.INDEX_CATEGORY] == self.category]    
@@ -419,7 +419,7 @@ class GroupLeaderboard(Leaderboard):
             extract, cached_at = lst_and_time
             cached_sec_ago = int(time.time() - cached_at)
 
-        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang)
+        updated_ago_string = utils.round_seconds(cached_sec_ago, self.lang, short=True)
 
         pages = Pages(extract, self.page)
 

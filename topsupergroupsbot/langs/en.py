@@ -65,10 +65,10 @@ choose_region = (
         "Choose your region. It will be the default language filter when you "
         "ask for a leaderboard")
 
-pre_leadervote = "Top supergroups ordered by average of votes. Having at least {} votes.\nRegion: {}"
-pre_leadermessage = "Top supergroups ordered by amount of sent messages during this week (UTC).\nRegion: {}"
-pre_groupleaderboard = "Top users ordered by more messages sent during this week (UTC) in @{}."
-pre_leadermember = "Top supergroups ordered by amount of members.\nRegion: {}"
+pre_leadervote = "Ordered by votes average. Having at least {} votes.\nRegion: {}"
+pre_leadermessage = "Ordered by sent messages in this week(UTC).\nRegion: {}"
+pre_groupleaderboard = "Top users ordered by messages sent during this week(UTC) in @{}."
+pre_leadermember = "Ordered by amount of members.\nRegion: {}"
 
 
 private_lang_button = "Language"
@@ -205,6 +205,9 @@ latest_update = "Updated"
 seconds_ago = "{} seconds ago"
 about_minutes_ago = "about {} minutes ago"
 about_hours_ago = "about {} hours ago"
+seconds_ago_short = "{} sec ago"
+about_minutes_ago_short = "~{} min ago"
+about_hours_ago_short = "~{}h ago"
 
 group_rank = {
     "title": "<b>GROUP RANK:</b>",

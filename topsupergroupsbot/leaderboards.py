@@ -430,7 +430,7 @@ class GroupLeaderboard(Leaderboard):
             footer_buttons=footer_buttons 
         )
 
-        text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(group_username)
+        text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(escape_markdown(group_username))
         text += "\n_{}: {}_".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string

@@ -453,7 +453,6 @@ class GroupLeaderboard(Leaderboard):
                     escape_markdown("@"+str(user[4]) if user[4] is not None else user[2]), 
                     utils.sep_l(user[1], self.lang)
                 )
-        print(text)
         return text, reply_markup
 
 

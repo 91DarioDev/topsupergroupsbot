@@ -180,7 +180,7 @@ def groupleaderboard_private(bot, update, args):
     update.message.reply_text(
         text=result[0],
         reply_markup=result[1],
-        parse_mode='HTML',
+        parse_mode='MARKDOWN',
         disable_notification=True)
 
 

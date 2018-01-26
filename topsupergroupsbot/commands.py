@@ -127,7 +127,7 @@ def group_rank_private(bot, update, args):
         return
 
     group_id = extract[0][0]
-    update.message.reply_text(text=group_rank_text(group_id, lang), parse_mode="HTML")
+    update.message.reply_text(text=group_rank_text(group_id, lang), parse_mode="MARKDOWN")
 
 
 def groupleaderboard_private(bot, update, args):

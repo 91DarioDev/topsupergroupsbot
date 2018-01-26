@@ -431,7 +431,7 @@ class GroupLeaderboard(Leaderboard):
         )
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(group_username)
-        text += "\n_{}: {}_>".format(
+        text += "\n_{}: {}_".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )

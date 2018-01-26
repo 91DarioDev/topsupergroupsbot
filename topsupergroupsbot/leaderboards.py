@@ -32,6 +32,7 @@ from topsupergroupsbot.pages import Pages
 from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext.dispatcher import run_async
+from telegram.utils.helpers import escape_markdown
 
 M_C_G = constants.MAX_CHARS_LEADERBOARD_PAGE_GROUP
 M_C_P = constants.MAX_CHARS_LEADERBOARD_PAGE_PRIVATE
@@ -147,7 +148,7 @@ class VotesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadervote").format(self.MIN_REVIEWS, emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n_{}: {}_".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )        
@@ -155,11 +156,11 @@ class VotesLeaderboard(Leaderboard):
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[5] is True else ""
             new = emojis.NEW if (group[6]+self.NEW_INTERVAL > time.time()) else ""
-            text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}|{}{}\n".format(
+            text += "{}) {}[{}](t.me/{}): {}{}|{}{}\n".format(
                     group[7],
                     nsfw, 
-                    group[2], 
-                    html.escape(utils.truncate(group[1], M_C_P)), 
+                    escape_markdown(utils.truncate(group[1], M_C_P)), 
+                    group[2],
                     group[4], 
                     emojis.STAR,
                     utils.sep_l(group[3], self.lang),
@@ -244,7 +245,7 @@ class MessagesLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermessage").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n_{}: {}_".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )        
@@ -252,11 +253,11 @@ class MessagesLeaderboard(Leaderboard):
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[4] is True else ""
             new = emojis.NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
-            text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
+            text += "{}) {}[{}](t.me/{}): {}{}\n".format(
                     group[6],
                     nsfw, 
+                    escape_markdown(utils.truncate(group[2], M_C_P)), 
                     group[3], 
-                    html.escape(utils.truncate(group[2], M_C_P)), 
                     utils.sep_l(group[1], self.lang), 
                     new
                     )
@@ -343,7 +344,7 @@ class MembersLeaderboard(Leaderboard):
         text = get_lang.get_string(self.lang, "pre_leadermember").format(emoji_region)
         if self.category != "":
             text += "\n{}: {}".format(get_lang.get_string(self.lang, "category"), get_lang.get_string(self.lang, "categories")[categories.CODES[self.category]])
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n_{}: {}_".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )
@@ -351,11 +352,11 @@ class MembersLeaderboard(Leaderboard):
         for group in pages.chosen_page_items():
             nsfw = emojis.NSFW if group[6] is True else ""
             new = emojis.NEW if (group[5]+self.NEW_INTERVAL) > time.time() else ""
-            text += "{}) {}<a href=\"https://t.me/{}\">{}</a>: {}{}\n".format(
+            text += "{}) {}[{}](t.me/{}): {}{}\n".format(
                 group[7],
                 nsfw, 
+                escape_markdown(utils.truncate(group[3], M_C_P)),
                 group[4], 
-                html.escape(utils.truncate(group[3], M_C_P)), 
                 utils.sep_l(group[1], self.lang), 
                 new)
         return text, reply_markup
@@ -430,7 +431,7 @@ class GroupLeaderboard(Leaderboard):
         )
 
         text = get_lang.get_string(self.lang, "pre_groupleaderboard").format(group_username)
-        text += "\n<i>{}: {}</i>".format(
+        text += "\n_{}: {}_>".format(
             utils.get_lang.get_string(self.lang, "latest_update"),
             updated_ago_string
         )
@@ -440,10 +441,10 @@ class GroupLeaderboard(Leaderboard):
         for user in pages.chosen_page_items():
             offset += 1  # for before IT numeration
             if only_admins:  # it means it's in a group
-                text += "{}) <a href=\"tg://user?id={}\">{}</a>: {}\n".format(
+                text += "{}) [{}](tg://user?id={}): {}\n".format(
                     user[5], 
-                    user[0], 
-                    html.escape(utils.truncate(user[2], M_C_G)), 
+                    escape_markdown(utils.truncate(user[2], M_C_G)),
+                    user[0],
                     utils.sep_l(user[1], self.lang)
                 )
             else:  # it's a private chat
@@ -486,14 +487,14 @@ def groupleaderboard(bot, update, args):
         update.message.reply_text(
                 text=result[0],
                 reply_markup=result[1],
-                parse_mode=ParseMode.HTML,
+                parse_mode=ParseMode.MARKDOWN,
                 disable_notification=True)
     except BadRequest as e:
         if str(e) == "Reply message not found":
             update.message.reply_text(
                 text=result[0],
                 reply_markup=result[1],
-                parse_mode=ParseMode.HTML,
+                parse_mode=ParseMode.MARKDOWN,
                 disable_notification=True,
                 quote=False)
         else:
@@ -577,7 +578,7 @@ def leadervote(bot, update, args):
     update.message.reply_text(
             text=result[0],
             reply_markup=result[1],
-            parse_mode=ParseMode.HTML,
+            parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True)
 
 
@@ -599,7 +600,7 @@ def leadermessage(bot, update, args):
     update.message.reply_text(
             text=result[0],
             reply_markup=result[1],
-            parse_mode=ParseMode.HTML,
+            parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True)
 
 
@@ -622,7 +623,7 @@ def leadermember(bot, update, args):
     update.message.reply_text(
             text=result[0],
             reply_markup=result[1],
-            parse_mode=ParseMode.HTML,
+            parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True)
 
 

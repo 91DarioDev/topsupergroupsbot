@@ -484,7 +484,7 @@ def lbpage_igl_private(bot, query, page, group_id_buttons):
     try:
         query.edit_message_text(
             text=result[0], reply_markup=result[1],
-            parse_mode=ParseMode.HTML, disable_notification=True)
+            parse_mode=ParseMode.MARKDOWN, disable_notification=True)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 
@@ -500,7 +500,7 @@ def lbpage_igl_group(bot, query, page, group_id_buttons):
     try:
         query.edit_message_text(
             text=result[0], reply_markup=result[1],
-            parse_mode=ParseMode.HTML, disable_notification=True)
+            parse_mode=ParseMode.MARKDOWN, disable_notification=True)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 
@@ -517,7 +517,7 @@ def lbpage_private(bot, query, lb_type, page, region, category):
     try:
         query.edit_message_text(
             text=result[0], reply_markup=result[1],
-            parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+            parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 

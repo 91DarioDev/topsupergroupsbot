@@ -286,3 +286,12 @@ def truncate(text, max_chars, place_holder='...'):
     if len(text) <= max_chars:
         return text
     return "{}{}".format(text[:max_chars-len(place_holder)], place_holder)
+
+
+def replace_markdown_chars(string):
+    string = string.replace('*', '+')
+    string = string.replace('_', '-')
+    for char in ['[', ']', '(', ')']:
+        string = string.replace(char, '|')
+    string = string.replace('`', "'")
+    return string

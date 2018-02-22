@@ -159,7 +159,7 @@ class VotesLeaderboard(Leaderboard):
             text += "{}) {}[{}](t.me/{}): {}{}|{}{}\n".format(
                     group[7],
                     nsfw, 
-                    escape_markdown(utils.truncate(group[1], M_C_P)), 
+                    utils.replace_markdown_chars(utils.truncate(group[1], M_C_P)), 
                     group[2],
                     group[4], 
                     emojis.STAR,
@@ -256,7 +256,7 @@ class MessagesLeaderboard(Leaderboard):
             text += "{}) {}[{}](t.me/{}): {}{}\n".format(
                     group[6],
                     nsfw, 
-                    escape_markdown(utils.truncate(group[2], M_C_P)), 
+                    utils.replace_markdown_chars(utils.truncate(group[2], M_C_P)), 
                     group[3], 
                     utils.sep_l(group[1], self.lang), 
                     new
@@ -355,7 +355,7 @@ class MembersLeaderboard(Leaderboard):
             text += "{}) {}[{}](t.me/{}): {}{}\n".format(
                 group[7],
                 nsfw, 
-                escape_markdown(utils.truncate(group[3], M_C_P)),
+                utils.replace_markdown_chars(utils.truncate(group[3], M_C_P)),
                 group[4], 
                 utils.sep_l(group[1], self.lang), 
                 new)
@@ -443,7 +443,7 @@ class GroupLeaderboard(Leaderboard):
             if only_admins:  # it means it's in a group
                 text += "{}) [{}](tg://user?id={}): {}\n".format(
                     user[5], 
-                    escape_markdown(utils.truncate(user[2], M_C_G)),
+                    utils.replace_markdown_chars(utils.truncate(user[2], M_C_G)),
                     user[0],
                     utils.sep_l(user[1], self.lang)
                 )

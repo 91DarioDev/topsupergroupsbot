@@ -286,7 +286,7 @@ class MessagesLeaderboard(Leaderboard):
             WHERE m.message_date > date_trunc('week', now())
                 AND (s.banned_until IS NULL OR s.banned_until < now()) 
                 AND s.bot_inside IS TRUE
-            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
+            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category, s.bot_inside
             ORDER BY leaderboard DESC
             """
         return database.query_r(query)

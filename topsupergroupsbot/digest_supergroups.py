@@ -66,7 +66,7 @@ def weekly_groups_digest(bot, job):
             message_date > now() - interval %s
             AND (s.banned_until IS NULL OR s.banned_until < now()) 
             AND s.bot_inside IS TRUE
-        GROUP BY s.lang, group_id;
+        GROUP BY s.lang, group_id
 
     """
     msgs_this_week = database.query_r(query, near_interval)
@@ -154,7 +154,7 @@ def weekly_groups_digest(bot, job):
         FROM votes 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        GROUP BY group_id, s.lang, s.banned_until
+        GROUP BY group_id, s.lang, s.banned_until, s.bot_inside
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND COUNT(vote) >= %s 
@@ -172,7 +172,7 @@ def weekly_groups_digest(bot, job):
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
         WHERE vote_date <= now() - interval %s
-        GROUP BY group_id, s.lang, s.banned_until
+        GROUP BY group_id, s.lang, s.banned_until, s.bot_inside
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND COUNT(vote) >= %s 

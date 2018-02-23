@@ -119,7 +119,7 @@ class VotesLeaderboard(Leaderboard):
         USING (group_id)
         LEFT OUTER JOIN supergroups AS s
         USING (group_id)
-        GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
+        GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category, s.bot_inside
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND s.lang = %s
@@ -187,7 +187,7 @@ class VotesLeaderboard(Leaderboard):
               ON s_ref.group_id = v.group_id
               LEFT OUTER JOIN supergroups AS s
               ON s.group_id = v.group_id
-              GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
+              GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category, s.bot_inside
               HAVING 
                   (s.banned_until IS NULL OR s.banned_until < now()) 
                   AND COUNT(vote) >= %s 
@@ -223,7 +223,7 @@ class MessagesLeaderboard(Leaderboard):
                 AND (s.banned_until IS NULL OR s.banned_until < now()) 
                 AND s.lang = %s
                 AND s.bot_inside IS TRUE
-            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
+            GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category, s.bot_inside
         """
 
         lst_and_time = self.get_list_from_cache()

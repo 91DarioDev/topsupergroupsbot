@@ -135,6 +135,7 @@ def caching_ranks(bot, job):
     encoded_dct = {k: json.dumps(v).encode('UTF-8') for k,v in dct.items()}
     database.REDIS.hmset(CACHE_KEY, encoded_dct)
     database.REDIS.expire(CACHE_KEY, CACHE_SECONDS*4)
+    remove_old_cached_keys(dct)
 
 
 def get_group_cached_rank(group_id):
@@ -164,3 +165,13 @@ def get_group_cached_rank(group_id):
     """
     rank = database.REDIS.hmget(CACHE_KEY, group_id)[0]
     return json.loads(rank.decode('UTF-8')) if rank is not None else None
+
+
+def remove_old_cached_keys(new_cache_dct):
+    new_groups_list = [i for i in new_cache_dct]
+    old_cache = database.REDIS.hgetall(CACHE_KEY)
+    old_cached_groups_list = [int(i.decode('UTF-8')) for i in old_cache]
+    groups_to_remove = [i for i in old_cached_groups_list if i not in new_groups_list]
+    if len(groups_to_remove) > 0:  # to avoid to run hdel with one param
+        database.REDIS.hdel(CACHE_KEY, *groups_to_remove)
+    

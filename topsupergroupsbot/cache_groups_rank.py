@@ -62,6 +62,7 @@ def caching_ranks(bot, job):
         WHERE 
             message_date > date_trunc('week', now())
             AND (s.banned_until IS NULL OR s.banned_until < now()) 
+            AND s.bot_inside IS TRUE
         GROUP BY s.lang, group_id
     
     """
@@ -94,6 +95,7 @@ def caching_ranks(bot, job):
         WHERE 
             last_members.row=1
             AND (s.banned_until IS NULL OR s.banned_until < now())
+            AND s.bot_inside IS TRUE
     """
     members_this_week = database.query_r(query)
 
@@ -111,10 +113,11 @@ def caching_ranks(bot, job):
         FROM votes 
         LEFT OUTER JOIN supergroups AS s 
         USING (group_id)
-        GROUP BY group_id, s.lang, s.banned_until
+        GROUP BY group_id, s.lang, s.banned_until, s.bot_inside
         HAVING 
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND COUNT(vote) >= %s 
+            AND s.bot_inside IS TRUE
     """
     this_week_votes_avg = database.query_r(query, leaderboards.VotesLeaderboard.MIN_REVIEWS)
 

@@ -124,6 +124,7 @@ class VotesLeaderboard(Leaderboard):
             (s.banned_until IS NULL OR s.banned_until < now()) 
             AND s.lang = %s
             AND COUNT(vote) >= %s 
+            AND s.bot_inside IS TRUE
         """
 
         lst_and_time = self.get_list_from_cache()
@@ -190,6 +191,7 @@ class VotesLeaderboard(Leaderboard):
               HAVING 
                   (s.banned_until IS NULL OR s.banned_until < now()) 
                   AND COUNT(vote) >= %s 
+                  AND s.bot_inside IS TRUE
               """
         return database.query_r(query, self.MIN_REVIEWS)
 
@@ -220,6 +222,7 @@ class MessagesLeaderboard(Leaderboard):
             WHERE m.message_date > date_trunc('week', now())
                 AND (s.banned_until IS NULL OR s.banned_until < now()) 
                 AND s.lang = %s
+                AND s.bot_inside IS TRUE
             GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
         """
 
@@ -282,6 +285,7 @@ class MessagesLeaderboard(Leaderboard):
             ON s.group_id = m.group_id
             WHERE m.message_date > date_trunc('week', now())
                 AND (s.banned_until IS NULL OR s.banned_until < now()) 
+                AND s.bot_inside IS TRUE
             GROUP BY m.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category
             ORDER BY leaderboard DESC
             """
@@ -320,6 +324,7 @@ class MembersLeaderboard(Leaderboard):
         ON supergroups.group_id = supergroups_ref.group_id
         WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
             AND lang = %s
+            AND supergroups.bot_inside IS TRUE
         """
 
         lst_and_time = self.get_list_from_cache()
@@ -385,6 +390,7 @@ class MembersLeaderboard(Leaderboard):
             LEFT JOIN supergroups_ref 
             ON supergroups.group_id = supergroups_ref.group_id
             WHERE (supergroups.banned_until IS NULL OR supergroups.banned_until < now()) 
+                AND supergroups.bot_inside IS TRUE
             """
         return database.query_r(query)
 

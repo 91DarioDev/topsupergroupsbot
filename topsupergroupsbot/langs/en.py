@@ -281,3 +281,6 @@ error_param_group_leaderboard_private = (
 )
 
 check_in_private = "Check in private"
+
+official_channel = "official channel"
+donate = "donate"

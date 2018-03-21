@@ -30,6 +30,7 @@ from topsupergroupsbot import get_lang
 from topsupergroupsbot import emojis
 from topsupergroupsbot import constants as c
 from topsupergroupsbot import categories
+from topsupergroupsbot import config
 
 
 
@@ -333,6 +334,26 @@ def help_kb(lang):
         callback_data="help_how_to_use_in_groups"
     )
     buttons_list = [[commands, group_usage], [feedback, source_code]]
+    # optional buttons
+    optional_buttons = []
+    if config.OFFICIAL_CHANNEL is not None:
+        official_channel = InlineKeyboardButton(
+            text=get_lang.get_string(lang, "official_channel"),
+            url=config.OFFICIAL_CHANNEL
+        )
+        optional_buttons.append(official_channel)
+
+    if config.DONATE_ADDRESSES is not None:
+        donate_button = InlineKeyboardButton(
+        text=get_lang.get_string(lang, "donate"),
+        callback_data="donate_button"
+        )
+        optional_buttons.append(donate_button)
+
+    grouped_optional_buttons = [optional_buttons[i:i + 2] for i in range(0, len(optional_buttons), 2)]
+    for i in grouped_optional_buttons:
+        buttons_list.append(i)
+        
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 

@@ -47,3 +47,13 @@ ADMINS = conf["admins"]
 FOUNDER = conf["founder"]
 
 FLOOD_CHECKS = conf["flood_checks"]
+
+try:
+    OFFICIAL_CHANNEL = conf["official_channel"]
+except KeyError:
+    OFFICIAL_CHANNEL = None
+
+try:
+    DONATE_ADDRESSES = conf["donate_addresses"]
+except KeyError:
+    DONATE_ADDRESSES = None

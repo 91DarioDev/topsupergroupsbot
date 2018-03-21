@@ -45,3 +45,9 @@ flood_checks:
   5678: 5678
   9012: 9012
   1357: 2468
+
+# this is optional. it has to contain the link of the official channel of the bot
+official_channel: "https://t.me/official_channel"
+
+# this is a text string containing text addresses for donations
+donate_addresses: "you can donate on mypaypal@account.com"

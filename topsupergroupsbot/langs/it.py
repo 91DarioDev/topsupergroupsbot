@@ -287,3 +287,8 @@ check_in_private = "Controlla in privato"
 
 official_channel = "canale ufficiale"
 donate = "dona"
+donate_intro = ("Questo bot è gratis, opensource e sviluppato per le community di telegram.\n\nIn ogni modo lo sviluppo ha richiesto e continua "
+    "a richiedere un sacco di tempo e soldi per le spese dei server. Ci farebbe molto piacere ricevere anche una piccola donazione per portare avanti "
+    "il progetto.\n\n"
+)
+something_went_wrong = "Ops! Qualcosa è andato storto."

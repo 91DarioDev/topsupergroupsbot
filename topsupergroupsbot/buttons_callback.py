@@ -25,6 +25,7 @@ from topsupergroupsbot import votelink
 from topsupergroupsbot import leaderboards
 from topsupergroupsbot import get_lang
 from topsupergroupsbot import constants as c
+from topsupergroupsbot import config
 
 from telegram import ParseMode
 from telegram.error import (TelegramError,
@@ -140,6 +141,32 @@ def callback_query(bot, update):
     elif query.data == "advanced_commands":
         advanced_commands(bot, query)
 
+    elif query.data == "donate_button":
+        donate_button(bot, query)
+
+
+
+def donate_button(bot, query):
+    addresses = config.DONATE_ADDRESSES
+    if addresses is not None:
+        query.answer()
+        lang = utils.get_db_lang(query.from_user.id)
+        reply_markup = keyboards.back_main_private_help_kb(lang)
+        pre_text = get_lang.get_string(lang, "donate_intro")
+        text = "{}<code>{}</code>".format(pre_text, addresses)
+        try:
+            query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode='HTML')
+        except TelegramError as e:
+            if str(e) != "Message is not modified": print(e)
+    else:
+        lang = utils.get_db_lang(query.from_user.id)
+        text = get_lang.get_string(lang, "something_went_wrong")
+        query.answer(text=text)
+        reply_markup = keyboards.help_kb(lang)
+        try:
+            query.message.edit_reply_markup(reply_markup=reply_markup)
+        except TelegramError as e:
+            if str(e) != "Message is not modified": print(e) 
 
 
 def advanced_commands(bot, query):

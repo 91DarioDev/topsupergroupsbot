@@ -244,12 +244,7 @@ def ban_group(bot, update, args):
         RETURNING lang, banned_until
     """
 
-    admins = bot.getChatAdministrators(chat_id=group_id)
-    creator = ""
-    for admin in admins:
-        if admin.status == 'creator':
-            creator = admin
-            break
+    creator = get_group_admins(group_id=group_id, only_creator=True)
 
     extract = database.query_wr(query, days, reason, group_id, one=True)
     lang = extract[0]

@@ -295,3 +295,14 @@ def replace_markdown_chars(string):
         string = string.replace(char, '|')
     string = string.replace('`', "'")
     return string
+
+
+def get_group_admins(group_id, only_creator=False):
+    admins = bot.getChatAdministrators(chat_id=group_id)
+    if not only_creator:
+        return admins
+    creator = ""
+    for admin in admins:
+        if admin.status == 'creator':
+            creator = admin
+            return creator

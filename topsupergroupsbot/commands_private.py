@@ -244,8 +244,6 @@ def ban_group(bot, update, args):
         RETURNING lang, banned_until
     """
 
-    creator = get_group_admins(group_id=group_id, only_creator=True)
-
     extract = database.query_wr(query, days, reason, group_id, one=True)
     lang = extract[0]
     banned_until = extract[1]
@@ -254,10 +252,7 @@ def ban_group(bot, update, args):
     text = get_lang.get_string(lang, "banned_until_leave").format(
             utils.formatted_datetime_l(banned_until.replace(microsecond=0), lang), 
             shown_reason)
-    text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(
-        creator.user.id, 
-        html.escape(creator.user.first_name)
-    )
+    text += utils.text_mention_creator(bot, update.message.chat.id)
     try:
         bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')
         bot.leaveChat(group_id)

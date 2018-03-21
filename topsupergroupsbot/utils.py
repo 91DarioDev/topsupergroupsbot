@@ -17,6 +17,7 @@
 import babel
 import datetime
 import time
+import html
 from functools import wraps, partial
 
 from topsupergroupsbot import supported_langs
@@ -297,7 +298,7 @@ def replace_markdown_chars(string):
     return string
 
 
-def get_group_admins(group_id, only_creator=False):
+def get_group_admins(bot, group_id, only_creator=False):
     admins = bot.getChatAdministrators(chat_id=group_id)
     if not only_creator:
         return admins
@@ -306,3 +307,13 @@ def get_group_admins(group_id, only_creator=False):
         if admin.status == 'creator':
             creator = admin
             return creator
+
+
+def text_mention_creator(bot, group_id):
+    creator = get_group_admins(bot, group_id, only_creator=True)
+    text = "\n\n<a href=\"tg://user?id={}\">{}</a>".format(
+        creator.user.id, 
+        html.escape(creator.user.first_name)
+    )
+    return text
+

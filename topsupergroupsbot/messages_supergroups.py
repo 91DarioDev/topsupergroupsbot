@@ -40,8 +40,10 @@ def leave_unsupported_chat(bot, update):
             lang = 'en'
         else:
             lang = extract[0]
+
         text = get_lang.get_string(lang, "unsupported_chat")
-        update.message.reply_text(text=text, quote=False)
+        text += utils.text_mention_creator(bot, update.message.chat.id)
+        update.message.reply_text(text=text, quote=False, parse_mode='HTML')
         bot.leaveChat(update.message.chat.id)
         query = "UPDATE supergroups SET bot_inside = FALSE WHERE group_id = %s"
         database.query_w(query, update.message.chat.id)

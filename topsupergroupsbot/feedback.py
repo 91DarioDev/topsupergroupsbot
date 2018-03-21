@@ -95,20 +95,22 @@ class Feedback:
             elif update.message.voice:
                 media = update.message.voice.file_id
                 duration = update.message.voice.duration
-                caption = update.message.caption
+                caption = update.message.caption_html if update.message.caption else None
                 first = bot.sendVoice(
                         chat_id=self.feedback_from.id, 
                         voice=media, 
                         duration=duration, 
-                        caption=caption)
+                        caption=caption,
+                        parse_mode='HTML')
 
             elif update.message.photo:
                 media = update.message.photo[-1].file_id
-                caption = update.message.caption
+                caption = update.message.caption_html if update.message.caption else None
                 first = bot.sendPhoto(
                         chat_id=self.feedback_from.id, 
                         photo=media, 
-                        caption=caption)
+                        caption=caption,
+                        parse_mode='HTML')
 
             elif update.message.sticker:
                 media = update.message.sticker.file_id
@@ -119,36 +121,39 @@ class Feedback:
             elif update.message.document:
                 media = update.message.document.file_id
                 filename = update.message.document.file_name
-                caption = update.message.caption
+                caption = update.message.caption_html if update.message.caption else None
                 first = bot.sendDocument(
                         chat_id=self.feedback_from.id, 
                         document=media, 
                         filename=filename, 
-                        caption=caption)
+                        caption=caption,
+                        parse_mode='HTML')
                 
             elif update.message.audio:
                 media = update.message.audio.file_id
                 duration = update.message.audio.duration
                 performer = update.message.audio.performer
                 title = update.message.audio.title
-                caption = update.message.caption
+                caption = update.message.caption_html if update.message.caption else None
                 first = bot.sendAudio(
                         chat_id=self.feedback_from.id, 
                         audio=media, 
                         duration=duration, 
                         performer=performer, 
                         title=title, 
-                        caption=caption)
+                        caption=caption,
+                        parse_mode='HTML')
                 
             elif update.message.video:
                 media = update.message.video.file_id
-                caption = update.message.caption
+                caption = update.message.caption_html if update.message.caption else None
                 duration = update.message.video.duration
                 first = bot.sendVideo(
                         chat_id=self.feedback_from.id, 
                         video=media, 
                         duration=duration, 
-                        caption=caption)
+                        caption=caption,
+                        parse_mode='HTML')
 
             bot.sendMessage(
                     chat_id=self.feedback_from.id, 

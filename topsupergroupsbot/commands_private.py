@@ -199,7 +199,7 @@ def infoid_from_db(tgid):
         text += "ban_reason: {}\n".format(extract[5])
         text += "bot_inside: {}\n".format(extract[6])
         text += "last_date: {}\n".format(extract[7])
-        text += "category: {}\n".format(categories.CODES[extract[8]])
+        text += "category: {}\n".format(categories.CODES[extract[8]] if extract[8] is not None else None)
     return text
 
 

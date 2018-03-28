@@ -311,10 +311,24 @@ def get_group_admins(bot, group_id, only_creator=False):
 
 def text_mention_creator(bot, group_id):
     creator = get_group_admins(bot, group_id, only_creator=True)
-    text = "\n\n<a href=\"tg://user?id={}\">{}</a>".format(
-        creator.user.id, 
-        html.escape(creator.user.first_name)
-    )
+    if creator is not None:
+        text = "\n\n<a href=\"tg://user?id={}\">{}</a>".format(
+            creator.user.id, 
+            html.escape(creator.user.first_name)
+        )
+    else:  # there is not a creator
+        print(group_id)
+        admins = get_group_admins(bot, group_id)
+        print(admins)
+        if len(admins) == 0:  # no creator and no admins
+            text = ''
+        else:  # mentions admins
+            text = ''
+            for admin in admins:
+                text += "\n\n<a href=\"tg://user?id={}\">{}</a>".format(
+                    admin.user.id, 
+                    html.escape(admin.user.first_name)
+                )
     return text
 
 

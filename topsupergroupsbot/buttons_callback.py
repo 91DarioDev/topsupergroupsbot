@@ -187,7 +187,7 @@ def change_vote(bot, query):
     reply_markup = keyboards.vote_group_kb(group_id, lang)
     text = utils.vote_intro(group_id, lang)
     try:
-        query.message.edit_message_text(text=text, reply_markup=reply_markup)
+        query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e) 
 

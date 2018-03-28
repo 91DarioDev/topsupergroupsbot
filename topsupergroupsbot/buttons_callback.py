@@ -425,8 +425,14 @@ def set_vote(bot, query):
     if vote == "cancel":
         text = get_lang.get_string(lang, "canceled")
         query.answer(text=text, show_alert=True)
-        text = "{}\n\n{}".format(utils.vote_intro(group_id, lang), get_lang.get_string(lang, "canceled"))
-        group_id = query.data.split(":")[2]
+        text = utils.vote_intro(group_id, lang)
+        # check if it's need to add the "already_voted"
+        query_db = "SELECT vote, vote_date FROM votes WHERE user_id = %s AND group_id = %s"
+        extract = database.query_r(query_db, query.from_user.id, group_id, one=True)
+        if extract is not None:
+            stars = emojis.STAR*extract[0]
+            date = utils.formatted_date_l(extract[1].date(), lang)
+            text += "\n\n"+get_lang.get_string(lang, "already_voted").format(stars, date)
         try:
             query.edit_message_text(text=text, reply_markup=keyboards.change_vote_kb(group_id, lang, vote_first_time=True))
         except TelegramError as e:

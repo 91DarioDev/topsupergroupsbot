@@ -62,5 +62,6 @@ def send_vote_by_link(bot, update, first_arg):
     if extract[3] and extract[4] is not None:
         reply_markup = keyboards.change_vote_kb(extract[0], lang)
     else:
+        text += get_lang.get_string(lang, "vote_from_one_to_five")
         reply_markup = keyboards.vote_group_kb(extract[0], lang)
     update.message.reply_text(text=text, reply_markup=reply_markup)

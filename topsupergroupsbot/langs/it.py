@@ -38,6 +38,8 @@ already_this_page = "Sei già in questa pagina!"
 
 vote_this_group = "id: {}\nusername: @{}\ntitolo: {}"
 already_voted = "Già votato {} il {}"
+vote = "vota"
+vote_from_one_to_five = "Vota questo gruppo da una a cinque stelle"
 choose_your_lang = "Seleziona la tua lingua"
 
 group_lang_button = "Lingua gruppo"

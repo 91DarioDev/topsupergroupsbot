@@ -185,8 +185,11 @@ def change_vote(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
     group_id = query.data.split(":")[1]
     reply_markup = keyboards.vote_group_kb(group_id, lang)
+    text = utils.vote_intro(group_id, lang)
+    text += "\n\n"
+    text += get_lang.get_string(lang, "vote_from_one_to_five")
     try:
-        query.message.edit_reply_markup(reply_markup=reply_markup)
+        query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e) 
 
@@ -418,16 +421,24 @@ def set_weekly_group_digest(bot, query):
 def set_vote(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
     vote = query.data.split(":")[1]
+    group_id = query.data.split(":")[2]
     if vote == "cancel":
-        query.answer()
-        text = "{}\n\n{}".format(query.message.text, get_lang.get_string(lang, "canceled"))
+        text = get_lang.get_string(lang, "canceled")
+        query.answer(text=text, show_alert=True)
+        text = utils.vote_intro(group_id, lang)
+        # check if it's need to add the "already_voted"
+        query_db = "SELECT vote, vote_date FROM votes WHERE user_id = %s AND group_id = %s"
+        extract = database.query_r(query_db, query.from_user.id, group_id, one=True)
+        if extract is not None:
+            stars = emojis.STAR*extract[0]
+            date = utils.formatted_date_l(extract[1].date(), lang)
+            text += "\n\n"+get_lang.get_string(lang, "already_voted").format(stars, date)
         try:
-            query.edit_message_text(text=text)
+            query.edit_message_text(text=text, reply_markup=keyboards.change_vote_kb(group_id, lang, vote_first_time=True))
         except TelegramError as e:
             if str(e) != "Message is not modified": print(e)
         return
     vote = int(vote)
-    group_id = query.data.split(":")[2]
     alert = ""
     query_db = """
     INSERT INTO votes 
@@ -452,9 +463,9 @@ def set_vote(bot, query):
         database.query_w(query_db, vote, query.from_user.id, group_id)
         alert = get_lang.get_string(lang, "updated_vote")
     query.answer(text=alert, show_alert=True)
-    text = "{}\n\n{}\n{}".format(query.message.text, alert, emojis.STAR * vote)
+    text = "{}\n\n{}\n{}".format(utils.vote_intro(group_id, lang), alert, emojis.STAR * vote)
     try:
-        query.edit_message_text(text=text)
+        query.edit_message_text(text=text, reply_markup=keyboards.change_vote_kb(group_id, lang))
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 

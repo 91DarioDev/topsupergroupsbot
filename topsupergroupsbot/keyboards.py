@@ -139,14 +139,14 @@ def vote_group_kb(group_id, lang):
                 callback_data="rate:{}:{}".format(i, group_id))])
     buttons_list.append([InlineKeyboardButton(
             text=get_lang.get_string(lang, "cancel"),
-            callback_data="rate:cancel")])
+            callback_data="rate:cancel:{}".format(group_id))])
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 
 
-def change_vote_kb(group_id, lang):
+def change_vote_kb(group_id, lang, vote_first_time=False):
     button_back = InlineKeyboardButton(
-            text=get_lang.get_string(lang, "change_vote"),
+            text=get_lang.get_string(lang, "change_vote") if vote_first_time is False else get_lang.get_string(lang, "vote"),
             callback_data="change_vote:{}".format(group_id))
     buttons_list = [[button_back]]
     keyboard = InlineKeyboardMarkup(buttons_list)

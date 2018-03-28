@@ -185,8 +185,9 @@ def change_vote(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
     group_id = query.data.split(":")[1]
     reply_markup = keyboards.vote_group_kb(group_id, lang)
+    text = utils.vote_intro(group_id, lang)
     try:
-        query.message.edit_reply_markup(reply_markup=reply_markup)
+        query.message.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e) 
 
@@ -420,7 +421,7 @@ def set_vote(bot, query):
     vote = query.data.split(":")[1]
     if vote == "cancel":
         query.answer()
-        text = "{}\n\n{}".format(query.message.text, get_lang.get_string(lang, "canceled"))
+        text = "{}\n\n{}".format(utils.vote_intro(group_id, lang), get_lang.get_string(lang, "canceled"))
         group_id = query.data.split(":")[2]
         try:
             query.edit_message_text(text=text, reply_markup=keyboards.change_vote_kb(group_id, lang, vote_first_time=True))

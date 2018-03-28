@@ -186,6 +186,8 @@ def change_vote(bot, query):
     group_id = query.data.split(":")[1]
     reply_markup = keyboards.vote_group_kb(group_id, lang)
     text = utils.vote_intro(group_id, lang)
+    text += "\n\n"
+    text += get_lang.get_string(lang, "vote_from_one_to_five")
     try:
         query.edit_message_text(text=text, reply_markup=reply_markup)
     except TelegramError as e:

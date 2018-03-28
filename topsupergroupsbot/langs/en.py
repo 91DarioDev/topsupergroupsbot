@@ -40,6 +40,7 @@ already_this_page = "You are already on this page!"
 vote_this_group = "id: {}\nusername: @{}\ntitle: {}"
 already_voted = "Already voted {} on {}"
 vote = "vote"
+vote_from_one_to_five = "Rate this group from 1 to 5 stars"
 choose_your_lang = "Select your language"
 
 group_lang_button = "Group Lang"

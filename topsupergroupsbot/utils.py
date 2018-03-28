@@ -318,3 +318,12 @@ def text_mention_creator(bot, group_id):
     return text
 
 
+def vote_intro(group_id, lang):
+    query = "SELECT username, title FROM supergroups WHERE group_id = %s"
+    extract = database.query_r(query, group_id)
+    if extract is None:
+        return None
+    else:
+        return get_lang.get_string(lang, "vote_this_group").format(group_id, extract[0], extract[1])
+
+

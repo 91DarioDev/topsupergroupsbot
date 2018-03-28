@@ -419,6 +419,7 @@ def set_weekly_group_digest(bot, query):
 def set_vote(bot, query):
     lang = utils.get_db_lang(query.from_user.id)
     vote = query.data.split(":")[1]
+    group_id = query.data.split(":")[2]
     if vote == "cancel":
         query.answer()
         text = "{}\n\n{}".format(utils.vote_intro(group_id, lang), get_lang.get_string(lang, "canceled"))
@@ -428,7 +429,6 @@ def set_vote(bot, query):
         except TelegramError as e:
             if str(e) != "Message is not modified": print(e)
         return
-    group_id = query.data.split(":")[2]
     vote = int(vote)
     alert = ""
     query_db = """

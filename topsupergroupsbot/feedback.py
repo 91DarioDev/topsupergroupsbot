@@ -196,7 +196,7 @@ def is_a_feedback_reply(bot, update):
         return False
     if update.message.reply_to_message.forward_from is None:
         return False
-    if update.message.reply_to_message.from_user.id == bot.id:
+    if update.message.reply_to_message.from_user.id == bot.id or update.message.reply_to_message.from_user.id == config.FOUNDER:
         return True
 
 

@@ -423,7 +423,8 @@ def set_vote(bot, query):
     vote = query.data.split(":")[1]
     group_id = query.data.split(":")[2]
     if vote == "cancel":
-        query.answer()
+        text = get_lang.get_string(lang, "canceled")
+        query.answer(text=text, show_alert=True)
         text = "{}\n\n{}".format(utils.vote_intro(group_id, lang), get_lang.get_string(lang, "canceled"))
         group_id = query.data.split(":")[2]
         try:

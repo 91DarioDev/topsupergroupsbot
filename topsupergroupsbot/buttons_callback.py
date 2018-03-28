@@ -454,7 +454,7 @@ def set_vote(bot, query):
     query.answer(text=alert, show_alert=True)
     text = "{}\n\n{}\n{}".format(query.message.text, alert, emojis.STAR * vote)
     try:
-        query.edit_message_text(text=text)
+        query.edit_message_text(text=text, reply_markup=keyboards.change_vote_kb(group_id, lang))
     except TelegramError as e:
         if str(e) != "Message is not modified": print(e)
 

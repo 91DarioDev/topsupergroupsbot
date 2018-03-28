@@ -317,3 +317,4 @@ def text_mention_creator(bot, group_id):
     )
     return text
 
+

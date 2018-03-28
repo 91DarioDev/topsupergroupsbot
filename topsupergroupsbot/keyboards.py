@@ -144,9 +144,9 @@ def vote_group_kb(group_id, lang):
     return keyboard
 
 
-def change_vote_kb(group_id, lang):
+def change_vote_kb(group_id, lang, vote_first_time=False):
     button_back = InlineKeyboardButton(
-            text=get_lang.get_string(lang, "change_vote"),
+            text=get_lang.get_string(lang, "change_vote") if vote_first_time is False else get_lang.get_string(lang, "vote"),
             callback_data="change_vote:{}".format(group_id))
     buttons_list = [[button_back]]
     keyboard = InlineKeyboardMarkup(buttons_list)

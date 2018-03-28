@@ -139,7 +139,7 @@ def vote_group_kb(group_id, lang):
                 callback_data="rate:{}:{}".format(i, group_id))])
     buttons_list.append([InlineKeyboardButton(
             text=get_lang.get_string(lang, "cancel"),
-            callback_data="rate:cancel")])
+            callback_data="rate:cancel:{}".format(group_id))])
     keyboard = InlineKeyboardMarkup(buttons_list)
     return keyboard
 

@@ -103,33 +103,67 @@ class VotesLeaderboard(Leaderboard):
 
     def build_page(self):
         query = """
-        SELECT 
-            v.group_id, 
-            s_ref.title, 
-            s_ref.username, 
-            COUNT(vote) AS amount, 
-            ROUND(AVG(vote), 1)::float AS average,
-            s.nsfw, 
-            extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
-            RANK() OVER (ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC),
-            s.lang,
-            s.category
-        FROM votes AS v
-        LEFT OUTER JOIN supergroups_ref AS s_ref
-        USING (group_id)
-        LEFT OUTER JOIN supergroups AS s
-        USING (group_id)
-        GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category, s.bot_inside
-        HAVING 
-            (s.banned_until IS NULL OR s.banned_until < now()) 
-            AND s.lang = %s
-            AND COUNT(vote) >= %s 
-            AND s.bot_inside IS TRUE
+                WITH myconst AS
+                (SELECT 
+                      AVG(vote)::float AS overall_avg
+                FROM votes AS v
+                LEFT OUTER JOIN supergroups_ref AS s_ref
+                ON s_ref.group_id = v.group_id
+                LEFT OUTER JOIN supergroups AS s
+                ON s.group_id = v.group_id
+                GROUP BY s.banned_until, s.bot_inside, s.lang
+                HAVING 
+                      (s.banned_until IS NULL OR s.banned_until < now()) 
+                      AND COUNT(vote) >= %s 
+                      AND s.lang = %s
+                      AND s.bot_inside IS TRUE)
+
+                SELECT 
+                  *,
+                  RANK() OVER (PARTITION BY sub.lang  ORDER BY bayesan DESC)
+                  FROM (
+                    SELECT 
+                        v.group_id,
+                        s_ref.title, 
+                        s_ref.username, 
+                        COUNT(vote) AS amount, 
+                        ROUND(AVG(vote), 1)::float AS average,
+                        s.nsfw,
+                        extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                        s.lang,
+                        s.category,
+                        -- (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
+                        --    * R = average for the movie (mean) = (Rating)
+                        --    * v = number of votes for the movie = (votes)
+                        --    * m = minimum votes required to be listed in the Top 250 (currently 1300)
+                        --    * C = the mean vote across the whole report (currently 6.8)
+                        (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan
+                    FROM myconst AS m, votes AS v
+                    LEFT OUTER JOIN supergroups_ref AS s_ref
+                    ON s_ref.group_id = v.group_id
+                    LEFT OUTER JOIN supergroups AS s
+                    ON s.group_id = v.group_id
+                    GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, s.banned_until, s.lang, s.category, s.bot_inside, s.joined_the_bot, m.overall_avg
+                    HAVING 
+                        (s.banned_until IS NULL OR s.banned_until < now()) 
+                        AND COUNT(vote) >= %s
+                        AND s.lang = %s 
+                        AND s.bot_inside IS TRUE
+                  ) AS sub;
         """
 
         lst_and_time = self.get_list_from_cache()
         if lst_and_time is None:
-            extract = database.query_r(query, self.region, self.MIN_REVIEWS)
+            extract = database.query_r(
+                query, 
+                self.MIN_REVIEWS, 
+                self.region, 
+                self.MIN_REVIEWS, 
+                self.MIN_REVIEWS, 
+                self.MIN_REVIEWS, 
+                self.MIN_REVIEWS, 
+                self.region
+            )
             self.cache_the_list(extract)
             cached_sec_ago = 1
         else:
@@ -158,7 +192,7 @@ class VotesLeaderboard(Leaderboard):
             nsfw = emojis.NSFW if group[5] is True else ""
             new = emojis.NEW if (group[6]+self.NEW_INTERVAL > time.time()) else ""
             text += "{}) {}[{}](t.me/{}): {}{}|{}{}\n".format(
-                    group[7],
+                    group[10],
                     nsfw, 
                     utils.replace_markdown_chars(utils.truncate(group[1], M_C_P)), 
                     group[2],
@@ -171,29 +205,60 @@ class VotesLeaderboard(Leaderboard):
 
     def all_results_no_filters(self):
         query = """
-              SELECT 
-                  v.group_id, 
-                  s_ref.title, 
-                  s_ref.username, 
-                  COUNT(vote) AS amount, 
-                  ROUND(AVG(vote), 1)::float AS average,
-                  s.nsfw, 
-                  extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
-                  RANK() OVER (PARTITION BY s.lang ORDER BY ROUND(AVG(vote), 1) DESC, COUNT(vote) DESC),
-                  s.lang,
-                  s.category
-              FROM votes AS v
-              LEFT OUTER JOIN supergroups_ref AS s_ref
-              ON s_ref.group_id = v.group_id
-              LEFT OUTER JOIN supergroups AS s
-              ON s.group_id = v.group_id
-              GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, dt, s.banned_until, s.lang, s.category, s.bot_inside
-              HAVING 
-                  (s.banned_until IS NULL OR s.banned_until < now()) 
-                  AND COUNT(vote) >= %s 
-                  AND s.bot_inside IS TRUE
-              """
-        return database.query_r(query, self.MIN_REVIEWS)
+                WITH myconst AS
+                (SELECT 
+                      AVG(vote)::float AS overall_avg
+                FROM votes AS v
+                LEFT OUTER JOIN supergroups_ref AS s_ref
+                ON s_ref.group_id = v.group_id
+                LEFT OUTER JOIN supergroups AS s
+                ON s.group_id = v.group_id
+                GROUP BY s.banned_until, s.bot_inside, s.lang
+                HAVING 
+                      (s.banned_until IS NULL OR s.banned_until < now()) 
+                      AND COUNT(vote) >= %s 
+                      AND s.bot_inside IS TRUE)
+
+                SELECT 
+                  *,
+                  RANK() OVER (PARTITION BY sub.lang  ORDER BY bayesan DESC)
+                  FROM (
+                    SELECT 
+                        v.group_id,
+                        s_ref.title, 
+                        s_ref.username, 
+                        COUNT(vote) AS amount, 
+                        ROUND(AVG(vote), 1)::float AS average,
+                        s.nsfw,
+                        extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                        s.lang,
+                        s.category,
+                        -- (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
+                        --    * R = average for the movie (mean) = (Rating)
+                        --    * v = number of votes for the movie = (votes)
+                        --    * m = minimum votes required to be listed in the Top 250 (currently 1300)
+                        --    * C = the mean vote across the whole report (currently 6.8)
+                        (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan
+                    FROM myconst AS m, votes AS v
+                    LEFT OUTER JOIN supergroups_ref AS s_ref
+                    ON s_ref.group_id = v.group_id
+                    LEFT OUTER JOIN supergroups AS s
+                    ON s.group_id = v.group_id
+                    GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, s.banned_until, s.lang, s.category, s.bot_inside, s.joined_the_bot, m.overall_avg
+                    HAVING 
+                        (s.banned_until IS NULL OR s.banned_until < now()) 
+                        AND COUNT(vote) >= %s
+                        AND s.bot_inside IS TRUE
+                  ) AS sub;
+        """
+        return database.query_r(
+            query, 
+            self.MIN_REVIEWS, 
+            self.MIN_REVIEWS, 
+            self.MIN_REVIEWS, 
+            self.MIN_REVIEWS, 
+            self.MIN_REVIEWS
+        )
 
 
 class MessagesLeaderboard(Leaderboard):

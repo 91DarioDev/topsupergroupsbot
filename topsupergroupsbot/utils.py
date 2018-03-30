@@ -317,9 +317,7 @@ def text_mention_creator(bot, group_id):
             html.escape(creator.user.first_name)
         )
     else:  # there is not a creator
-        print(group_id)
         admins = get_group_admins(bot, group_id)
-        print(admins)
         if len(admins) == 0:  # no creator and no admins
             text = ''
         else:  # mentions admins

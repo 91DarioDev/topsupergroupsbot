@@ -146,21 +146,63 @@ def weekly_groups_digest(bot, job):
     ####################
 
     query = """
-        SELECT
-            group_id,
-            COUNT(vote) AS amount,
-            ROUND(AVG(vote), 1) AS average, 
-            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC)
-        FROM votes 
-        LEFT OUTER JOIN supergroups AS s 
-        USING (group_id)
-        GROUP BY group_id, s.lang, s.banned_until, s.bot_inside
+        WITH myconst AS
+        (SELECT 
+              s.lang,
+              AVG(vote)::float AS overall_avg
+        FROM votes AS v
+        LEFT OUTER JOIN supergroups_ref AS s_ref
+        ON s_ref.group_id = v.group_id
+        LEFT OUTER JOIN supergroups AS s
+        ON s.group_id = v.group_id
+        GROUP BY s.banned_until, s.bot_inside, s.lang
         HAVING 
-            (s.banned_until IS NULL OR s.banned_until < now()) 
-            AND COUNT(vote) >= %s 
-            AND s.bot_inside IS TRUE
+              (s.banned_until IS NULL OR s.banned_until < now()) 
+              AND COUNT(vote) >= %s
+              AND s.bot_inside IS TRUE)
+
+        SELECT 
+          *,
+          RANK() OVER (PARTITION BY sub.lang  ORDER BY bayesan DESC)
+          FROM (
+            SELECT 
+                v.group_id,
+                s_ref.title, 
+                s_ref.username, 
+                COUNT(vote) AS amount, 
+                ROUND(AVG(vote), 1)::float AS average,
+                s.nsfw,
+                extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                s.lang,
+                s.category,
+                -- (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
+                --    * R = average for the movie (mean) = (Rating)
+                --    * v = number of votes for the movie = (votes)
+                --    * m = minimum votes required to be listed in the Top 250 (currently 1300)
+                --    * C = the mean vote across the whole report (currently 6.8)
+                (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan
+            FROM votes AS v
+            LEFT OUTER JOIN supergroups_ref AS s_ref
+            ON s_ref.group_id = v.group_id
+            LEFT OUTER JOIN supergroups AS s
+            ON s.group_id = v.group_id
+            LEFT OUTER JOIN myconst AS m
+            ON (s.lang = m.lang)
+            GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, s.banned_until, s.lang, s.category, s.bot_inside, s.joined_the_bot, m.overall_avg
+            HAVING 
+                (s.banned_until IS NULL OR s.banned_until < now()) 
+                AND COUNT(vote) >= %s
+                AND s.bot_inside IS TRUE
+          ) AS sub;
     """
-    this_week_votes_avg = database.query_r(query, leaderboards.VotesLeaderboard.MIN_REVIEWS)
+    this_week_votes_avg = database.query_r(
+        query, 
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS
+    )
 
     query = """
         SELECT 
@@ -178,7 +220,68 @@ def weekly_groups_digest(bot, job):
             AND COUNT(vote) >= %s 
             AND s.bot_inside IS TRUE
     """
-    last_week_votes_avg = database.query_r(query, near_interval, leaderboards.VotesLeaderboard.MIN_REVIEWS)
+    query = """
+        WITH myconst AS
+        (SELECT 
+              s.lang,
+              AVG(vote)::float AS overall_avg
+        FROM votes AS v
+        LEFT OUTER JOIN supergroups_ref AS s_ref
+        ON s_ref.group_id = v.group_id
+        LEFT OUTER JOIN supergroups AS s
+        ON s.group_id = v.group_id
+        WHERE vote_date <= now() - interval %s
+        GROUP BY s.banned_until, s.bot_inside, s.lang
+        HAVING 
+              (s.banned_until IS NULL OR s.banned_until < now()) 
+              AND COUNT(vote) >= %s
+              AND s.bot_inside IS TRUE)
+
+        SELECT 
+          *,
+          RANK() OVER (PARTITION BY sub.lang  ORDER BY bayesan DESC)
+          FROM (
+            SELECT 
+                v.group_id,
+                s_ref.title, 
+                s_ref.username, 
+                COUNT(vote) AS amount, 
+                ROUND(AVG(vote), 1)::float AS average,
+                s.nsfw,
+                extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                s.lang,
+                s.category,
+                -- (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
+                --    * R = average for the movie (mean) = (Rating)
+                --    * v = number of votes for the movie = (votes)
+                --    * m = minimum votes required to be listed in the Top 250 (currently 1300)
+                --    * C = the mean vote across the whole report (currently 6.8)
+                (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan
+            FROM votes AS v
+            LEFT OUTER JOIN supergroups_ref AS s_ref
+            ON s_ref.group_id = v.group_id
+            LEFT OUTER JOIN supergroups AS s
+            ON s.group_id = v.group_id
+            LEFT OUTER JOIN myconst AS m
+            ON (s.lang = m.lang)
+            WHERE vote_date <= now() - interval %s
+            GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, s.banned_until, s.lang, s.category, s.bot_inside, s.joined_the_bot, m.overall_avg
+            HAVING 
+                (s.banned_until IS NULL OR s.banned_until < now()) 
+                AND COUNT(vote) >= %s
+                AND s.bot_inside IS TRUE
+          ) AS sub;
+    """
+    last_week_votes_avg = database.query_r(
+        query, 
+        near_interval, 
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        near_interval,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS
+    )
 
     ##################
     # ACTIVE USERS
@@ -270,16 +373,16 @@ def weekly_groups_digest(bot, job):
 
         for i in this_week_votes_avg:
             if i[0] == group_id:
-                sum_v_new = i[1]
-                avg_v_new = i[2]
-                avg_pos_new = i[3]
+                sum_v_new = i[3]
+                avg_v_new = i[4]
+                avg_pos_new = i[10]
                 break
 
         for i in last_week_votes_avg:
             if i[0] == group_id:
-                sum_v_old = i[1]
-                avg_v_old = i[2]
-                avg_pos_old = i[3]
+                sum_v_old = i[3]
+                avg_v_old = i[4]
+                avg_pos_old = i[10]
                 break
 
         for i in this_week_active_users:

@@ -104,22 +104,63 @@ def caching_ranks(bot, job):
     ####################
 
     query = """
-        SELECT
-            group_id,
-            COUNT(vote) AS amount,
-            ROUND(AVG(vote), 1)::float AS average, 
-            RANK() OVER(PARTITION BY s.lang ORDER BY ROUND(AVG(VOTE), 1)DESC, COUNT(VOTE)DESC),
-            s.lang
-        FROM votes 
-        LEFT OUTER JOIN supergroups AS s 
-        USING (group_id)
-        GROUP BY group_id, s.lang, s.banned_until, s.bot_inside
+        WITH myconst AS
+        (SELECT 
+              s.lang,
+              AVG(vote)::float AS overall_avg
+        FROM votes AS v
+        LEFT OUTER JOIN supergroups_ref AS s_ref
+        ON s_ref.group_id = v.group_id
+        LEFT OUTER JOIN supergroups AS s
+        ON s.group_id = v.group_id
+        GROUP BY s.banned_until, s.bot_inside, s.lang
         HAVING 
-            (s.banned_until IS NULL OR s.banned_until < now()) 
-            AND COUNT(vote) >= %s 
-            AND s.bot_inside IS TRUE
+              (s.banned_until IS NULL OR s.banned_until < now()) 
+              AND COUNT(vote) >= %s
+              AND s.bot_inside IS TRUE)
+
+        SELECT 
+          *,
+          RANK() OVER (PARTITION BY sub.lang  ORDER BY bayesan DESC)
+          FROM (
+            SELECT 
+                v.group_id,
+                s_ref.title, 
+                s_ref.username, 
+                COUNT(vote) AS amount, 
+                ROUND(AVG(vote), 1)::float AS average,
+                s.nsfw,
+                extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
+                s.lang,
+                s.category,
+                -- (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
+                --    * R = average for the movie (mean) = (Rating)
+                --    * v = number of votes for the movie = (votes)
+                --    * m = minimum votes required to be listed in the Top 250 (currently 1300)
+                --    * C = the mean vote across the whole report (currently 6.8)
+                (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan
+            FROM votes AS v
+            LEFT OUTER JOIN supergroups_ref AS s_ref
+            ON s_ref.group_id = v.group_id
+            LEFT OUTER JOIN supergroups AS s
+            ON s.group_id = v.group_id
+            LEFT OUTER JOIN myconst AS m
+            ON (s.lang = m.lang)
+            GROUP BY v.group_id, s_ref.title, s_ref.username, s.nsfw, s.banned_until, s.lang, s.category, s.bot_inside, s.joined_the_bot, m.overall_avg
+            HAVING 
+                (s.banned_until IS NULL OR s.banned_until < now()) 
+                AND COUNT(vote) >= %s
+                AND s.bot_inside IS TRUE
+          ) AS sub;
     """
-    this_week_votes_avg = database.query_r(query, leaderboards.VotesLeaderboard.MIN_REVIEWS)
+    this_week_votes_avg = database.query_r(
+        query, 
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS,
+        leaderboards.VotesLeaderboard.MIN_REVIEWS
+    )
 
     dct = {}
     for group in msgs_this_week:
@@ -129,7 +170,7 @@ def caching_ranks(bot, job):
         dct = filling_dict(dct, group[0], BY_MEMBERS, group[2], group[3], group[4], group[1])
 
     for group in this_week_votes_avg:
-        dct = filling_dict(dct, group[0], BY_VOTES, group[3], group[4], time.time(), [group[2], group[1]])
+        dct = filling_dict(dct, group[0], BY_VOTES, group[10], group[7], time.time(), [group[4], group[3]])
 
     # encoding
     encoded_dct = {k: json.dumps(v).encode('UTF-8') for k,v in dct.items()}

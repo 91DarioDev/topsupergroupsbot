@@ -98,8 +98,8 @@ class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
     MIN_REVIEWS = 10
     CACHE_SECONDS = 60*3
-    INDEX_LANG = 7
-    INDEX_CATEGORY = 8
+    INDEX_LANG = 8
+    INDEX_CATEGORY = 9
 
     def build_page(self):
         query = """
@@ -111,7 +111,7 @@ class VotesLeaderboard(Leaderboard):
                 ON s_ref.group_id = v.group_id
                 LEFT OUTER JOIN supergroups AS s
                 ON s.group_id = v.group_id
-                GROUP BY s.banned_until, s.bot_inside, s.lang
+                GROUP BY s.banned_until, s.bot_inside
                 HAVING 
                       (s.banned_until IS NULL OR s.banned_until < now()) 
                       AND COUNT(vote) >= %s 
@@ -130,14 +130,14 @@ class VotesLeaderboard(Leaderboard):
                         ROUND(AVG(vote), 1)::float AS average,
                         s.nsfw,
                         extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
-                        s.lang,
-                        s.category,
                         -- (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
                         --    * R = average for the movie (mean) = (Rating)
                         --    * v = number of votes for the movie = (votes)
                         --    * m = minimum votes required to be listed in the Top 250 (currently 1300)
                         --    * C = the mean vote across the whole report (currently 6.8)
-                        (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan
+                        (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan,
+                        s.lang,
+                        s.category
                     FROM myconst AS m, votes AS v
                     LEFT OUTER JOIN supergroups_ref AS s_ref
                     ON s_ref.group_id = v.group_id
@@ -231,14 +231,14 @@ class VotesLeaderboard(Leaderboard):
                         ROUND(AVG(vote), 1)::float AS average,
                         s.nsfw,
                         extract(epoch from s.joined_the_bot at time zone 'utc') AS dt,
-                        s.lang,
-                        s.category,
                         -- (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
                         --    * R = average for the movie (mean) = (Rating)
                         --    * v = number of votes for the movie = (votes)
                         --    * m = minimum votes required to be listed in the Top 250 (currently 1300)
                         --    * C = the mean vote across the whole report (currently 6.8)
-                        (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan
+                        (  (COUNT(vote)::float / (COUNT(vote)+%s)) * AVG(vote)::float + (%s::float / (COUNT(vote)+%s)) * (m.overall_avg) ) AS bayesan,
+                        s.lang,
+                        s.category
                     FROM myconst AS m, votes AS v
                     LEFT OUTER JOIN supergroups_ref AS s_ref
                     ON s_ref.group_id = v.group_id

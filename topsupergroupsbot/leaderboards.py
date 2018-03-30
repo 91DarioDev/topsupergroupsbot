@@ -98,8 +98,8 @@ class VotesLeaderboard(Leaderboard):
     CODE = 'vl'
     MIN_REVIEWS = 10
     CACHE_SECONDS = 60*3
-    INDEX_LANG = 8
-    INDEX_CATEGORY = 9
+    INDEX_LANG = 7
+    INDEX_CATEGORY = 8
 
     def build_page(self):
         query = """
@@ -164,7 +164,6 @@ class VotesLeaderboard(Leaderboard):
                 self.MIN_REVIEWS, 
                 self.region
             )
-            print(extract)
             self.cache_the_list(extract)
             cached_sec_ago = 1
         else:

@@ -373,16 +373,16 @@ def weekly_groups_digest(bot, job):
 
         for i in this_week_votes_avg:
             if i[0] == group_id:
-                sum_v_new = i[1]
-                avg_v_new = i[2]
-                avg_pos_new = i[3]
+                sum_v_new = i[3]
+                avg_v_new = i[4]
+                avg_pos_new = i[10]
                 break
 
         for i in last_week_votes_avg:
             if i[0] == group_id:
-                sum_v_old = i[1]
-                avg_v_old = i[2]
-                avg_pos_old = i[3]
+                sum_v_old = i[3]
+                avg_v_old = i[4]
+                avg_pos_old = i[10]
                 break
 
         for i in this_week_active_users:

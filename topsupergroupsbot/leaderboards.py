@@ -164,6 +164,7 @@ class VotesLeaderboard(Leaderboard):
                 self.MIN_REVIEWS, 
                 self.region
             )
+            print(extract)
             self.cache_the_list(extract)
             cached_sec_ago = 1
         else:

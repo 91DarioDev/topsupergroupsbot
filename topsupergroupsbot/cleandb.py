@@ -77,6 +77,7 @@ def send_chat_action_inactive_group(bot, job):
 	]
 	group_id = job.context[0]
 	try:
+		print("sending")
 		bot.sendChatAction(chat_id=group_id, action='typing')
 	except Exception as e:
 		if e in errors:

@@ -28,3 +28,34 @@ def clean_db(bot, job):
 
     query = "DELETE FROM members WHERE updated_date < now() - interval %s"
     database.query_w(query, CLEAN_INTERVAL)
+
+
+@run_async
+def check_bot_inside_in_inactive_groups(bot, job):
+	query = """
+		SELECT
+			rows_by_group.group_id,
+			rows_by_group.message_date,
+			rows_by_group.row
+		FROM
+			(
+			SELECT
+				group_id,
+				message_date,
+				ROW_NUMBER() OVER (PARTITION BY group_id ORDER BY message_date DESC) AS row
+			FROM messages
+		) AS rows_by_group
+		LEFT OUTER JOIN supergroups AS s
+		USING (group_id)
+		WHERE 
+			rows_by_group.row=1
+			AND s.bot_inside IS TRUE
+			AND rows_by_group.message_date < (NOW() - INTERVAL %s); 
+	"""
+
+	interval = '3 days'
+	lst = database.query_r(query, interval)
+
+	for item in lst:
+		group_id = item[0]
+		print(group_id)

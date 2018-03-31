@@ -166,6 +166,13 @@ def main():
         first=0
     )
 
+    # check inactive groups
+    j.run_repeating(
+        cleandb.check_bot_inside_in_inactive_groups,
+        interval=(60*60*24) * 2,
+        first=0
+    )
+
     # update cache if the week is over for cached leaderboards related to the week
     j.run_daily(
         leaderboards.scheduling_messages_leaderboard_cache,

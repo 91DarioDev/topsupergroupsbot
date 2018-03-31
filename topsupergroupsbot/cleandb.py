@@ -56,7 +56,17 @@ def check_bot_inside_in_inactive_groups(bot, job):
 	interval = '3 days'
 	lst = database.query_r(query, interval)
 
+	start_in = 0
 	for item in lst:
+		start_in += 0.2
 		group_id = item[0]
-		print(group_id)
-	print(lst)
+		job.job_queue.run_once(send_chat_action_inactive_group, start_in, context=[group_id])
+
+
+
+def send_chat_action_inactive_group(bot, job):
+	group_id = context[0]
+	try:
+		bot.sendChatAction(chat_id=group_id, action='typing')
+	except Exception as e:
+		print (e)

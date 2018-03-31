@@ -59,3 +59,4 @@ def check_bot_inside_in_inactive_groups(bot, job):
 	for item in lst:
 		group_id = item[0]
 		print(group_id)
+	print(lst)

@@ -252,7 +252,7 @@ def ban_group(bot, update, args):
     text = get_lang.get_string(lang, "banned_until_leave").format(
             utils.formatted_datetime_l(banned_until.replace(microsecond=0), lang), 
             shown_reason)
-    text += utils.text_mention_creator(bot, update.message.chat.id)
+    text += utils.text_mention_creator(bot, group_id)
     try:
         bot.send_message(chat_id=group_id, text=text, parse_mode='HTML')
         bot.leaveChat(group_id)

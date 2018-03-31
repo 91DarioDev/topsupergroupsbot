@@ -63,9 +63,9 @@ def check_bot_inside_in_inactive_groups(bot, job):
 		job.job_queue.run_once(send_chat_action_inactive_group, start_in, context=[group_id])
 
 
-
+@run_async
 def send_chat_action_inactive_group(bot, job):
-	group_id = context[0]
+	group_id = job.context[0]
 	try:
 		bot.sendChatAction(chat_id=group_id, action='typing')
 	except Exception as e:

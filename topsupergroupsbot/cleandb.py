@@ -32,6 +32,12 @@ def clean_db(bot, job):
 
 @run_async
 def check_bot_inside_in_inactive_groups(bot, job):
+
+
+
+
+
+
 	query = """
 		SELECT
 			rows_by_group.group_id,
@@ -65,8 +71,21 @@ def check_bot_inside_in_inactive_groups(bot, job):
 
 @run_async
 def send_chat_action_inactive_group(bot, job):
+	errors = [
+		"Forbidden: bot was kicked from the supergroup chat",
+		"Forbidden: bot is not a member of the supergroup chat"
+	]
 	group_id = job.context[0]
 	try:
 		bot.sendChatAction(chat_id=group_id, action='typing')
 	except Exception as e:
-		print (e)
+		if e in errors:
+			print(e)
+			print('right')
+			query = "UPDATE supergroups SET bot_inside=FALSE WHERE group_id=%s"
+			database.query_w(query, group_id)
+		else:
+			print(e)
+			print("cleandb inactive groups")
+
+

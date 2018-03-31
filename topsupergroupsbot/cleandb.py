@@ -81,7 +81,7 @@ def send_chat_action_inactive_group(bot, job):
 	except Exception as e:
 		if e in errors:
 			print(e)
-			print('right')
+			print('right usage in clean_db inactive groups')
 			query = "UPDATE supergroups SET bot_inside=FALSE WHERE group_id=%s"
 			database.query_w(query, group_id)
 		else:

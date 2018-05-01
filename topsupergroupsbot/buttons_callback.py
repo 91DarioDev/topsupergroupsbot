@@ -37,6 +37,12 @@ from telegram.error import (TelegramError,
 
 
 def callback_query(bot, update):
+
+    # PATCH
+    if update.effective_chat.type == "channel":
+        return
+    # END PATCH
+
     query = update.callback_query
 
     if query.data.startswith("set_group_lang_"):

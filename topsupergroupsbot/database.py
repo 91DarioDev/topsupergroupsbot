@@ -100,7 +100,8 @@ def create_db():
         banned_until TIMESTAMP DEFAULT NULL, 
         weekly_own_digest BOOLEAN DEFAULT TRUE, 
         weekly_groups_digest TEXT [], 
-        message_date timestamp
+        message_date timestamp,
+        registered_at TIMESTAMP DEFAULT NOW()
     )"""
     query_w(query)
 

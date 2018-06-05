@@ -156,7 +156,8 @@ def infoid_from_db(tgid):
                 banned_until,
                 weekly_own_digest,
                 weekly_groups_digest,
-                message_date
+                registered_at::timestamp(0),
+                message_date,
             FROM users
             WHERE user_id = %s"""
         extract = database.query_r(query, tgid, one=True)
@@ -171,7 +172,8 @@ def infoid_from_db(tgid):
         text += "banned_until: {}\n".format(extract[5])
         text += "weekly_own_digest: {}\n".format(extract[6])
         text += "weekly_groups_digest: {}\n".format(extract[7])
-        text += "message_date: {}\n".format(extract[8])
+        text += "registered_at: {}\n".format(extract[8])
+        text += "message_date: {}\n".format(extract[9])
     else:
         query = """ 
         SELECT

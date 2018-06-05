@@ -157,7 +157,7 @@ def infoid_from_db(tgid):
                 weekly_own_digest,
                 weekly_groups_digest,
                 registered_at::timestamp(0),
-                message_date,
+                message_date
             FROM users
             WHERE user_id = %s"""
         extract = database.query_r(query, tgid, one=True)

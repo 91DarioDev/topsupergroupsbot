@@ -22,7 +22,7 @@ CODES = {
     'e': 'family_and_home',
     'f': 'sport',
     'g': 'art_and_culture',
-    'h': 'politicts',
+    'h': 'politics',
     'i': 'information_technology',
     'j': 'game_and_apps',
     'k': 'love',

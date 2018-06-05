@@ -242,7 +242,7 @@ categories = {
     'family_and_home': 'famiglia&casa',
     'sport': 'sport',
     'art_and_culture': 'arte&cultura',
-    'politicts': 'politica',
+    'politics': 'politica',
     'information_technology': 'informatica&tecnologia',
     'game_and_apps': 'giochi&app',
     'love': 'love',

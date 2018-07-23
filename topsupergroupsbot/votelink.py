@@ -29,7 +29,7 @@ def create_vote_link(group_id):
 
 @utils.private_only
 def send_vote_by_link(bot, update, first_arg):
-    group_id = first_arg.replace("vote", "")
+    group_id = first_arg.lower().replace("vote", "")
     user_id = update.message.from_user.id
     lang = utils.get_db_lang(user_id)
 

@@ -57,7 +57,7 @@ def start(bot, update, args):
             start_no_params(bot, update)
         return
     first_arg = args[0]
-    if first_arg.startswith("vote"):
+    if first_arg.lower().startswith("vote"):
         votelink.send_vote_by_link(bot, update, first_arg)
     elif first_arg == "aboutyou":
         aboutyou(bot, update)

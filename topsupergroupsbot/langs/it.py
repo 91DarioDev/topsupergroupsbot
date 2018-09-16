@@ -178,6 +178,7 @@ weekly_groups_digest = (
         "posizione la scorsa settimana: {}\n"
         "posizione questa settimana: {}\n\n"
         
+        "Puoi seguire le classifiche anche su @topsupergruppi\n"
         "TOP UTENTI DELLA SETTIMANA:\n"
         )
 

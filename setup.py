@@ -28,10 +28,10 @@ setuptools.setup(
     author_email="dariomsn@hotmail.it",
 
     install_requires=[
-		"redis",
+		"redis<2.10.6",
 		"Babel",
 		"python-telegram-bot",
-		"psycopg2",
+		"psycopg2<2.7.3",
         "Pyyaml"
     ],
 

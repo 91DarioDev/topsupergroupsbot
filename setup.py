@@ -31,7 +31,7 @@ setuptools.setup(
 		"redis",
 		"Babel",
 		"python-telegram-bot",
-		"psycopg2",
+		"psycopg2=2.7.3",
         "Pyyaml"
     ],
 

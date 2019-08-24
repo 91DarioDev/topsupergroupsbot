@@ -16,7 +16,7 @@
 
 import threading
 import redis
-from psycopg2 import pool
+import psycopg2
 from threading import Semaphore
 
 from topsupergroupsbot import config

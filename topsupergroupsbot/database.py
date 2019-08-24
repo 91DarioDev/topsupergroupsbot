@@ -15,10 +15,24 @@
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
 import threading
-import psycopg2
 import redis
+from psycopg2 import pool
+from threading import Semaphore
 
 from topsupergroupsbot import config
+
+class ReallyThreadedConnectionPool(psycopg2.pool.ThreadedConnectionPool):
+    def __init__(self, minconn, maxconn, *args, **kwargs):
+        self._semaphore = Semaphore(maxconn)
+        super().__init__(minconn, maxconn, *args, **kwargs)
+
+    def getconn(self, *args, **kwargs):
+        self._semaphore.acquire()
+        return super().getconn(*args, **kwargs)
+
+    def putconn(self, *args, **kwargs):
+        super().putconn(*args, **kwargs)
+        self._semaphore.release()
 
 #                            _   _          
 #    __ ___ _ _  _ _  ___ __| |_(_)___ _ _  
@@ -32,12 +46,14 @@ REDIS = redis.Redis(host=config.REDIS_HOST,
                     db=config.REDIS_DB)
 
 
-LOCAL = threading.local()
 
-def conn():
-    if not hasattr(LOCAL, "db"):
-        LOCAL.db = psycopg2.connect(config.POSTGRES_DB)
-    return LOCAL.db
+DB_POOL_CONNECTIONS = ReallyThreadedConnectionPool(
+    minconn=config.MIN_DB_CONNECTIONS, 
+    maxconn=config.MAX_DB_CONNECTIONS,
+    user = config.DB_USER,
+    password = config.DB_PASSWORD,
+    dbname = config.DB_NAME
+)
 
 
 #                                      _                     _        
@@ -49,7 +65,7 @@ def conn():
 
 
 def query(query, *params, one=False, read=False):
-    connect = conn()
+    connect = DB_POOL_CONNECTIONS.getconn()
     c = connect.cursor()
     try:
         c.execute(query, params)
@@ -63,8 +79,7 @@ def query(query, *params, one=False, read=False):
         c.connection.rollback()
         raise
     finally:
-        c.close()
-
+        DB_POOL_CONNECTIONS.putconn(connect)
 
 # for retrocompatibilty
 def query_w(raw_query, *params):

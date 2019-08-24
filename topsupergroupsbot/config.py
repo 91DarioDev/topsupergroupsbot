@@ -36,7 +36,13 @@ except FileNotFoundError:
 
 
 BOT_TOKEN = conf["bot_token"]
-POSTGRES_DB = conf["postgres_db"]
+
+MIN_DB_CONNECTIONS = conf["min_db_connections"]
+MAX_DB_CONNECTIONS = conf["max_db_connections"]
+DB_USER = conf["db_user"]
+DB_PASSWORD = conf["db_password"]
+DB_NAME = conf["db_name"]
+
 
 REDIS_HOST = conf["redis_host"]
 REDIS_PORT = conf["redis_port"]

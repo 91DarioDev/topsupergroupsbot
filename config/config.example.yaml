@@ -24,11 +24,16 @@
 
 
 bot_token: "bot_token"
-postgres_db: "dbname=dbname user=user"
 
 redis_host: 'redis_host'
 redis_port: 1234
 redis_db: 1234
+
+min_db_connections: 5
+max_db_connections: 10
+db_user: 'db_user'
+db_password: 'db_password'
+db_name: 'db_name'
 
 # telegram IDs of the admins of the bot (list)
 admins:

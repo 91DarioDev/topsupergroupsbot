@@ -30,7 +30,7 @@ setuptools.setup(
     install_requires=[
 		"redis<2.10.6",
 		"Babel",
-		"python-telegram-bot",
+		"python-telegram-bot<12",
 		"psycopg2<2.7.3",
         "Pyyaml"
     ],

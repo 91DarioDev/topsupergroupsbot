@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TopSupergroupsBot.  If not, see <http://www.gnu.org/licenses/>.
 
-from topsupergroupsbot.langs import en, it
+from topsupergroupsbot.langs import en, it, pt_br
 
 lang_obj = {
     "en": en,
-    "it": it
+    "it": it,
+    "pt": pt_br
 }
 
 

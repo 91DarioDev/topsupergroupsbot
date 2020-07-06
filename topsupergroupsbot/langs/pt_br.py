@@ -44,8 +44,8 @@ vote_from_one_to_five = "Classifique esse grupo de 1 a 5 estrelas"
 choose_your_lang = "Selecione seu idioma"
 
 group_lang_button = "Idioma do grupo"
-adult_button = "Adult Emoji"
-vote_link_button = "Vote link"
+adult_button = "🔞"
+vote_link_button = "Link de votação"
 back = "Voltar"
 yes = "Sim"
 no = "Não"
@@ -69,7 +69,7 @@ choose_region = (
 
 pre_leadervote = "Ordenada pela média de votos. Tendo, no mínimo, {} votos.\nRegião: {}"
 pre_leadermessage = "Ordenada pelas mensagens enviadas nesta semana(UTC).\nRegião: {}"
-pre_groupleaderboard = "Principais usuários em ordem de mensagens enviadas nesta semana(UTC) em @{}."
+pre_groupleaderboard = "Principais usuários por quantidade de mensagens enviadas nesta semana (UTC) em @{}."
 pre_leadermember = "Ordenado pela quantidade de membros.\nRegião: {}"
 
 
@@ -128,7 +128,7 @@ unsupported_chat = (
 banned_until_leave = "Este grupo foi banido. A proibição terminará em {} UTC. \nMotivo: {}.\nEstou saindo."
 not_specified = "Não especificado"
 
-group_digest_button = "Resumdo"
+group_digest_button = "Resumo"
 group_weekly_digest = (
         "Gostaria de receber um resumo semanal deste grupo?"
         " Você pode mudar de idéia a qualquer momento.")
@@ -161,26 +161,26 @@ weekly_groups_digest = (
         "posição nesta semana: {}\n\n"
         
         "-- POR MEMBROS --\n"
-        "membros da última semana: {}\n"
+        "membros na última semana: {}\n"
         "membros nesta semana: {}\n"
         "diferença: {}  percentual: {}\n"
        "posição na última semana: {}\n"
         "posição nesta semana: {}\n\n"
         
-        "-- PELA MÉDIA DE VOTOS --\n"
-        "média e número de votos da última semana: {}{}|({})\n"
-        "média e número de votos desta semana: {}{}|({})\n"
+        "-- POR MÉDIA DE VOTOS --\n"
+        "média e número de votos na última semana: {}{}|({})\n"
+        "média e número de votos nesta semana: {}{}|({})\n"
         "posição na última semana: {}\n"
         "posição nesta semana: {}\n\n"
         
-        "-- BY ACTIVE USERS --\n"
-        "usuários ativos da última semana: {}\n"
-        "usuários ativos desta semana: {}\n"
+        "-- POR USUÁRIOS ATIVOS --\n"
+        "usuários ativos na última semana: {}\n"
+        "usuários ativos nesta semana: {}\n"
         "diferença: {}  percentual: {}\n"
        "posição na última semana: {}\n"
         "posição nesta semana: {}\n\n"
         
-        "PRINCIPAIS USÁRIOS DESTA SEMANA:\n"
+        "PRINCIPAIS USUÁRIOS DESTA SEMANA:\n"
         )
 
 added_again = "Olá! Você quer verificar as configurações do grupo novamente?"
@@ -213,8 +213,8 @@ about_hours_ago_short = "aprox {}h atrás"
 
 group_rank = {
     "title": "<b>RANKING DO GRUPO:</b>",
-    "by_messages": "<b>Tabela de classificação ordenada por mensagens enviadas durante a semana atual</b> (região: <code>{}</code>):",
-    "by_members": "<b>Classificação ordenada por quantidade de membros</b> (região: <code>{}</code>):",
+    "by_messages": "<b>Classificação por mensagens enviadas nesta semana</b> (região: <code>{}</code>):",
+    "by_members": "<b>Classificação por quantidade de membros</b> (região: <code>{}</code>):",
     "by_votes": "<b>Classificação ordenada por média de votos</b> (região: <code>{}</code>):",
     "position": "- Posição: {}",
     "updated": "<i>{}: {}</i>",
@@ -231,13 +231,13 @@ how_to_use_in_groups = "uso em grupos"
 
 
 category = "Categoria"
-choose_group_category = "Escolha a categoria que melhor se encaixa nesse grupo. Não minta ou proibiremos o grupo."
+choose_group_category = "Escolha a categoria que melhor se encaixa nesse grupo. Não minta ou o grupo será banido."
 categories = {
     'news': 'notícias',
     'science_and_education': 'ciência e educação',
     'religion': 'espiritualidade',
     'entertainment': 'entretenimento',
-    'family_and_home': 'família e casa',
+    'family_and_home': 'casa e família',
     'sport': 'esportes',
     'art_and_culture': 'arte e cultura',
     'politics': 'política',
@@ -257,9 +257,9 @@ advanced_commands = "Comandos avançados"
 
 advanced_commands_text = (
     "<b>Comandos avançados:</b>\n\n"
-    "/leadervote - <i>tabela de classificação ordenada por votos (parâmetros opcionais: [p = (número da página)] [c = (número da categoria)])</i>\n"
-    "/leadermember - <i>tabela de classificação ordenada pelos membros (parâmetros opcionais: [p = (número da página)] [c = (número da categoria)]</i>\n"
-    "/leadermessage - <i>cabeçalho ordenado por mensagens (parâmetros opcionais: [p = (número da página)] [c = (número da categoria)]</i>\n\n"
+    "/leadervote - <i>tabela de classificação ordenada por votos (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)])</i>\n"
+    "/leadermember - <i>tabela de classificação ordenada pelos membros (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)]</i>\n"
+    "/leadermessage - <i>cabeçalho ordenado por mensagens (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)]</i>\n\n"
     "O número da categoria pode ser obtido contando os botões das categorias, começando da esquerda para a direita\n\n"
     "/grouprank - <i>/grouprank [nome de usuário do grupo]</i>\n"
     "/groupleaderboard - <i>/groupleaderboard [nome de usuário do grupo]</i>"
@@ -270,23 +270,23 @@ groupleaderboard_command_error = "<b>Erro:</b>\nuse o comando dessa forma:\n\n<c
 avdanced_leaderboard_command_error = "<b>Erro:</b>\nuse o comando dessa forma. Parâmetros são opcionais:\n\n<code>{} [p=(número da página)] [c=(número da categoria)]</code>"
 
 error_param_group_rank_private = (
-    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the rank. "
-    "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/grouprank my_favorite_group</code>"
+    "<b>Erro:</b>\nvocê deve escrever o nome de usuário do grupo como parâmetro para ver o ranking. "
+    "O uso de \"@\" é opcional.\n\nExemplo: <code>/grouprank meu_grupo</code>"
 )
 
-cant_check_this = "Sorry, @{} is not in our database."
+cant_check_this = "Desculpe, @{} não está em nossa base de dados."
 
 error_param_group_leaderboard_private = (
-    "<b>Error:</b>\nyou should write as parameter of this command the username of the group that you want to check the groupleaderboard. "
-    "You can put or not the \"@\" (it doesn't matter).\n\nExample: <code>/groupleaderboard my_favorite_group</code>\n\n"
-    "Optionally you can jump directly to a page adding the parameter <code>p=[page number]</code>.\n\nExample: <code>/groupleaderboard my_favorite_group p=26</code>"
+    "<b>Erro:</b>\nvocê deve escrever como parâmetro deste comando o nome de usuário do grupo que deseja verificar a classificação. "
+    "O uso de \"@\" é opcional.\n\nExemplo: <code>/groupleaderboard meu_grupo</code>\n\n"
+    "Opcionalmente, você pode pular diretamente para uma página adicionando o parâmetro <code>p=[número da página]</code>.\n\nExemplo: <code>/groupleaderboard meu_grupo p=26</code>"
 )
 
 check_in_private = "Veja na conversa privada"
 
 official_channel = "canal oficial"
-donate = "donate"
-donate_intro = ("This bot is free, opensource and developed for telegram communities.\n\nAnyways the developement required and still "
-    "requires a lot of time and money to pay servers. We will be very happy if you can help us with project with a little donation.\n\n"
+donate = "doar"
+donate_intro = ("Este bot é gratuito, de código aberto e desenvido para a comunidade do Telegram.\n\nAinda assim, o desenvolvimento necessita "
+    "de tempo e dinheiro para os custos com servidores. Ficaríamos muito felizes se puder ajudar neste projeto com uma pequena doação.\n\n"
 )
-something_went_wrong = "Ops! something went wrong."
+something_went_wrong = "Ops! Algo deu errado."

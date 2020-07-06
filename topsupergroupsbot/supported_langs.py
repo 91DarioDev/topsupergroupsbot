@@ -42,7 +42,8 @@ GROUP_LANGS = [
 
 PRIVATE_LANGS = [
     'it',
-    'en'
+    'en',
+    'pt'
 ]
 
 PRIVATE_REGIONS = GROUP_LANGS

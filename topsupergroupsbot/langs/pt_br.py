@@ -286,7 +286,7 @@ check_in_private = "Veja na conversa privada"
 
 official_channel = "canal oficial"
 donate = "donate"
-  donate_intro = ("This bot is free, opensource and developed for telegram communities.\n\nAnyways the developement required and still "
+donate_intro = ("This bot is free, opensource and developed for telegram communities.\n\nAnyways the developement required and still "
     "requires a lot of time and money to pay servers. We will be very happy if you can help us with project with a little donation.\n\n"
 )
 something_went_wrong = "Ops! something went wrong."

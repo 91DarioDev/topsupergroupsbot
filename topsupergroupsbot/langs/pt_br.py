@@ -88,7 +88,7 @@ digest_of_the_week_global = ("Mais uma semana terminou!\nNesta última semana vo
 digest_of_the_week_detail = "— {} mensagens em @{}. Sua posição: {}\n"
 
 generic_leaderboard = (
-        "Esscolha um dos critérios para a ordem de classificação.\n" 
+        "Escolha um dos critérios para a ordem de classificação.\n" 
         "Sua região: {}. Toque em /region caso queira ver grupos de outras regiões")
 
 by_members = "Por membros"
@@ -144,8 +144,8 @@ groups_working = (
          " nas tabelas de classificação.\nEm /settings, você encontrará o link para redirecionar os usuários para"
          " votar no seu grupo.\n\n"
         "<b>COMANDOS SUPORTADOS EM GRUPOS</b>:\n"
-        "/settings - <i>definiar as configurações do grupo</i>\n"
-        "/groupleaderboard - <i>recebe uma mensagem com a classificação dos usuários que mais enviaram "
+        "/settings - <i>definir as configurações do grupo</i>\n"
+        "/groupleaderboard - <i>receber uma mensagem com a classificação dos usuários que mais enviaram "
         "mensagens no grupo durante a semana (UTC). parâmetro opcional: [número da página]</i>\n"
         "/grouprank - <i>Veja o ranking do grupo</i>"
 )
@@ -155,7 +155,7 @@ weekly_groups_digest = (
         
         "-- POR MENSAGEM --\n"
         "mensagens enviadas na última semana: {}\n"
-        "mensagens enviadas nesta semanan: {}\n"
+        "mensagens enviadas nesta semana: {}\n"
         "diferença: {}  percentual: {}\n"
         "posição na última semana: {}\n"
         "posição nesta semana: {}\n\n"
@@ -241,7 +241,7 @@ categories = {
     'sport': 'esportes',
     'art_and_culture': 'arte e cultura',
     'politics': 'política',
-    'information_technology': 'Tecnologia',
+    'information_technology': 'tecnologia',
     'game_and_apps': 'jogos e aplicativos',
     'love': 'relacionamento',
     'tourism': 'turismo',
@@ -257,9 +257,9 @@ advanced_commands = "Comandos avançados"
 
 advanced_commands_text = (
     "<b>Comandos avançados:</b>\n\n"
-    "/leadervote - <i>tabela de classificação ordenada por votos (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)])</i>\n"
-    "/leadermember - <i>tabela de classificação ordenada pelos membros (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)]</i>\n"
-    "/leadermessage - <i>cabeçalho ordenado por mensagens (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)]</i>\n\n"
+    "/leadervote - <i>classificação ordenada por votos (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)])</i>\n"
+    "/leadermember - <i>classificação ordenada pelos membros (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)]</i>\n"
+    "/leadermessage - <i>classificação ordenada por mensagens (parâmetros opcionais: [p=(número da página)] [c=(número da categoria)]</i>\n\n"
     "O número da categoria pode ser obtido contando os botões das categorias, começando da esquerda para a direita\n\n"
     "/grouprank - <i>/grouprank [nome de usuário do grupo]</i>\n"
     "/groupleaderboard - <i>/groupleaderboard [nome de usuário do grupo]</i>"
@@ -270,14 +270,14 @@ groupleaderboard_command_error = "<b>Erro:</b>\nuse o comando dessa forma:\n\n<c
 avdanced_leaderboard_command_error = "<b>Erro:</b>\nuse o comando dessa forma. Parâmetros são opcionais:\n\n<code>{} [p=(número da página)] [c=(número da categoria)]</code>"
 
 error_param_group_rank_private = (
-    "<b>Erro:</b>\nvocê deve escrever o nome de usuário do grupo como parâmetro para ver o ranking. "
+    "<b>Erro:</b>\nvocê deve escrever o nome de usuário do grupo para ver o ranking. "
     "O uso de \"@\" é opcional.\n\nExemplo: <code>/grouprank meu_grupo</code>"
 )
 
 cant_check_this = "Desculpe, @{} não está em nossa base de dados."
 
 error_param_group_leaderboard_private = (
-    "<b>Erro:</b>\nvocê deve escrever como parâmetro deste comando o nome de usuário do grupo que deseja verificar a classificação. "
+    "<b>Erro:</b>\nvocê deve escrever o nome de usuário do grupo que deseja verificar a classificação. "
     "O uso de \"@\" é opcional.\n\nExemplo: <code>/groupleaderboard meu_grupo</code>\n\n"
     "Opcionalmente, você pode pular diretamente para uma página adicionando o parâmetro <code>p=[número da página]</code>.\n\nExemplo: <code>/groupleaderboard meu_grupo p=26</code>"
 )

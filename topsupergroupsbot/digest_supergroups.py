@@ -147,19 +147,16 @@ def weekly_groups_digest(bot, job):
 
     query = """
         WITH myconst AS
-        (SELECT 
-              s.lang,
-              AVG(vote)::float AS overall_avg
+        (SSELECT 
+            s.lang,
+            AVG(vote)::float AS overall_avg
         FROM votes AS v
-        LEFT OUTER JOIN supergroups_ref AS s_ref
-        ON s_ref.group_id = v.group_id
         LEFT OUTER JOIN supergroups AS s
         ON s.group_id = v.group_id
-        GROUP BY s.banned_until, s.bot_inside, s.lang
-        HAVING 
-              (s.banned_until IS NULL OR s.banned_until < now()) 
-              AND COUNT(vote) >= %s
-              AND s.bot_inside IS TRUE)
+        WHERE (s.banned_until IS NULL OR s.banned_until < now() )
+        AND s.bot_inside IS TRUE
+        GROUP BY s.lang
+        HAVING COUNT(vote) >= %s)
 
         SELECT 
           *,
@@ -223,19 +220,15 @@ def weekly_groups_digest(bot, job):
     query = """
         WITH myconst AS
         (SELECT 
-              s.lang,
-              AVG(vote)::float AS overall_avg
+            s.lang,
+            AVG(vote)::float AS overall_avg
         FROM votes AS v
-        LEFT OUTER JOIN supergroups_ref AS s_ref
-        ON s_ref.group_id = v.group_id
         LEFT OUTER JOIN supergroups AS s
         ON s.group_id = v.group_id
-        WHERE vote_date <= now() - interval %s
-        GROUP BY s.banned_until, s.bot_inside, s.lang
-        HAVING 
-              (s.banned_until IS NULL OR s.banned_until < now()) 
-              AND COUNT(vote) >= %s
-              AND s.bot_inside IS TRUE)
+        WHERE (s.banned_until IS NULL OR s.banned_until < now() ) AND vote_date <= now() - interval %s
+        AND s.bot_inside IS TRUE
+        GROUP BY s.lang
+        HAVING COUNT(vote) >= %s)
 
         SELECT 
           *,

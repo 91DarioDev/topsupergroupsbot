@@ -147,7 +147,7 @@ def weekly_groups_digest(bot, job):
 
     query = """
         WITH myconst AS
-        (SSELECT 
+        (SELECT 
             s.lang,
             AVG(vote)::float AS overall_avg
         FROM votes AS v
